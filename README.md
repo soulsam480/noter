@@ -1,5 +1,7 @@
 # notally
 
+### A collaborative and realtime note taking and sharing app built with Vuejs + Firebase
+
 ## Project setup
 ```
 npm install
