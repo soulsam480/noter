@@ -1,17 +1,21 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
+    <br />
+    <h6>
+      <button class="btn btn-success btn-sm float-right" @click="createBoard">
+        New Board
+      </button>
+    </h6>
     <h4>My Boards</h4>
     <div>
-      <p v-for="board in boards" :key="board.key">
-        <router-link :to="{ path: `/board/${board.key}` }">{{
-          board.key
-        }}</router-link>
-      </p>
+      <ol>
+        <li v-for="board in boards" :key="board.key">
+          <router-link class="nav-link" :to="{ path: `/board/${board.key}` }">{{
+            board.meta.name
+          }}</router-link>
+        </li>
+      </ol>
     </div>
-    <h6>
-      create a new Board
-      <button class="btn btn-success" @click="createBoard">Here</button>
-    </h6>
   </div>
 </template>
 

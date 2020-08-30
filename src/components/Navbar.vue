@@ -15,8 +15,10 @@
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ path: '/' }">Home</router-link>
+          <li class="nav-item text-success">
+            <router-link class="nav-link" :to="{ path: '/' }"
+              ><b>Notally</b></router-link
+            >
           </li>
           <li class="nav-item">
             <a
@@ -30,11 +32,11 @@
               >User</router-link
             >
           </li>
-          <!--  <li class="nav-item">
-            <router-link class="nav-link" :to="{ path: '/boards' }">
-              Boards
-            </router-link>
-          </li> -->
+          <li class="nav-item" v-if="user.loggedIn">
+            <router-link class="nav-link" :to="{ path: '/boards' }"
+              >Boards</router-link
+            >
+          </li>
         </ul>
       </div>
     </nav>

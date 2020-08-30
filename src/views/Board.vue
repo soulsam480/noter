@@ -1,10 +1,14 @@
 <template>
   <div class="container-fluid">
-    <p>Board</p>
-    <button class="btn btn-info">
-      get data
+    <br />
+    <button
+      :hidden="!isSaved"
+      class="btn btn-sm btn-danger"
+      @click="deleteBoard"
+    >
+      Delete
     </button>
-    <div id="editor" @keydown.ctrl.enter="getData"></div>
+    <div id="editor" @keydown.ctrl.enter="setData"></div>
   </div>
 </template>
 
@@ -23,6 +27,7 @@ export default {
     return {
       preData: null,
       editor: null,
+      isSaved: false,
     };
   },
   computed: {
@@ -33,18 +38,25 @@ export default {
           {
             data: {
               level: 2,
-              text: "This is another Heading",
+              text: "Title",
             },
             type: "header",
           },
           {
             data: {
+              level: 6,
               text: "Add more content by clicking wherever you want!!",
             },
-            type: "paragraph",
+            type: "header",
+          },
+          {
+            data: {
+              level: 6,
+              text: "Save changes ctrl/cmd + enter",
+            },
+            type: "header",
           },
         ],
-        time: 1598655538181,
         version: "2.18.0",
       };
       if (this.boards.find((el) => el.key === this.$route.params._slug)) {
@@ -56,16 +68,27 @@ export default {
     },
   },
   methods: {
-    getData() {
+    setData() {
       this.editor.save().then((data) => {
+        console.log(data);
         db.ref(
           `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
         )
-          .set(data)
-          .then(() => {
-            console.log("yoyo");
-          });
+          .set({
+            meta: {
+              name: data.blocks[0].data.text,
+            },
+            data: data,
+          })
+          .then(() => {});
       });
+    },
+    deleteBoard() {
+      db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
+        .remove()
+        .then(() => {
+          this.$router.replace({ path: "/user" });
+        });
     },
   },
   created() {
@@ -84,21 +107,33 @@ export default {
           class: List,
           inlineToolbar: true,
           shortcut: "CMD+SHIFT+L",
+          config: {
+            placeholder: "Add a list!",
+          },
         },
         checklist: {
           class: Checklist,
           inlineToolbar: true,
+          config: {
+            placeholder: "Add a checklist !",
+          },
         },
 
         code: {
           class: CodeTool,
           shortcut: "CMD+SHIFT+C",
+          config: {
+            placeholder: "Add a code block!",
+          },
         },
 
         linkTool: Link,
       },
       data: this.boardData,
     });
+    if (this.boards.find((el) => el.key === this.$route.params._slug)) {
+      this.isSaved = true;
+    }
   },
 };
 </script>

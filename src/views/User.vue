@@ -1,6 +1,8 @@
 <template>
   <div class="container-fluid">
+    <br />
     <div v-if="user.loggedIn">
+      <p>Name: {{ user.data.name }}</p>
       <p>User ID : {{ user.data.uid }}</p>
       <button class="btn btn-danger" @click="logout">Log Out</button>
       <br />
@@ -29,6 +31,7 @@ export default {
         .signOut()
         .then(() => {
           this.$router.replace({ path: "/" });
+          this.$store.dispatch("fetchUser", null);
         })
         .catch((err) => {
           window.alert(err);
