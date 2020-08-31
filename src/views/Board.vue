@@ -87,7 +87,7 @@ export default {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
         .remove()
         .then(() => {
-          this.$router.replace({ path: "/user" });
+          this.$router.replace({ path: "/boards" });
         });
     },
   },
@@ -126,7 +126,6 @@ export default {
             placeholder: "Add a code block!",
           },
         },
-
         linkTool: Link,
       },
       data: this.boardData,
