@@ -1,6 +1,10 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-sm  sticky-top  navbar-light bg-light">
+    <nav class="navbar navbar-expand-sm  fixed-top navbar-light bg-light">
+      <router-link class="navbar-brand" :to="{ path: '/' }"
+        ><b>Notally</b></router-link
+      >
+
       <button
         class="navbar-toggler"
         type="button"
@@ -15,11 +19,6 @@
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item text-success">
-            <router-link class="nav-link" :to="{ path: '/' }"
-              ><b>Notally</b></router-link
-            >
-          </li>
           <li class="nav-item">
             <a
               v-if="!user.loggedIn"

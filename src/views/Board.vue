@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <br />
     <button
       :hidden="!isSaved"
@@ -21,6 +21,11 @@ const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
 const List = require("@editorjs/list");
 const CodeTool = require("@editorjs/code");
+const InlineCode = require("@editorjs/inline-code");
+const Table = require("@editorjs/table");
+const Embed = require("@editorjs/embed");
+const Quote = require("@editorjs/quote");
+const Marker = require("@editorjs/marker");
 export default {
   name: "Board",
   data() {
@@ -45,14 +50,16 @@ export default {
           {
             data: {
               level: 6,
-              text: "Add more content by clicking wherever you want!!",
+              text:
+                "<mark class ='cdx-marker'>Add more content by clicking wherever you want!! </mark>",
             },
             type: "header",
           },
           {
             data: {
-              level: 6,
-              text: "Save changes ctrl/cmd + enter",
+              level: 5,
+              text:
+                "<mark class='cdx-marker'>Save changes ctrl/cmd + enter </mark>",
             },
             type: "header",
           },
@@ -66,11 +73,19 @@ export default {
         return tempdata;
       }
     },
+    boardMeta() {
+      return { name: this.boardData.blocks[0].data.text };
+    },
+  },
+  metaInfo() {
+    return {
+      title: `Board ${this.boardMeta.name}`,
+    };
   },
   methods: {
     setData() {
       this.editor.save().then((data) => {
-        console.log(data);
+        this.boardMeta.name = data.blocks[0].data.text;
         db.ref(
           `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
         )
@@ -127,8 +142,27 @@ export default {
           },
         },
         linkTool: Link,
+        inlineCode: {
+          class: InlineCode,
+          shortcut: "CMD+SHIFT+M",
+        },
+        table: {
+          class: Table,
+          inlineToolbar: true,
+          config: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+        embed: Embed,
+        quote: Quote,
+        Marker: {
+          class: Marker,
+          shortcut: "CMD+SHIFT+M",
+        },
       },
       data: this.boardData,
+      logLevel: "ERROR",
     });
     if (this.boards.find((el) => el.key === this.$route.params._slug)) {
       this.isSaved = true;

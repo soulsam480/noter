@@ -1,11 +1,9 @@
 <template>
   <div class="container">
     <br />
-    <h6>
-      <button class="btn btn-success btn-sm float-right" @click="createBoard">
-        New Board
-      </button>
-    </h6>
+    <button class="btn btn-success btn-sm float-right" @click="createBoard">
+      New Board
+    </button>
     <h4>My Boards</h4>
     <div>
       <ol>
@@ -24,7 +22,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "Boards",
   computed: {
-    ...mapGetters({ boards: "boards" }),
+    ...mapGetters({ boards: "boards", user: "giveUser" }),
   },
   methods: {
     createBoard() {
@@ -34,6 +32,11 @@ export default {
         .toUpperCase();
       this.$router.push({ path: `/board/${id}` });
     },
+  },
+  metaInfo() {
+    return {
+      title: `${this.user.data.name}'s Boards`,
+    };
   },
 };
 </script>

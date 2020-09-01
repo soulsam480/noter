@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div>
     <br />
     <div v-if="user.loggedIn">
       <p>Name: {{ user.data.name }}</p>
@@ -37,6 +37,11 @@ export default {
           window.alert(err);
         });
     },
+  },
+  metaInfo() {
+    return {
+      title: ` ${this.user.data.name}`,
+    };
   },
 };
 </script>
