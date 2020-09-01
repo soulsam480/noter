@@ -8,7 +8,13 @@
     >
       Delete
     </button>
-    <div id="editor" @keydown.ctrl.enter="setData"></div>
+    <span class="float-right">
+      <span class="upstatus" style="color:green" v-if="upStatus === 'updated'">
+        ✓ Updated</span
+      >
+      <span class="upstatus" v-if="upStatus === 'updating'">Updating</span>
+    </span>
+    <div @input="autoSave" id="editor" @keyup.ctrl.enter="autoSave"></div>
   </div>
 </template>
 
@@ -30,9 +36,10 @@ export default {
   name: "Board",
   data() {
     return {
-      preData: null,
       editor: null,
       isSaved: false,
+      timeout: null,
+      upStatus: "",
     };
   },
   computed: {
@@ -59,7 +66,7 @@ export default {
             data: {
               level: 5,
               text:
-                "<mark class='cdx-marker'>Save changes ctrl/cmd + enter </mark>",
+                "<mark class='cdx-marker'>Data is saved automatically. ctrl/cmd + enter to force save</mark>",
             },
             type: "header",
           },
@@ -83,20 +90,26 @@ export default {
     };
   },
   methods: {
-    setData() {
-      this.editor.save().then((data) => {
-        this.boardMeta.name = data.blocks[0].data.text;
-        db.ref(
-          `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
-        )
-          .set({
-            meta: {
-              name: data.blocks[0].data.text,
-            },
-            data: data,
-          })
-          .then(() => {});
-      });
+    autoSave() {
+      this.upStatus = "updating";
+      if (this.timeout) clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.editor.save().then((data) => {
+          this.boardMeta.name = data.blocks[0].data.text;
+          db.ref(
+            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+          )
+            .set({
+              meta: {
+                name: data.blocks[0].data.text,
+              },
+              data: data,
+            })
+            .then(() => {
+              this.upStatus = "updated";
+            });
+        });
+      }, 1000);
     },
     deleteBoard() {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
@@ -166,6 +179,7 @@ export default {
     });
     if (this.boards.find((el) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
+      this.upStatus = "updated";
     }
   },
 };

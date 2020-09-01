@@ -1,6 +1,20 @@
 //todo colors
 
 //todo fonts
+//todo default styles
+button {
+  &:focus {
+    outline: none !important;
+  }
+}
+/* a {
+  color: inherit !important;
+  text-decoration: none !important;
+  &:hover {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+} */
 
 //todo media queries
 
@@ -13,4 +27,57 @@
 }
 .nav-link {
   cursor: pointer;
+}
+.upstatus {
+  padding: 3px 5px;
+  border-radius: 2px;
+  background-color: rgb(218, 218, 218);
+}
+
+// ** Lgin modal tabs custom css
+.nav-tabs {
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+  border: none !important;
+  .nav-link {
+    border: none !important;
+    &:hover {
+      border: none !important;
+    }
+  }
+  .nav-item.show .nav-link {
+    border-top: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-color: none !important;
+    &:hover {
+      border-top: none !important;
+      border-right: none !important;
+      border-left: none !important;
+      border-color: none !important;
+    }
+  }
+  .nav-link.active {
+    border-top: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: 1px solid black !important;
+  }
+}
+
+// ** nav toggler custom
+.navbar-light .navbar-toggler {
+  border-color: transparent !important;
+}
+p {
+  margin-bottom: 10px !important;
+}
+.btn {
+  margin: 0 4px;
 }

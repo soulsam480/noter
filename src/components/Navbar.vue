@@ -1,8 +1,8 @@
 <template>
   <div>
     <nav class="navbar navbar-expand-sm  fixed-top navbar-light bg-light">
-      <router-link class="navbar-brand" :to="{ path: '/' }"
-        ><b>Notally</b></router-link
+      <router-link class="navbar-brand text-info" :to="{ path: '/' }"
+        ><b>Noter</b></router-link
       >
 
       <button
@@ -28,8 +28,8 @@
               >Login
             </a>
             <router-link class="nav-link" v-else :to="{ path: '/user' }"
-              >User</router-link
-            >
+              >{{ user.data.name }}
+            </router-link>
           </li>
           <li class="nav-item" v-if="user.loggedIn">
             <router-link class="nav-link" :to="{ path: '/boards' }"
