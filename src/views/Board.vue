@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";
 import EditorJS from "@editorjs/editorjs";
 import { mapGetters } from "vuex";
@@ -109,7 +110,7 @@ export default {
               this.upStatus = "updated";
             });
         });
-      }, 1000);
+      }, 3000);
     },
     deleteBoard() {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
@@ -154,7 +155,12 @@ export default {
             placeholder: "Add a code block!",
           },
         },
-        linkTool: Link,
+        linkTool: {
+          class: Link,
+          config: {
+            endpoint: endpoint, // Your backend endpoint for url data fetching
+          },
+        },
         inlineCode: {
           class: InlineCode,
           shortcut: "CMD+SHIFT+M",
