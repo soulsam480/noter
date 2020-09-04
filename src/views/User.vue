@@ -1,9 +1,8 @@
 <template>
   <div>
-    <br />
     <div v-if="user.loggedIn">
       <div class="row d-flex justify-content-center">
-        <div class="col-4 parent-c">
+        <div class="parent-c">
           <div class="row">
             <div class="col-4">
               <img :src="imgUrl" class="card-img-top" />
@@ -12,8 +11,7 @@
               <div class="card-body">
                 <h4 class="card-title">{{ user.data.name }}</h4>
                 <div class="card-text">
-                  <p>Email: {{ user.data.email }}</p>
-                  <p>User ID : {{ user.data.uid }}</p>
+                  <p>{{ user.data.email }}</p>
                 </div>
                 <button class="btn btn-info btn-sm">
                   <router-link :to="{ path: '/boards' }">My Boards</router-link>
@@ -24,7 +22,6 @@
               </div>
             </div>
           </div>
-          <div class="card"></div>
         </div>
       </div>
 
@@ -63,7 +60,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: ` ${this.user.data.name}`,
+      title: "Home",
     };
   },
   created() {
@@ -75,9 +72,13 @@ export default {
 <style lang="scss" scoped>
 @media only screen and(max-width:768px) {
   .parent-c {
-    flex: 0 0 100%;
-    max-width: 100%;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
   }
+}
+.parent-c {
+  max-width: 50%;
+  padding: 15px !important;
 }
 a {
   color: inherit !important;
@@ -89,15 +90,14 @@ a {
 }
 .card {
   border: none !important;
- 
 }
- .card-body {
-    padding: 0 !important;
-  }
-  .card-img-top {
-    margin: auto;
-    display: block;
-    max-width: 100%;
-    border-radius: 10000px !important;
-  }
+.card-body {
+  padding: 0 !important;
+}
+.card-img-top {
+  margin: auto;
+  display: block;
+  max-width: 100%;
+  border-radius: 10000px !important;
+}
 </style>

@@ -1,24 +1,12 @@
 <template>
-  <div class="container">
-    <br />
-    <button class="btn btn-success btn-sm float-right" @click="createBoard">
-      New Board
-    </button>
-    <h4>My Boards</h4>
-    <div>
-      <ol>
-        <li v-for="board in boards" :key="board.key">
-          <router-link class="nav-link" :to="{ path: `/board/${board.key}` }">{{
-            board.meta.name
-          }}</router-link>
-        </li>
-      </ol>
-    </div>
+  <div>
+    <router-view :key="this.$route.params._slug"></router-view>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+/* import Sidebar from "@/components/Sidebar.vue";
+ */ import { mapGetters } from "vuex";
 export default {
   name: "Boards",
   computed: {
@@ -30,15 +18,26 @@ export default {
         .toString(20)
         .substr(2)
         .toUpperCase();
-      this.$router.push({ path: `/board/${id}` });
+      this.$router.push({ name: "Board", params: { _slug: id } });
     },
   },
   metaInfo() {
     return {
-      title: `${this.user.data.name}'s Boards`,
+      title: "Boards",
     };
+  },
+  components: {
+    /*     Sidebar,
+     */
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.nav-link {
+  color: black;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+</style>

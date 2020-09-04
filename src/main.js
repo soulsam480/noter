@@ -16,6 +16,7 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     store.dispatch("fetchUser", user);
     store.commit("Boards", user.uid);
+    router.push({ path: "/boards" });
   }
 });
 

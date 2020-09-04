@@ -9,6 +9,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    beforeEnter: (to, from, next) => {
+      if (!auth.currentUser) {
+        next();
+      } else next({ path: "/user" });
+    },
   },
   {
     path: "/user",
@@ -29,17 +34,14 @@ const routes = [
         next();
       } else next({ path: "/" });
     },
-  },
-  {
-    path: "/board/:_slug",
-    name: "Board",
-    component: () => import("../views/Board.vue"),
-    params: true,
-    beforeEnter: (to, from, next) => {
-      if (auth.currentUser) {
-        next();
-      } else next({ path: "/" });
-    },
+    children: [
+      {
+        path: ":_slug",
+        name: "Board",
+        component: () => import("../views/Board.vue"),
+        params: true,
+      },
+    ],
   },
 ];
 

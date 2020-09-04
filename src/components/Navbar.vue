@@ -4,7 +4,6 @@
       <router-link class="navbar-brand text-info" :to="{ path: '/' }"
         ><b>Noter</b></router-link
       >
-
       <button
         class="navbar-toggler"
         type="button"
@@ -22,9 +21,9 @@
           <li class="nav-item">
             <a
               v-if="!user.loggedIn"
-              class="nav-link"
               data-toggle="modal"
-              data-target="#staticBackdrop"
+              data-target="#loginModal"
+              class="nav-link"
               >Login
             </a>
             <router-link class="nav-link" v-else :to="{ path: '/user' }"

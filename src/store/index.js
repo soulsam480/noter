@@ -30,6 +30,9 @@ export default new Vuex.Store({
             });
           }
         });
+        state.boards.sort((a, b) => {
+          return b.meta.stamp - a.meta.stamp;
+        });
       });
     },
   },

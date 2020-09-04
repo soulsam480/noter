@@ -2,7 +2,7 @@
   <div>
     <div
       class="modal fade"
-      id="staticBackdrop"
+      id="loginModal"
       data-keyboard="false"
       tabindex="-1"
       aria-labelledby="staticBackdropLabel"
@@ -147,7 +147,8 @@ export default {
         .then(() => {
           this.email = "";
           this.pass = "";
-          this.$router.replace({ path: "/user" });
+          /*           this.$router.replace({ path: "/user" });
+           */
         })
         .catch(function(error) {
           this.email = "";

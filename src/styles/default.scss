@@ -1,23 +1,40 @@
 //todo colors
-
+$bg-primary: #f3f3f3;
+$primary: #262526;
+$primary-light: #7a7a7a;
+$secondary: #afb2b7;
 //todo fonts
 //todo default styles
+:root,
+html,
+body {
+  background-color: $bg-primary !important;
+  color: $primary;
+}
 button {
   &:focus {
     outline: none !important;
   }
 }
-/* a {
-  color: inherit !important;
+a {
+  color: $primary;
   text-decoration: none !important;
   &:hover {
-    color: inherit !important;
+    color: $primary;
     text-decoration: none !important;
   }
-} */
-
+}
 //todo media queries
-
+@media only screen and(min-width:768px) {
+  // ** link-tool custom
+  .link-tool__image {
+    margin: 0 0 0 10px !important;
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 3px;
+    float: right;
+  }
+}
 //todo component/views styles
 
 // ** Login
@@ -80,4 +97,163 @@ p {
 }
 .btn {
   margin: 0 4px;
+}
+
+// ** borad styles
+.init_head {
+  position: relative;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 1em 0;
+  margin-bottom: -0.9em;
+  line-height: 1.5em;
+  outline: none;
+  &:empty:not(:focus):before {
+    position: absolute;
+    content: attr(data-text);
+    color: grey;
+  }
+}
+// **hamburger
+/*!
+ * Hamburgers
+ * @description Tasty CSS-animated hamburgers
+ * @author Jonathan Suh @jonsuh
+ * @site https://jonsuh.com/hamburgers
+ * @link https://github.com/jonsuh/hamburgers
+ */
+
+.ham {
+  z-index: 1000;
+  position: absolute;
+  left: 10px;
+  display: inline-block;
+  cursor: pointer;
+  transition-property: left;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 10px 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.ham.is-active .hamburger-inner,
+.ham.is-active .hamburger-inner::before,
+.ham.is-active .hamburger-inner::after {
+  background-color: white;
+}
+
+.hamburger-box {
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+}
+
+.hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px;
+}
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  width: 28px;
+  height: 2.5px;
+  background-color: black;
+  border-radius: 2px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+.hamburger-inner::before,
+.hamburger-inner::after {
+  content: "";
+  display: block;
+}
+.hamburger-inner::before {
+  top: -6px;
+}
+.hamburger-inner::after {
+  bottom: -6px;
+}
+.is-active {
+  left: 150px;
+}
+/*
+   * Arrow Turn
+   */
+.hamburger--arrowturn.is-active .hamburger-inner {
+  transform: rotate(-180deg);
+}
+.hamburger--arrowturn.is-active .hamburger-inner::before {
+  transform: translate3d(8px, 0, 0) rotate(40deg) scale(0.7, 1);
+}
+.hamburger--arrowturn.is-active .hamburger-inner::after {
+  transform: translate3d(8px, 0, 0) rotate(-40deg) scale(0.7, 1);
+}
+
+// ** Sidebar styles
+.sidebar-active {
+  width: 200px !important;
+}
+.sidebar {
+  transition-property: width;
+  transition-duration: 0s;
+  transition-timing-function: linear;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background-color: #8a8a8a;
+  overflow-x: hidden;
+  a {
+    cursor: pointer;
+    padding: 6px 8px 6px 16px;
+    display: block;
+    color: white !important;
+    white-space: nowrap;
+    font-size: 16px;
+    &:hover {
+      cursor: pointer;
+      background-color: $primary-light !important;
+      color: white !important;
+    }
+  }
+  .sidebar-inner {
+    padding-top: 40px;
+  }
+}
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.side-user {
+  display: flex;
+  flex-direction: row;
+  .u-l {
+    padding: 0 5px;
+    text-align: left;
+    flex: 0 0 20%;
+    max-width: 20%;
+    img {
+      max-width: 100%;
+      border-radius: 10000px !important;
+    }
+  }
+  .u-r {
+    padding: 0 5px;
+    text-align: left;
+    flex: 0 0 80%;
+    max-width: 80%;
+  }
 }

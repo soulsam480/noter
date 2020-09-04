@@ -1,26 +1,34 @@
 <template>
   <div>
-    <br />
-    <button
+    <!--     <button
       :hidden="!isSaved"
-      class="btn btn-sm btn-danger"
+      class="btn btn-sm btn-danger float-right"
       @click="deleteBoard"
     >
       Delete
-    </button>
+    </button> -->
     <span class="float-right">
       <span class="upstatus" style="color:green" v-if="upStatus === 'updated'">
         ✓ Updated</span
       >
       <span class="upstatus" v-if="upStatus === 'updating'">Updating</span>
     </span>
-    <div @input="autoSave" id="editor" @keyup.ctrl.enter="autoSave"></div>
+    <!--   @input="autoSave" -->
+    <div id="editor" @input="autoSave">
+      <h2
+        id="init_head"
+        class="init_head"
+        contenteditable="true"
+        data-text="Untitled"
+        autofocus
+      ></h2>
+    </div>
   </div>
 </template>
 
 <script>
-import endpoint from "../miscred/prelink";
-import { db } from "../firebase/index";
+/* import endpoint from "../miscred/prelink";
+ */ import { db } from "../firebase/index";
 import EditorJS from "@editorjs/editorjs";
 import { mapGetters } from "vuex";
 const Checklist = require("@editorjs/checklist");
@@ -50,44 +58,49 @@ export default {
         blocks: [
           {
             data: {
-              level: 2,
-              text: "Title",
-            },
-            type: "header",
-          },
-          {
-            data: {
               level: 6,
-              text:
-                "<mark class ='cdx-marker'>Add more content by clicking wherever you want!! </mark>",
+              text: "<mark class ='cdx-marker'>Guide/</mark>",
             },
             type: "header",
           },
           {
             data: {
-              level: 5,
-              text:
-                "<mark class='cdx-marker'>Data is saved automatically. ctrl/cmd + enter to force save</mark>",
+              items: [
+                "<mark class ='cdx-marker'>Click anywhere to add content</mark>",
+                "<mark class ='cdx-marker'>Hit tab for block types</mark>",
+                "<mark class ='cdx-marker'>Saved automatically on typing! </mark>",
+                "<mark class ='cdx-marker'>Ctrl/Cmd + S to force save</mark>",
+              ],
+              style: "ordered",
             },
-            type: "header",
+            type: "list",
           },
         ],
         version: "2.18.0",
       };
       if (this.boards.find((el) => el.key === this.$route.params._slug)) {
-        return this.boards.find((el) => el.key === this.$route.params._slug)
-          .data;
+        return {
+          data: this.boards.find((el) => el.key === this.$route.params._slug)
+            .data,
+          meta: this.boards.find((el) => el.key === this.$route.params._slug)
+            .meta,
+        };
       } else {
-        return tempdata;
+        return {
+          data: tempdata,
+          meta: {
+            name: "Untitled",
+          },
+        };
       }
     },
     boardMeta() {
-      return { name: this.boardData.blocks[0].data.text };
+      return { name: this.boardData.meta.name };
     },
   },
   metaInfo() {
     return {
-      title: `Board ${this.boardMeta.name}`,
+      title: this.boardMeta.name,
     };
   },
   methods: {
@@ -96,17 +109,20 @@ export default {
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.editor.save().then((data) => {
+          const head = document.getElementById("init_head");
           this.boardMeta.name = data.blocks[0].data.text;
           db.ref(
             `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
           )
-            .set({
+            .update({
               meta: {
-                name: data.blocks[0].data.text,
+                name: head.innerText,
+                stamp: Date.now(),
               },
               data: data,
             })
             .then(() => {
+              this.isSaved = true;
               this.upStatus = "updated";
             });
         });
@@ -122,7 +138,8 @@ export default {
   },
   created() {
     this.editor = new EditorJS({
-      holderId: "editor",
+      autofocus: true,
+      holder: "editor",
       tools: {
         header: {
           class: Header,
@@ -158,7 +175,7 @@ export default {
         linkTool: {
           class: Link,
           config: {
-            endpoint: endpoint, // Your backend endpoint for url data fetching
+            endpoint: /* endpoint */ "http://localhost:3000/get-preview", // Your backend endpoint for url data fetching
           },
         },
         inlineCode: {
@@ -180,13 +197,30 @@ export default {
           shortcut: "CMD+SHIFT+M",
         },
       },
-      data: this.boardData,
+      data: this.boardData.data,
       logLevel: "ERROR",
     });
+
     if (this.boards.find((el) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
       this.upStatus = "updated";
-    }
+    } /* else { 
+      this.autoSave();
+    } */
+  },
+  mounted() {
+    const head = document.getElementById("init_head");
+    head.innerHTML = this.boardData.meta.name;
+    this._keyListener = function(e) {
+      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault(); // present "Save Page" from getting triggered.
+        this.autoSave();
+      }
+    };
+    document.addEventListener("keydown", this._keyListener.bind(this));
+  },
+  beforeDestroy() {
+    document.removeEventListener("keydown", this._keyListener);
   },
 };
 </script>

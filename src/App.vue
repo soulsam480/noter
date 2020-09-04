@@ -1,27 +1,42 @@
 <template>
-  <div id="app" class="container-fluid">
+  <div id="app">
     <Login />
-    <Navbar />
+    <Navbar v-if="!user.loggedIn" />
+    <Sidebar v-else />
     <br />
-    <br />
-    <router-view />
+    <router-view class="container-fluid" />
   </div>
 </template>
 <script>
 import "./styles/default.scss";
 import Login from "@/components/Login.vue";
 import Navbar from "@/components/Navbar.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     Navbar,
     Login,
+    Sidebar,
+  },
+  computed: {
+    ...mapGetters({ user: "giveUser" }),
+    defTitle() {
+      if (this.user.loggedIn) {
+        return `%s | ${this.user.data.name}'s Noter`;
+      } else {
+        return "%s";
+      }
+    },
   },
   created() {},
-  metaInfo: {
-    // if no subcomponents specify a metaInfo.title, this title will be used
-    /*     title: "Noter | a collborative note taking app",
-     */ // all titles will be injected into this template
-    titleTemplate: "%s | Noter",
+  metaInfo() {
+    return {
+      // if no subcomponents specify a metaInfo.title, this title will be used
+      /*     title: "Noter | a collborative note taking app",
+       */ // all titles will be injected into this template
+      titleTemplate: this.defTitle,
+    };
   },
 };
 </script>
