@@ -1,26 +1,20 @@
 <template>
   <div>
-    <!--     <button
-      :hidden="!isSaved"
-      class="btn btn-sm btn-danger float-right"
-      @click="deleteBoard"
-    >
-      Delete
-    </button> -->
     <span class="float-right">
       <span class="upstatus" style="color:green" v-if="upStatus === 'updated'">
         ✓ Updated</span
       >
       <span class="upstatus" v-if="upStatus === 'updating'">Updating</span>
     </span>
-    <!--   @input="autoSave" -->
-    <div id="editor" @input="autoSave">
+    <div id="editor">
       <h2
         id="init_head"
         class="init_head"
         contenteditable="true"
         data-text="Untitled"
         autofocus
+        @paste="autoSave"
+        @input="autoSave"
       ></h2>
     </div>
   </div>
@@ -126,7 +120,7 @@ export default {
               this.upStatus = "updated";
             });
         });
-      }, 3000);
+      }, 1000);
     },
     deleteBoard() {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
@@ -199,21 +193,22 @@ export default {
       },
       data: this.boardData.data,
       logLevel: "ERROR",
+      onChange: () => {
+        this.autoSave();
+      },
     });
 
     if (this.boards.find((el) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
       this.upStatus = "updated";
-    } /* else { 
-      this.autoSave();
-    } */
+    }
   },
   mounted() {
     const head = document.getElementById("init_head");
     head.innerHTML = this.boardData.meta.name;
     this._keyListener = function(e) {
       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault(); // present "Save Page" from getting triggered.
+        e.preventDefault();
         this.autoSave();
       }
     };

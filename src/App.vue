@@ -2,9 +2,11 @@
   <div id="app">
     <Login />
     <Navbar v-if="!user.loggedIn" />
-    <Sidebar v-else />
+    <Sidebar @side_event="contentShift" v-else />
     <br />
-    <router-view class="container-fluid" />
+    <div ref="child" class="content">
+      <router-view class="container-fluid" />
+    </div>
   </div>
 </template>
 <script>
@@ -19,6 +21,17 @@ export default {
     Login,
     Sidebar,
   },
+  methods: {
+    contentShift(dat) {
+      if (this.user.loggedIn) {
+        if (dat === true) {
+          this.$refs.child.classList.add("content");
+        } else {
+          this.$refs.child.classList.remove("content");
+        }
+      }
+    },
+  },
   computed: {
     ...mapGetters({ user: "giveUser" }),
     defTitle() {
@@ -32,9 +45,6 @@ export default {
   created() {},
   metaInfo() {
     return {
-      // if no subcomponents specify a metaInfo.title, this title will be used
-      /*     title: "Noter | a collborative note taking app",
-       */ // all titles will be injected into this template
       titleTemplate: this.defTitle,
     };
   },

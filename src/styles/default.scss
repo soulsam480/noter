@@ -1,8 +1,8 @@
 //todo colors
-$bg-primary: #f3f3f3;
-$primary: #262526;
-$primary-light: #7a7a7a;
-$secondary: #afb2b7;
+$bg-primary: #e2e2ee;
+$primary: #101629;
+$primary-light: #101629ce;
+$secondary: #d3b7cc;
 //todo fonts
 //todo default styles
 :root,
@@ -145,7 +145,7 @@ p {
 .ham.is-active .hamburger-inner,
 .ham.is-active .hamburger-inner::before,
 .ham.is-active .hamburger-inner::after {
-  background-color: white;
+  background-color: $primary;
 }
 
 .hamburger-box {
@@ -165,7 +165,7 @@ p {
 .hamburger-inner::after {
   width: 28px;
   height: 2.5px;
-  background-color: black;
+  background-color: $primary;
   border-radius: 2px;
   position: absolute;
   transition-property: transform;
@@ -205,21 +205,21 @@ p {
 }
 .sidebar {
   transition-property: width;
-  transition-duration: 0s;
-  transition-timing-function: linear;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
   height: 100%;
   width: 0;
   position: fixed;
   z-index: 100;
   top: 0;
   left: 0;
-  background-color: #8a8a8a;
+  background-color: $secondary;
   overflow-x: hidden;
   a {
     cursor: pointer;
     padding: 6px 8px 6px 16px;
     display: block;
-    color: white !important;
+    color: $primary;
     white-space: nowrap;
     font-size: 16px;
     &:hover {
@@ -231,11 +231,30 @@ p {
   .sidebar-inner {
     padding-top: 40px;
   }
+  .side-att {
+    padding: 4px 8px 4px 16px;
+    display: block;
+    color: $primary;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: underline;
+  }
 }
 .topbar {
-  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: fixed;
+  z-index: 10000;
   top: 0;
   left: 0;
+  width: 100%;
+  background-color: $secondary;
+  .top-head {
+    padding: 6px 0;
+    font-weight: bold;
+  }
 }
 .side-user {
   display: flex;
@@ -256,4 +275,10 @@ p {
     flex: 0 0 80%;
     max-width: 80%;
   }
+}
+.content {
+  margin-left: 200px;
+  transition-property: margin-left;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
 }

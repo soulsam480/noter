@@ -12,7 +12,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!auth.currentUser) {
         next();
-      } else next({ path: "/user" });
+      } else next({ path: "/boards" });
     },
   },
   {

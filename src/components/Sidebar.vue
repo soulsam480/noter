@@ -1,26 +1,31 @@
 <template>
   <div class="usernav">
     <div class="topbar">
+      <span class="top-head"> {{ user.data.name }}'s Noter </span>
       <a
         @click="hamToggle"
-        id="hamburger"
         class="ham hamburger--arrowturn is-active"
+        ref="ham"
       >
         <span class="hamburger-box">
           <span class="hamburger-inner"></span>
         </span>
       </a>
     </div>
-
-    <div class="sidebar sidebar-active" id="sidebar">
+    <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
-        <a
+        <router-link :to="{ path: '/user' }"
           ><div class="side-user">
             <div class="u-l"><img :src="imgUrl" /></div>
             <div class="u-r">{{ user.data.name }}</div>
-          </div></a
+          </div></router-link
         >
-        <span v-for="board in boards" :key="board.key">
+        <span class="side-att">Boards</span>
+        <span
+          v-for="board in boards"
+          :key="board.key"
+          @contextmenu.prevent="contextFire"
+        >
           <router-link :to="{ name: 'Board', params: { _slug: board.key } }">
             {{ board.meta.name }}
           </router-link>
@@ -38,15 +43,21 @@ export default {
   data() {
     return {
       imgUrl: "",
+      sideActive: true,
     };
   },
   computed: {
     ...mapGetters({ boards: "boards", user: "giveUser" }),
   },
   methods: {
+    contextFire() {
+      console.log("yoyo");
+    },
     hamToggle() {
-      document.getElementById("hamburger").classList.toggle("is-active");
-      document.getElementById("sidebar").classList.toggle("sidebar-active");
+      this.sideActive = !this.sideActive;
+      this.$emit("side_event", this.sideActive);
+      this.$refs.ham.classList.toggle("is-active");
+      this.$refs.sidebar.classList.toggle("sidebar-active");
     },
     createBoard() {
       const id = Math.random()
@@ -58,6 +69,12 @@ export default {
   },
   mounted() {
     this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
+    if (window.innerWidth < 768) {
+      this.sideActive = !this.sideActive;
+      this.$emit("side_event", this.sideActive);
+      this.$refs.ham.classList.toggle("is-active");
+      this.$refs.sidebar.classList.toggle("sidebar-active");
+    }
   },
 };
 </script>

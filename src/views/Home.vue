@@ -1,6 +1,5 @@
 <template>
   <div class=" text-center">
-    <br />
     <h1>Welcome to <em>noter (ˈnəʊtə)</em>!</h1>
     <h3 class=" text-info">What's this bro??</h3>
     <div class="px-lg-5">
