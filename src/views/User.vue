@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="user.loggedIn">
-      <div class="row d-flex justify-content-center">
+      <div class="row d-flex justify-content-center py-5">
         <div class="parent-c">
           <div class="row">
             <div class="col-4">

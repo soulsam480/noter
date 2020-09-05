@@ -1,6 +1,22 @@
 <template>
   <div>
-    <router-view :key="this.$route.params._slug"></router-view>
+    <div
+      v-if="this.$route.fullPath === '/boards'"
+      class="container boards-intro"
+    >
+      <br />
+      <h4>Hi {{ user.data.name }} 👋🏼 !</h4>
+      <h3 class="">Welcome to <em>Noter</em>👏🏼</h3>
+      <br />
+      <h5>
+        <em>Noter</em> is very easy to begin with 💥 ! Just create a
+        <span class="n-btn">Board</span> and start creating!
+      </h5>
+    </div>
+
+    <div>
+      <router-view :key="this.$route.params._slug"></router-view>
+    </div>
   </div>
 </template>
 

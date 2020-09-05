@@ -1,14 +1,25 @@
 <template>
   <div class=" text-center">
+    <br />
+    <br />
+    <br />
     <h1>Welcome to <em>noter (ˈnəʊtə)</em>!</h1>
+    <br />
     <h3 class=" text-info">What's this bro??</h3>
     <div class="px-lg-5">
       <h4>
         <em>Noter</em> is a free note taking and sharing platform built with
         Vuejs & Firebase. It lets users take and share notes in realtime and
         also for free without any limits!! Most of the features are currently in
-        beta. Coming SOON! Peace ☮✌🏼
+        alpha.
       </h4>
+      <br />
+      <h4>
+        You can still Explore the beta features by loggin in or signing up!
+        Peace ☮✌🏼
+      </h4>
+      <br />
+      <h4>Current v2.0.0.alpha</h4>
     </div>
   </div>
 </template>

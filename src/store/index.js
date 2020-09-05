@@ -10,6 +10,7 @@ export default new Vuex.Store({
       data: null,
     },
     boards: [],
+    boardStatus: {},
   },
   mutations: {
     setLogIn(state, value) {
@@ -35,6 +36,9 @@ export default new Vuex.Store({
         });
       });
     },
+    setBoard: (state, data) => {
+      state.boardStatus = data;
+    },
   },
   actions: {
     fetchUser({ commit }, user) {
@@ -59,6 +63,9 @@ export default new Vuex.Store({
     },
     boards: (state) => {
       return state.boards;
+    },
+    boardStatus: (state) => {
+      return state.boardStatus;
     },
   },
   modules: {},

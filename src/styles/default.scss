@@ -1,8 +1,9 @@
 //todo colors
-$bg-primary: #e2e2ee;
+$bg-primary: #ffffff;
 $primary: #101629;
-$primary-light: #101629ce;
+$primary-light: #434449;
 $secondary: #d3b7cc;
+$secondary-light: #dac8d5;
 //todo fonts
 //todo default styles
 :root,
@@ -10,6 +11,7 @@ html,
 body {
   background-color: $bg-primary !important;
   color: $primary;
+  font-size: 14px !important;
 }
 button {
   &:focus {
@@ -24,7 +26,48 @@ a {
     text-decoration: none !important;
   }
 }
+.n-btn {
+  background: $secondary;
+  color: $primary;
+  border-radius: 2px;
+  border: none;
+  padding: 5px 15px;
+  margin: 5px;
+  display: inline-block;
+  font-family: inherit;
+
+  &:hover {
+    color: $primary;
+    background-color: $secondary-light;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:not([href]) {
+    cursor: pointer;
+    color: $primary;
+    text-decoration: none;
+  }
+
+  &:not([href]):hover {
+    color: $primary;
+    text-decoration: none;
+  }
+
+  &:disabled {
+    background-color: $secondary-light;
+    cursor: not-allowed;
+  }
+
+  a {
+    display: block;
+    width: 100%;
+  }
+}
 //todo media queries
+// ** Desktop
 @media only screen and(min-width:768px) {
   // ** link-tool custom
   .link-tool__image {
@@ -33,6 +76,16 @@ a {
     height: 100px !important;
     border-radius: 3px;
     float: right;
+  }
+  // ** Boards styles
+  .boards-intro {
+    padding: 20px 100px 0 100px !important;
+  }
+}
+@media only screen and(max-width:768px) {
+  // ** Boards styles
+  .boards-intro {
+    padding: 50px 0px 0 0px !important;
   }
 }
 //todo component/views styles
@@ -46,7 +99,6 @@ a {
   cursor: pointer;
 }
 .upstatus {
-  padding: 3px 5px;
   border-radius: 2px;
   background-color: rgb(218, 218, 218);
 }
@@ -205,8 +257,8 @@ p {
 }
 .sidebar {
   transition-property: width;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
   height: 100%;
   width: 0;
   position: fixed;
@@ -221,11 +273,10 @@ p {
     display: block;
     color: $primary;
     white-space: nowrap;
-    font-size: 16px;
     &:hover {
       cursor: pointer;
-      background-color: $primary-light !important;
-      color: white !important;
+      background-color: $secondary-light !important;
+      color: $primary !important;
     }
   }
   .sidebar-inner {
@@ -236,24 +287,42 @@ p {
     display: block;
     color: $primary;
     white-space: nowrap;
-    font-size: 16px;
     font-weight: bold;
     text-decoration: underline;
+  }
+  .b-context {
+    font-weight: bold;
+    padding: 2px 4px;
+    background-color: $primary;
+    position: absolute;
+    border-radius: 3px;
+    color: white;
+    z-index: 1000;
+    left: 175px;
+
+    transform: rotate(90deg);
+    le &:hover {
+      color: white;
+    }
   }
 }
 .topbar {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-end;
   position: fixed;
   z-index: 10000;
   top: 0;
   left: 0;
   width: 100%;
   background-color: $secondary;
+  .top-link {
+    padding: 6px 5px;
+  }
   .top-head {
-    padding: 6px 0;
     font-weight: bold;
+    text-align: right;
+    padding-right: 20px;
   }
 }
 .side-user {
@@ -266,6 +335,7 @@ p {
     max-width: 20%;
     img {
       max-width: 100%;
+      width: 100%;
       border-radius: 10000px !important;
     }
   }
@@ -276,9 +346,49 @@ p {
     max-width: 80%;
   }
 }
+.content-def {
+  transition-property: margin-left;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in;
+}
 .content {
   margin-left: 200px;
-  transition-property: margin-left;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-in-out;
+}
+// ** conetxt menu
+.context {
+  width: 150px;
+  box-shadow: 0 5px 10px 0.5px #00000057;
+  background-color: $secondary;
+  position: absolute;
+  z-index: 2000;
+  border-radius: 5px;
+  .context-options {
+    list-style: none;
+    padding: 5px 0;
+    margin-bottom: 0;
+    .context-option {
+      font-size: 14px;
+      padding: 5px 10px;
+      cursor: pointer;
+      a {
+        color: $primary;
+      }
+      &:hover {
+        background: $secondary-light;
+      }
+    }
+    .context-close {
+      float: right;
+      color: red;
+      border-radius: 2px;
+      padding: 0px 2px 4px 2px;
+      margin-right: 5px;
+      cursor: pointer;
+      line-height: 14px;
+      border: 1px solid $primary;
+      &:hover {
+        background: $secondary-light;
+      }
+    }
+  }
 }

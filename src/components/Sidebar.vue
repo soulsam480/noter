@@ -1,7 +1,18 @@
 <template>
   <div class="usernav">
+    <Context
+      :command="command"
+      v-if="contextActive"
+      v-on:close-context="closeContext"
+    />
     <div class="topbar">
-      <span class="top-head"> {{ user.data.name }}'s Noter </span>
+      <span class="top-link top-head" v-if="this.$route.fullPath === '/boards'">
+        {{ this.user.data.name }}'s Noter
+      </span>
+      <span class="top-link top-head" v-if="hasStatus">
+        <span style="color:green" v-if="hasStatus === 'updated'"> ✓ Saved</span>
+        <span v-if="hasStatus === 'updating'">Saving</span>
+      </span>
       <a
         @click="hamToggle"
         class="ham hamburger--arrowturn is-active"
@@ -24,19 +35,27 @@
         <span
           v-for="board in boards"
           :key="board.key"
-          @contextmenu.prevent="contextFire"
+          @contextmenu.prevent="contextFire(board.key, $event)"
         >
           <router-link :to="{ name: 'Board', params: { _slug: board.key } }">
-            {{ board.meta.name }}
+            {{ trunc_name(board.meta.name) }}
+            <span
+              class="b-context"
+              @click.prevent="contextFire(board.key, $event)"
+              >⋮</span
+            >
           </router-link>
         </span>
-        <a @click="createBoard">Add a new Board</a>
+        <a @click="createBoard"
+          >Add a new Board <!-- <span class="b-context">+</span> --></a
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Context from "@/components/Context.vue";
 import { mapGetters } from "vuex";
 export default {
   name: "Sidebar",
@@ -44,14 +63,51 @@ export default {
     return {
       imgUrl: "",
       sideActive: true,
+      command: null,
+      contextActive: false,
     };
   },
+  components: {
+    Context,
+  },
   computed: {
-    ...mapGetters({ boards: "boards", user: "giveUser" }),
+    ...mapGetters({
+      boards: "boards",
+      user: "giveUser",
+      boardStatus: "boardStatus",
+    }),
+    hasStatus() {
+      if (this.$route.fullPath === "/boards") {
+        return null;
+      } else {
+        if (this.boardStatus.id === this.$route.params._slug) {
+          return this.boardStatus.status;
+        } else {
+          return null;
+        }
+      }
+    },
   },
   methods: {
-    contextFire() {
-      console.log("yoyo");
+    closeContext() {
+      this.contextActive = false;
+    },
+    trunc_name(str) {
+      const length = 26;
+      if (str.length > length) {
+        return str.substring(0, length - 3) + "...";
+      } else {
+        return str;
+      }
+    },
+    contextFire(key, event) {
+      this.contextActive = true;
+      this.command = {
+        left: event.pageX,
+        top: event.pageY,
+        key: key,
+        display: "block",
+      };
     },
     hamToggle() {
       this.sideActive = !this.sideActive;

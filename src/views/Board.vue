@@ -1,11 +1,5 @@
 <template>
   <div>
-    <span class="float-right">
-      <span class="upstatus" style="color:green" v-if="upStatus === 'updated'">
-        ✓ Updated</span
-      >
-      <span class="upstatus" v-if="upStatus === 'updating'">Updating</span>
-    </span>
     <div id="editor">
       <h2
         id="init_head"
@@ -21,8 +15,8 @@
 </template>
 
 <script>
-/* import endpoint from "../miscred/prelink";
- */ import { db } from "../firebase/index";
+import endpoint from "../miscred/prelink";
+import { db } from "../firebase/index";
 import EditorJS from "@editorjs/editorjs";
 import { mapGetters } from "vuex";
 const Checklist = require("@editorjs/checklist");
@@ -60,10 +54,10 @@ export default {
           {
             data: {
               items: [
-                "<mark class ='cdx-marker'>Click anywhere to add content</mark>",
-                "<mark class ='cdx-marker'>Hit tab for block types</mark>",
-                "<mark class ='cdx-marker'>Saved automatically on typing! </mark>",
-                "<mark class ='cdx-marker'>Ctrl/Cmd + S to force save</mark>",
+                "<mark class ='cdx-marker'><b>Click anywhere to add content</b></mark>",
+                "<mark class ='cdx-marker'><b>Hit tab for block types</b></mark>",
+                "<mark class ='cdx-marker'><b>Saved automatically on typing! </b></mark>",
+                "<mark class ='cdx-marker'><b>Ctrl/Cmd + S to force save</b></mark>",
               ],
               style: "ordered",
             },
@@ -91,6 +85,7 @@ export default {
     boardMeta() {
       return { name: this.boardData.meta.name };
     },
+    /*  giveEndpoint() {}, */
   },
   metaInfo() {
     return {
@@ -100,6 +95,10 @@ export default {
   methods: {
     autoSave() {
       this.upStatus = "updating";
+      this.$store.commit("setBoard", {
+        id: this.$route.params._slug,
+        status: this.upStatus,
+      });
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         this.editor.save().then((data) => {
@@ -118,16 +117,13 @@ export default {
             .then(() => {
               this.isSaved = true;
               this.upStatus = "updated";
+              this.$store.commit("setBoard", {
+                id: this.$route.params._slug,
+                status: this.upStatus,
+              });
             });
         });
       }, 1000);
-    },
-    deleteBoard() {
-      db.ref(`/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`)
-        .remove()
-        .then(() => {
-          this.$router.replace({ path: "/boards" });
-        });
     },
   },
   created() {
@@ -169,7 +165,7 @@ export default {
         linkTool: {
           class: Link,
           config: {
-            endpoint: /* endpoint */ "http://localhost:3000/get-preview", // Your backend endpoint for url data fetching
+            endpoint: endpoint /* "http://localhost:3000/get-preview" */, // Your backend endpoint for url data fetching
           },
         },
         inlineCode: {
@@ -201,6 +197,15 @@ export default {
     if (this.boards.find((el) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
       this.upStatus = "updated";
+      this.$store.commit("setBoard", {
+        id: this.$route.params._slug,
+        status: this.upStatus,
+      });
+    } else {
+      this.$store.commit("setBoard", {
+        id: this.$route.params._slug,
+        status: "init",
+      });
     }
   },
   mounted() {

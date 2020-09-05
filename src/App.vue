@@ -4,7 +4,7 @@
     <Navbar v-if="!user.loggedIn" />
     <Sidebar @side_event="contentShift" v-else />
     <br />
-    <div ref="child" class="content">
+    <div ref="child" :class="{ content: isHome }" class="content-def">
       <router-view class="container-fluid" />
     </div>
   </div>
@@ -41,8 +41,15 @@ export default {
         return "%s";
       }
     },
+    isHome() {
+      if (this.$route.fullPath === "/") {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
-  created() {},
+  mounted() {},
   metaInfo() {
     return {
       titleTemplate: this.defTitle,

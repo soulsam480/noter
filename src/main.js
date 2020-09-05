@@ -17,6 +17,9 @@ auth.onAuthStateChanged((user) => {
     store.dispatch("fetchUser", user);
     store.commit("Boards", user.uid);
     router.push({ path: "/boards" });
+  } else {
+    store.dispatch("fetchUser", null);
+    store.commit("Boards", null);
   }
 });
 

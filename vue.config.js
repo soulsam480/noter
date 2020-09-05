@@ -12,4 +12,18 @@ module.exports = {
       },
     },
   },
+  pwa: {
+    workboxPluginMode: "InjectManifest",
+    workboxOptions: {
+      swSrc: "./sw.js",
+    },
+  },
+  configureWebpack: {
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000,
+      },
+    },
+  },
 };
