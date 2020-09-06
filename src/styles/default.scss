@@ -2,9 +2,14 @@
 $bg-primary: #ffffff;
 $primary: #101629;
 $primary-light: #434449;
-$secondary: #d3b7cc;
-$secondary-light: #dac8d5;
+$secondary: #d4d4f5;
+$secondary-light: #e1e1ff;
 //todo fonts
+@font-face {
+  font-family: "Merriweather Regular";
+  src: url(~@/assets/Merriweather-Regular.woff2) format("woff2"),
+    url(~@/assets/Merriweather-Regular.woff) format("woff");
+}
 //todo default styles
 :root,
 html,
@@ -12,6 +17,8 @@ body {
   background-color: $bg-primary !important;
   color: $primary;
   font-size: 14px !important;
+  line-height: normal !important;
+  font-family: Merriweather Regular !important;
 }
 button {
   &:focus {
@@ -26,6 +33,8 @@ a {
     text-decoration: none !important;
   }
 }
+
+// ** custom buttons
 .n-btn {
   background: $secondary;
   color: $primary;
@@ -35,7 +44,6 @@ a {
   margin: 5px;
   display: inline-block;
   font-family: inherit;
-
   &:hover {
     color: $primary;
     background-color: $secondary-light;
@@ -89,6 +97,39 @@ a {
   }
 }
 //todo component/views styles
+// ** navbar custom homepage
+.navbar {
+  background-color: $secondary !important;
+  font-size: 14px !important;
+  .navbar-nav {
+    .nav-link {
+      color: $primary !important;
+      padding: 7px !important;
+      &:hover {
+        background-color: $secondary-light;
+        border-radius: 5px;
+      }
+    }
+  }
+  .navbar-brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    color: $primary !important;
+    padding: 0 7px;
+    img {
+      max-width: 28px;
+    }
+    span {
+      padding: 0 3px;
+      font-weight: 600;
+    }
+    &:hover {
+      background-color: $secondary-light;
+      border-radius: 5px;
+    }
+  }
+}
 
 // ** Login
 
@@ -140,10 +181,6 @@ a {
   }
 }
 
-// ** nav toggler custom
-.navbar-light .navbar-toggler {
-  border-color: transparent !important;
-}
 p {
   margin-bottom: 10px !important;
 }
@@ -189,7 +226,7 @@ p {
   text-transform: none;
   background-color: transparent;
   border: 0;
-  margin: 10px 0;
+  margin: 7px 0;
   padding: 0;
   overflow: visible;
 }
@@ -210,7 +247,7 @@ p {
 .hamburger-inner {
   display: block;
   top: 50%;
-  margin-top: -2px;
+  margin-top: -1px;
 }
 .hamburger-inner,
 .hamburger-inner::before,
@@ -230,10 +267,10 @@ p {
   display: block;
 }
 .hamburger-inner::before {
-  top: -6px;
+  top: -5.5px;
 }
 .hamburger-inner::after {
-  bottom: -6px;
+  bottom: -5.5px;
 }
 .is-active {
   left: 150px;
@@ -257,7 +294,7 @@ p {
 }
 .sidebar {
   transition-property: width;
-  transition-duration: 0.2s;
+  transition-duration: 0.15s;
   transition-timing-function: ease-in;
   height: 100%;
   width: 0;
@@ -279,6 +316,9 @@ p {
       color: $primary !important;
     }
   }
+  .boardActive {
+    font-weight: 600;
+  }
   .sidebar-inner {
     padding-top: 40px;
   }
@@ -287,22 +327,41 @@ p {
     display: block;
     color: $primary;
     white-space: nowrap;
-    font-weight: bold;
-    text-decoration: underline;
+    font-weight: 500;
+    font-size: 16px;
   }
   .b-context {
     font-weight: bold;
-    padding: 2px 4px;
-    background-color: $primary;
+    height: 25px;
+    width: 25px;
     position: absolute;
-    border-radius: 3px;
-    color: white;
+    border-radius: 2px;
+    color: $primary;
     z-index: 1000;
-    left: 175px;
-
-    transform: rotate(90deg);
+    left: 170px;
     le &:hover {
       color: white;
+    }
+    // ** sidebar board list context fire 3dot button
+    span {
+      margin: 8px 10px;
+    }
+    span,
+    span:before,
+    span:after {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: $primary;
+      border-radius: 1000px;
+      content: "";
+      display: block;
+    }
+    span:before {
+      top: -8px;
+    }
+    span:after {
+      bottom: -8px;
     }
   }
 }
@@ -315,12 +374,13 @@ p {
   top: 0;
   left: 0;
   width: 100%;
+  height: 33px !important;
   background-color: $secondary;
   .top-link {
     padding: 6px 5px;
   }
   .top-head {
-    font-weight: bold;
+    font-weight: 600;
     text-align: right;
     padding-right: 20px;
   }
@@ -331,24 +391,26 @@ p {
   .u-l {
     padding: 0 5px;
     text-align: left;
-    flex: 0 0 20%;
-    max-width: 20%;
+    flex: 0 0 25%;
+    max-width: 25%;
     img {
       max-width: 100%;
       width: 100%;
-      border-radius: 10000px !important;
+      border-radius: 5px !important;
     }
   }
   .u-r {
+    font-size: 16px;
     padding: 0 5px;
     text-align: left;
-    flex: 0 0 80%;
-    max-width: 80%;
+    flex: 0 0 75%;
+    max-width: 75%;
   }
 }
+// ** app margin animation
 .content-def {
   transition-property: margin-left;
-  transition-duration: 0.2s;
+  transition-duration: 0.15s;
   transition-timing-function: ease-in;
 }
 .content {
@@ -378,16 +440,35 @@ p {
       }
     }
     .context-close {
+      margin: 0px 4px;
       float: right;
-      color: red;
+      height: 20px;
+      width: 20px;
+      display: block;
       border-radius: 2px;
-      padding: 0px 2px 4px 2px;
-      margin-right: 5px;
       cursor: pointer;
-      line-height: 14px;
-      border: 1px solid $primary;
+      border: 0.5px solid $primary;
+      padding: 2px;
       &:hover {
         background: $secondary-light;
+      }
+      // ** sidebar board list context fire 3dot button
+      span:before,
+      span:after {
+        margin: 6px 0 0 -3px;
+        position: absolute;
+        width: 20px;
+        height: 2.5px;
+        background-color: red;
+        border-radius: 2px;
+        content: "";
+        display: block;
+      }
+      span:before {
+        transform: rotate(45deg);
+      }
+      span:after {
+        transform: rotate(-45deg);
       }
     }
   }

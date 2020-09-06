@@ -21,6 +21,11 @@ export default {
     Login,
     Sidebar,
   },
+  data() {
+    return {
+      isMobile: null,
+    };
+  },
   methods: {
     contentShift(dat) {
       if (this.user.loggedIn) {
@@ -45,11 +50,19 @@ export default {
       if (this.$route.fullPath === "/") {
         return false;
       } else {
-        return true;
+        if (this.isMobile === true) {
+          return false;
+        } else {
+          return true;
+        }
       }
     },
   },
-  mounted() {},
+  mounted() {
+    if (window.innerWidth < 768) {
+      this.isMobile = true;
+    }
+  },
   metaInfo() {
     return {
       titleTemplate: this.defTitle,

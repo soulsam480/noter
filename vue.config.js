@@ -13,6 +13,10 @@ module.exports = {
     },
   },
   pwa: {
+    name: "Noter",
+    themeColor: "#d4d4f5",
+    msTileColor: "#d4d4f5",
+    //todo webpack-workbox config
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
       swSrc: "./sw.js",

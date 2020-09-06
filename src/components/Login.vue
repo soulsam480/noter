@@ -11,6 +11,7 @@
       <div class="modal-dialog ">
         <div class="modal-content">
           <div class="modal-header d-flex justify-contents-center">
+            <!--//todo these are tab navs-->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
                 <a
@@ -39,6 +40,7 @@
             </ul>
           </div>
           <div class="modal-body ">
+            <!--//todo these are tab content forms-->
             <div class="tab-content" id="myTabContent">
               <div
                 class="tab-pane fade show active"
@@ -46,6 +48,7 @@
                 role="tabpanel"
                 aria-labelledby="home-tab"
               >
+                <!--//todo Login form-->
                 <form>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
@@ -71,11 +74,7 @@
                     />
                   </div>
 
-                  <button
-                    data-dismiss="modal"
-                    class="btn btn-primary"
-                    @click="login"
-                  >
+                  <button data-dismiss="modal" class=" n-btn" @click="login">
                     Login
                   </button>
                 </form>
@@ -86,6 +85,7 @@
                 role="tabpanel"
                 aria-labelledby="profile-tab"
               >
+                <!--//todo Signup Form-->
                 <form>
                   <div class="form-group">
                     <label for="exampleInputEmail2">Email address</label>
@@ -111,11 +111,7 @@
                     />
                   </div>
 
-                  <button
-                    data-dismiss="modal"
-                    class="btn btn-primary"
-                    @click="signUp"
-                  >
+                  <button data-dismiss="modal" class=" n-btn" @click="signUp">
                     Sign Up
                   </button>
                 </form>
@@ -147,8 +143,6 @@ export default {
         .then(() => {
           this.email = "";
           this.pass = "";
-          /*           this.$router.replace({ path: "/user" });
-           */
         })
         .catch(function(error) {
           this.email = "";

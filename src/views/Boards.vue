@@ -10,7 +10,8 @@
       <br />
       <h5>
         <em>Noter</em> is very easy to begin with 💥 ! Just create a
-        <span class="n-btn">Board</span> and start creating!
+        <span class="n-btn" @click="createBoard">Board</span> and start
+        Exploring!
       </h5>
     </div>
 

@@ -2,7 +2,7 @@
   <div>
     <div class="context" ref="context">
       <ul class="context-options ">
-        <span class="context-close" @click="close">🗙</span>
+        <span class="context-close" @click="close"> <span></span></span>
         <br />
         <span @click="deleteBoard"
           ><li class="context-option">Delete Board</li></span
@@ -33,11 +33,11 @@ export default {
       this.$emit("close-context");
     },
     deleteBoard() {
-      db.ref(
-        `/Users/${this.user.data.uid}/Boards/${this.command.key}`
-      ).remove().then(()=>{
-        this.$router.replace({path:'/boards'})
-      })
+      db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
+        .remove()
+        .then(() => {
+          /*    if() */
+        });
       this.$emit("close-context");
     },
   },

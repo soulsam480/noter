@@ -6,7 +6,10 @@
       v-on:close-context="closeContext"
     />
     <div class="topbar">
-      <span class="top-link top-head" v-if="this.$route.fullPath === '/boards'">
+      <span
+        class="top-link top-head"
+        v-if="this.$route.fullPath === '/boards' || hasStatus === 'init'"
+      >
         {{ this.user.data.name }}'s Noter
       </span>
       <span class="top-link top-head" v-if="hasStatus">
@@ -25,29 +28,35 @@
     </div>
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
-        <router-link :to="{ path: '/user' }"
-          ><div class="side-user">
-            <div class="u-l"><img :src="imgUrl" /></div>
-            <div class="u-r">{{ user.data.name }}</div>
-          </div></router-link
-        >
-        <span class="side-att">Boards</span>
+        <span @click="sideShutMobile">
+          <router-link :to="{ path: '/user' }"
+            ><div class="side-user">
+              <div class="u-l"><img :src="imgUrl" /></div>
+              <div class="u-r">{{ trunc_name(user.data.name) }}</div>
+            </div></router-link
+          >
+        </span>
+        <br />
         <span
           v-for="board in boards"
           :key="board.key"
           @contextmenu.prevent="contextFire(board.key, $event)"
         >
-          <router-link :to="{ name: 'Board', params: { _slug: board.key } }">
+          <router-link
+            :to="{ name: 'Board', params: { _slug: board.key } }"
+            :class="{ boardActive: $route.params._slug === board.key }"
+          >
             {{ trunc_name(board.meta.name) }}
             <span
               class="b-context"
               @click.prevent="contextFire(board.key, $event)"
-              >⋮</span
-            >
+              ><span></span
+            ></span>
           </router-link>
         </span>
-        <a @click="createBoard"
-          >Add a new Board <!-- <span class="b-context">+</span> --></a
+        <a @click="createBoard">
+          <b>+</b> Add a new Board
+          <!-- <span class="b-context">+</span> --></a
         >
       </div>
     </div>
@@ -65,6 +74,7 @@ export default {
       sideActive: true,
       command: null,
       contextActive: false,
+      sideshut: null,
     };
   },
   components: {
@@ -89,11 +99,16 @@ export default {
     },
   },
   methods: {
+    sideShutMobile() {
+      if (this.sideshut) {
+        this.hamToggle();
+      }
+    },
     closeContext() {
       this.contextActive = false;
     },
     trunc_name(str) {
-      const length = 26;
+      const length = 22;
       if (str.length > length) {
         return str.substring(0, length - 3) + "...";
       } else {
@@ -126,6 +141,7 @@ export default {
   mounted() {
     this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
     if (window.innerWidth < 768) {
+      this.sideshut = true;
       this.sideActive = !this.sideActive;
       this.$emit("side_event", this.sideActive);
       this.$refs.ham.classList.toggle("is-active");
