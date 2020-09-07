@@ -19,6 +19,7 @@ body {
   font-size: 14px !important;
   line-height: normal !important;
   font-family: Merriweather Regular !important;
+  letter-spacing: 0.3px !important;
 }
 button {
   &:focus {
@@ -74,6 +75,7 @@ a {
     width: 100%;
   }
 }
+
 //todo media queries
 // ** Desktop
 @media only screen and(min-width:768px) {
@@ -90,6 +92,7 @@ a {
     padding: 20px 100px 0 100px !important;
   }
 }
+// ** mobile
 @media only screen and(max-width:768px) {
   // ** Boards styles
   .boards-intro {
@@ -203,210 +206,7 @@ p {
     color: grey;
   }
 }
-// **hamburger
-/*!
- * Hamburgers
- * @description Tasty CSS-animated hamburgers
- * @author Jonathan Suh @jonsuh
- * @site https://jonsuh.com/hamburgers
- * @link https://github.com/jonsuh/hamburgers
- */
 
-.ham {
-  z-index: 1000;
-  position: absolute;
-  left: 10px;
-  display: inline-block;
-  cursor: pointer;
-  transition-property: left;
-  transition-duration: 0.15s;
-  transition-timing-function: linear;
-  font: inherit;
-  color: inherit;
-  text-transform: none;
-  background-color: transparent;
-  border: 0;
-  margin: 7px 0;
-  padding: 0;
-  overflow: visible;
-}
-
-.ham.is-active .hamburger-inner,
-.ham.is-active .hamburger-inner::before,
-.ham.is-active .hamburger-inner::after {
-  background-color: $primary;
-}
-
-.hamburger-box {
-  width: 30px;
-  height: 20px;
-  display: inline-block;
-  position: relative;
-}
-
-.hamburger-inner {
-  display: block;
-  top: 50%;
-  margin-top: -1px;
-}
-.hamburger-inner,
-.hamburger-inner::before,
-.hamburger-inner::after {
-  width: 28px;
-  height: 2.5px;
-  background-color: $primary;
-  border-radius: 2px;
-  position: absolute;
-  transition-property: transform;
-  transition-duration: 0.15s;
-  transition-timing-function: ease;
-}
-.hamburger-inner::before,
-.hamburger-inner::after {
-  content: "";
-  display: block;
-}
-.hamburger-inner::before {
-  top: -5.5px;
-}
-.hamburger-inner::after {
-  bottom: -5.5px;
-}
-.is-active {
-  left: 150px;
-}
-/*
-   * Arrow Turn
-   */
-.hamburger--arrowturn.is-active .hamburger-inner {
-  transform: rotate(-180deg);
-}
-.hamburger--arrowturn.is-active .hamburger-inner::before {
-  transform: translate3d(8px, 0, 0) rotate(40deg) scale(0.7, 1);
-}
-.hamburger--arrowturn.is-active .hamburger-inner::after {
-  transform: translate3d(8px, 0, 0) rotate(-40deg) scale(0.7, 1);
-}
-
-// ** Sidebar styles
-.sidebar-active {
-  width: 200px !important;
-}
-.sidebar {
-  transition-property: width;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-in;
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  background-color: $secondary;
-  overflow-x: hidden;
-  a {
-    cursor: pointer;
-    padding: 6px 8px 6px 16px;
-    display: block;
-    color: $primary;
-    white-space: nowrap;
-    &:hover {
-      cursor: pointer;
-      background-color: $secondary-light !important;
-      color: $primary !important;
-    }
-  }
-  .boardActive {
-    font-weight: 600;
-  }
-  .sidebar-inner {
-    padding-top: 40px;
-  }
-  .side-att {
-    padding: 4px 8px 4px 16px;
-    display: block;
-    color: $primary;
-    white-space: nowrap;
-    font-weight: 500;
-    font-size: 16px;
-  }
-  .b-context {
-    font-weight: bold;
-    height: 25px;
-    width: 25px;
-    position: absolute;
-    border-radius: 2px;
-    color: $primary;
-    z-index: 1000;
-    left: 170px;
-    le &:hover {
-      color: white;
-    }
-    // ** sidebar board list context fire 3dot button
-    span {
-      margin: 8px 10px;
-    }
-    span,
-    span:before,
-    span:after {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background-color: $primary;
-      border-radius: 1000px;
-      content: "";
-      display: block;
-    }
-    span:before {
-      top: -8px;
-    }
-    span:after {
-      bottom: -8px;
-    }
-  }
-}
-.topbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 33px !important;
-  background-color: $secondary;
-  .top-link {
-    padding: 6px 5px;
-  }
-  .top-head {
-    font-weight: 600;
-    text-align: right;
-    padding-right: 20px;
-  }
-}
-.side-user {
-  display: flex;
-  flex-direction: row;
-  .u-l {
-    padding: 0 5px;
-    text-align: left;
-    flex: 0 0 25%;
-    max-width: 25%;
-    img {
-      max-width: 100%;
-      width: 100%;
-      border-radius: 5px !important;
-    }
-  }
-  .u-r {
-    font-size: 16px;
-    padding: 0 5px;
-    text-align: left;
-    flex: 0 0 75%;
-    max-width: 75%;
-  }
-}
 // ** app margin animation
 .content-def {
   transition-property: margin-left;
@@ -416,60 +216,14 @@ p {
 .content {
   margin-left: 200px;
 }
-// ** conetxt menu
-.context {
-  width: 150px;
-  box-shadow: 0 5px 10px 0.5px #00000057;
+.tooltiptext {
   background-color: $secondary;
-  position: absolute;
-  z-index: 2000;
+  color: $primary;
+  text-align: center;
   border-radius: 5px;
-  .context-options {
-    list-style: none;
-    padding: 5px 0;
-    margin-bottom: 0;
-    .context-option {
-      font-size: 14px;
-      padding: 5px 10px;
-      cursor: pointer;
-      a {
-        color: $primary;
-      }
-      &:hover {
-        background: $secondary-light;
-      }
-    }
-    .context-close {
-      margin: 0px 4px;
-      float: right;
-      height: 20px;
-      width: 20px;
-      display: block;
-      border-radius: 2px;
-      cursor: pointer;
-      border: 0.5px solid $primary;
-      padding: 2px;
-      &:hover {
-        background: $secondary-light;
-      }
-      // ** sidebar board list context fire 3dot button
-      span:before,
-      span:after {
-        margin: 6px 0 0 -3px;
-        position: absolute;
-        width: 20px;
-        height: 2.5px;
-        background-color: red;
-        border-radius: 2px;
-        content: "";
-        display: block;
-      }
-      span:before {
-        transform: rotate(45deg);
-      }
-      span:after {
-        transform: rotate(-45deg);
-      }
-    }
-  }
+  padding: 5px 7px;
+  position: absolute;
+  z-index: 1000000;
+  visibility: visible;
+  box-shadow: 2px 2px 10px 0.5px #00000057;
 }

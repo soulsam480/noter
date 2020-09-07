@@ -5,6 +5,7 @@
       v-if="contextActive"
       v-on:close-context="closeContext"
     />
+    <Tooltip :dat="dat" v-if="isTooltip" />
     <div class="topbar">
       <span
         class="top-link top-head"
@@ -54,7 +55,11 @@
             ></span>
           </router-link>
         </span>
-        <a @click="createBoard">
+        <a
+          @click="createBoard"
+          @mouseenter="showTooltip($event, 'Click to Add Board')"
+          @mouseleave="isTooltip = false"
+        >
           <b>+</b> Add a new Board
           <!-- <span class="b-context">+</span> --></a
         >
@@ -64,6 +69,7 @@
 </template>
 
 <script>
+import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
 import { mapGetters } from "vuex";
 export default {
@@ -75,10 +81,13 @@ export default {
       command: null,
       contextActive: false,
       sideshut: null,
+      dat: {},
+      isTooltip: false,
     };
   },
   components: {
     Context,
+    Tooltip,
   },
   computed: {
     ...mapGetters({
@@ -99,6 +108,17 @@ export default {
     },
   },
   methods: {
+    showTooltip(event, text) {
+      this.isTooltip = true;
+      this.dat = {
+        text: text,
+        left: event.pageX,
+        top: event.pageY,
+      };
+        setTimeout(() => {
+        this.isTooltip = false;
+      }, 1000);
+    },
     sideShutMobile() {
       if (this.sideshut) {
         this.hamToggle();
@@ -151,4 +171,207 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+//todo colors
+$bg-primary: #ffffff;
+$primary: #101629;
+$primary-light: #434449;
+$secondary: #d4d4f5;
+$secondary-light: #e1e1ff;
+// **hamburger
+.ham {
+  z-index: 1000;
+  position: absolute;
+  left: 10px;
+  display: inline-block;
+  cursor: pointer;
+  transition-property: left;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 7px 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.ham.is-active .hamburger-inner,
+.ham.is-active .hamburger-inner::before,
+.ham.is-active .hamburger-inner::after {
+  background-color: $primary;
+}
+
+.hamburger-box {
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+}
+
+.hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -1px;
+}
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  width: 28px;
+  height: 2.5px;
+  background-color: $primary;
+  border-radius: 2px;
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+.hamburger-inner::before,
+.hamburger-inner::after {
+  content: "";
+  display: block;
+}
+.hamburger-inner::before {
+  top: -5.5px;
+}
+.hamburger-inner::after {
+  bottom: -5.5px;
+}
+.is-active {
+  left: 150px;
+}
+/*
+   * Arrow Turn
+   */
+.hamburger--arrowturn.is-active .hamburger-inner {
+  transform: rotate(-180deg);
+}
+.hamburger--arrowturn.is-active .hamburger-inner::before {
+  transform: translate3d(8px, 0, 0) rotate(40deg) scale(0.7, 1);
+}
+.hamburger--arrowturn.is-active .hamburger-inner::after {
+  transform: translate3d(8px, 0, 0) rotate(-40deg) scale(0.7, 1);
+}
+
+// ** Sidebar styles
+.sidebar-active {
+  width: 200px !important;
+}
+.sidebar {
+  transition-property: width;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background-color: $secondary;
+  overflow-x: hidden;
+  a {
+    cursor: pointer;
+    padding: 6px 8px 6px 16px;
+    display: block;
+    color: $primary;
+    white-space: nowrap;
+    &:hover {
+      cursor: pointer;
+      background-color: $secondary-light !important;
+      color: $primary !important;
+    }
+  }
+  .boardActive {
+    font-weight: 600;
+  }
+  .sidebar-inner {
+    padding-top: 40px;
+  }
+  .side-att {
+    padding: 4px 8px 4px 16px;
+    display: block;
+    color: $primary;
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .b-context {
+    font-weight: bold;
+    height: 25px;
+    width: 25px;
+    position: absolute;
+    border-radius: 2px;
+    color: $primary;
+    z-index: 1000;
+    left: 170px;
+    le &:hover {
+      color: white;
+    }
+    // ** sidebar board list context fire 3dot button
+    span {
+      margin: 8px 10px;
+    }
+    span,
+    span:before,
+    span:after {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background-color: $primary;
+      border-radius: 1000px;
+      content: "";
+      display: block;
+    }
+    span:before {
+      top: -8px;
+    }
+    span:after {
+      bottom: -8px;
+    }
+  }
+}
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 33px !important;
+  background-color: $secondary;
+  .top-link {
+    padding: 6px 5px;
+  }
+  .top-head {
+    font-weight: 600;
+    text-align: right;
+    padding-right: 20px;
+  }
+}
+.side-user {
+  display: flex;
+  flex-direction: row;
+  .u-l {
+    padding: 0 5px;
+    text-align: left;
+    flex: 0 0 25%;
+    max-width: 25%;
+    img {
+      max-width: 100%;
+      width: 100%;
+      border-radius: 5px !important;
+    }
+  }
+  .u-r {
+    font-size: 16px;
+    padding: 0 5px;
+    text-align: left;
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+}
+</style>

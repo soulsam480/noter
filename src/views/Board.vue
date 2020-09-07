@@ -1,20 +1,24 @@
 <template>
   <div>
+    <Tooltip :dat="dat" v-if="isTooltip" />
     <div id="editor">
       <h2
         id="init_head"
-        class="init_head"
+        class="init_head "
         contenteditable="true"
         data-text="Untitled"
         autofocus
         @paste="autoSave"
         @input="autoSave"
+        @mouseenter="showTooltip($event, 'Click to Rename')"
+        @mouseleave="isTooltip = false"
       ></h2>
     </div>
   </div>
 </template>
 
 <script>
+import Tooltip from "@/components/Tooltip.vue";
 import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";
 import EditorJS from "@editorjs/editorjs";
@@ -37,12 +41,9 @@ export default {
       isSaved: false,
       timeout: null,
       upStatus: "",
-    };
-  },
-  computed: {
-    ...mapGetters({ user: "giveUser", boards: "boards" }),
-    boardData() {
-      const tempdata = {
+      dat: {},
+      isTooltip: false,
+      tempdata: {
         blocks: [
           {
             data: {
@@ -65,7 +66,15 @@ export default {
           },
         ],
         version: "2.18.0",
-      };
+      },
+    };
+  },
+  components: {
+    Tooltip,
+  },
+  computed: {
+    ...mapGetters({ user: "giveUser", boards: "boards" }),
+    boardData() {
       if (this.boards.find((el) => el.key === this.$route.params._slug)) {
         return {
           data: this.boards.find((el) => el.key === this.$route.params._slug)
@@ -75,9 +84,9 @@ export default {
         };
       } else {
         return {
-          data: tempdata,
+          data: this.tempdata,
           meta: {
-            name: "Untitled",
+            name: "😕 Untitled",
           },
         };
       }
@@ -85,7 +94,6 @@ export default {
     boardMeta() {
       return { name: this.boardData.meta.name };
     },
-    /*  giveEndpoint() {}, */
   },
   metaInfo() {
     return {
@@ -93,6 +101,17 @@ export default {
     };
   },
   methods: {
+    showTooltip(event, text) {
+      this.isTooltip = true;
+      this.dat = {
+        text: text,
+        left: event.pageX,
+        top: event.pageY,
+      };
+      setTimeout(() => {
+        this.isTooltip = false;
+      }, 1000);
+    },
     autoSave() {
       this.upStatus = "updating";
       this.$store.commit("setBoard", {
@@ -103,25 +122,46 @@ export default {
       this.timeout = setTimeout(() => {
         this.editor.save().then((data) => {
           const head = document.getElementById("init_head");
-          this.boardMeta.name = data.blocks[0].data.text;
-          db.ref(
-            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
-          )
-            .update({
-              meta: {
-                name: head.innerText,
-                stamp: Date.now(),
-              },
-              data: data,
-            })
-            .then(() => {
-              this.isSaved = true;
-              this.upStatus = "updated";
-              this.$store.commit("setBoard", {
-                id: this.$route.params._slug,
-                status: this.upStatus,
+          /* this.boardMeta.name = data.blocks[0].data.text; */
+          if (data === undefined) {
+            db.ref(
+              `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+            )
+              .update({
+                meta: {
+                  name: head.innerText,
+                  stamp: Date.now(),
+                },
+                data: data,
+              })
+              .then(() => {
+                this.isSaved = true;
+                this.upStatus = "updated";
+                this.$store.commit("setBoard", {
+                  id: this.$route.params._slug,
+                  status: this.upStatus,
+                });
               });
-            });
+          } else {
+            db.ref(
+              `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+            )
+              .update({
+                meta: {
+                  name: head.innerText,
+                  stamp: Date.now(),
+                },
+                data: this.tempdata,
+              })
+              .then(() => {
+                this.isSaved = true;
+                this.upStatus = "updated";
+                this.$store.commit("setBoard", {
+                  id: this.$route.params._slug,
+                  status: this.upStatus,
+                });
+              });
+          }
         });
       }, 1000);
     },
@@ -165,7 +205,7 @@ export default {
         linkTool: {
           class: Link,
           config: {
-            endpoint: endpoint /* "http://localhost:3000/get-preview" */, // Your backend endpoint for url data fetching
+            endpoint: endpoint,
           },
         },
         inlineCode: {
@@ -221,6 +261,7 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener("keydown", this._keyListener);
+    this.editor.destroy();
   },
 };
 </script>

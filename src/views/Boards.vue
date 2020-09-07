@@ -6,13 +6,39 @@
     >
       <br />
       <h4>Hi {{ user.data.name }} 👋🏼 !</h4>
-      <h3 class="">Welcome to <em>Noter</em>👏🏼</h3>
+      <h3 class="">👏🏼 Welcome to <em>Noter</em> 👏🏼</h3>
       <br />
       <h5>
         <em>Noter</em> is very easy to begin with 💥 ! Just create a
         <span class="n-btn" @click="createBoard">Board</span> and start
-        Exploring!
+        Exploring 🤯 .
       </h5>
+      <small class="text-muted"
+        >Pro Tip: add an emoji in board title for better experience!
+      </small>
+      <br />
+      <br />
+      <h4>What <em> Noter </em> can Do 😁</h4>
+      <ul class="b-ul">
+        <li><h5>Content Blocks</h5></li>
+        <li>Paragraphs</li>
+        <li>Headings</li>
+        <li>Lists</li>
+        <li>Checklists</li>
+        <li>Code Blocks</li>
+        <li>Links with Preview</li>
+        <li>Tables</li>
+      </ul>
+      <br />
+      <h4>What's in store for <em>Noter</em> 😋 ?</h4>
+      <ul class="b-ul">
+        <li>Board sharing support is coming sooon !</li>
+        <li>Image Support inside Blocks.</li>
+        <li>Improvement in error handling.</li>
+        <li>Refining the end-user experience.</li>
+        <li>Accessibility Improvements.</li>
+        <li>Some major Bug Fixes !</li>
+      </ul>
     </div>
 
     <div>
@@ -22,8 +48,7 @@
 </template>
 
 <script>
-/* import Sidebar from "@/components/Sidebar.vue";
- */ import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   name: "Boards",
   computed: {
@@ -43,10 +68,7 @@ export default {
       title: "Boards",
     };
   },
-  components: {
-    /*     Sidebar,
-     */
-  },
+  components: {},
 };
 </script>
 
@@ -55,6 +77,11 @@ export default {
   color: black;
   &:hover {
     text-decoration: underline;
+  }
+}
+.b-ul {
+  li {
+    margin-bottom: 7px;
   }
 }
 </style>

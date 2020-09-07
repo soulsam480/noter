@@ -13,10 +13,10 @@
                 <div class="card-text">
                   <p>{{ user.data.email }}</p>
                 </div>
-                <button class="n-btn btn-sm">
+                <!--  <button class="n-btn btn-sm">
                   <router-link :to="{ path: '/boards' }">My Boards</router-link>
-                </button>
-                <button class="btn btn-danger btn-sm" @click="logout">
+                </button> -->
+                <button class="n-btn" @click="logout">
                   Log Out
                 </button>
               </div>
