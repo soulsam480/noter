@@ -100,4 +100,7 @@ a {
   max-width: 100%;
   border-radius: 10000px !important;
 }
+.row {
+  align-items: center;
+}
 </style>

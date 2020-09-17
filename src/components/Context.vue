@@ -7,13 +7,6 @@
         <span @click="deleteBoard"
           ><li class="context-option">Delete Board</li></span
         >
-      <!--   <span @click="$emit('close-context')"
-          ><li class="context-option">
-            <router-link :to="{ path: `/boards/${command.key}` }"
-              >Rename</router-link
-            >
-          </li></span
-        > -->
       </ul>
     </div>
   </div>
@@ -26,7 +19,7 @@ export default {
   name: "Context",
   props: ["command"],
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: "giveUser", boards: "boards" }),
   },
   methods: {
     close() {
@@ -36,7 +29,9 @@ export default {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
         .remove()
         .then(() => {
-          /*    if() */
+          if (this.$route.fullPath !== "/boards") {
+            this.$router.push({ path: "/boards" });
+          }
         });
       this.$emit("close-context");
     },

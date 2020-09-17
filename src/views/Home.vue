@@ -20,7 +20,7 @@
         Peace ☮✌🏼
       </h4>
       <br />
-      <h4>Current v2.3.0.alpha</h4>
+      <h4>Current v0.3.0.alpha</h4>
     </div>
   </div>
 </template>

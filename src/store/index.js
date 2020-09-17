@@ -20,7 +20,7 @@ export default new Vuex.Store({
       state.user.data = data;
     },
     Boards: (state, uid) => {
-      db.ref(`/Users/${uid}/Boards/`).on("value", (snap) => {
+      db.ref(`/Users/${uid}/Boards`).on("value", (snap) => {
         state.boards = [];
         snap.forEach((csnap) => {
           if (!state.boards.find((el) => el.key === csnap.key)) {

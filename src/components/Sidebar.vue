@@ -30,9 +30,9 @@
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
         <span @click="sideShutMobile">
-          <router-link :to="{ path: '/user' }"
+          <router-link class="user-link" :to="{ path: '/user' }"
             ><div class="side-user">
-              <div class="u-l"><img :src="imgUrl" /></div>
+              <img class="u-l" :src="imgUrl" />
               <div class="u-r">{{ trunc_name(user.data.name) }}</div>
             </div></router-link
           >
@@ -61,8 +61,7 @@
           @mouseleave="isTooltip = false"
         >
           <b>+</b> Add a new Board
-          <!-- <span class="b-context">+</span> --></a
-        >
+        </a>
       </div>
     </div>
   </div>
@@ -115,7 +114,7 @@ export default {
         left: event.pageX,
         top: event.pageY,
       };
-        setTimeout(() => {
+      setTimeout(() => {
         this.isTooltip = false;
       }, 1000);
     },
@@ -220,7 +219,7 @@ $secondary-light: #e1e1ff;
 .hamburger-inner::before,
 .hamburger-inner::after {
   width: 28px;
-  height: 2.5px;
+  height: 2px;
   background-color: $primary;
   border-radius: 2px;
   position: absolute;
@@ -234,10 +233,10 @@ $secondary-light: #e1e1ff;
   display: block;
 }
 .hamburger-inner::before {
-  top: -5.5px;
+  top: -5px;
 }
 .hamburger-inner::after {
-  bottom: -5.5px;
+  bottom: -5px;
 }
 .is-active {
   left: 150px;
@@ -249,10 +248,10 @@ $secondary-light: #e1e1ff;
   transform: rotate(-180deg);
 }
 .hamburger--arrowturn.is-active .hamburger-inner::before {
-  transform: translate3d(8px, 0, 0) rotate(40deg) scale(0.7, 1);
+  transform: translate3d(8px, 0, 0) rotate(35deg) scale(0.7, 1);
 }
 .hamburger--arrowturn.is-active .hamburger-inner::after {
-  transform: translate3d(8px, 0, 0) rotate(-40deg) scale(0.7, 1);
+  transform: translate3d(8px, 0, 0) rotate(-35deg) scale(0.7, 1);
 }
 
 // ** Sidebar styles
@@ -271,7 +270,7 @@ $secondary-light: #e1e1ff;
   left: 0;
   background-color: $secondary;
   overflow-x: hidden;
-  a {
+  a:not(.user-link) {
     cursor: pointer;
     padding: 6px 8px 6px 16px;
     display: block;
@@ -355,23 +354,21 @@ $secondary-light: #e1e1ff;
 .side-user {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  align-content: flex-start;
+  justify-content: center;
+  color: $primary !important;
   .u-l {
+    flex: 0 0 20%;
+    max-width: 20%;
     padding: 0 5px;
-    text-align: left;
-    flex: 0 0 25%;
-    max-width: 25%;
-    img {
-      max-width: 100%;
-      width: 100%;
-      border-radius: 5px !important;
-    }
+    border-radius: 5px !important;
   }
   .u-r {
+    flex: 0 0 78%;
+    max-width: 78%;
     font-size: 16px;
     padding: 0 5px;
-    text-align: left;
-    flex: 0 0 75%;
-    max-width: 75%;
   }
 }
 </style>

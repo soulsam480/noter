@@ -4,10 +4,9 @@
     <div id="editor">
       <h2
         id="init_head"
-        class="init_head "
+        class="init_head"
         contenteditable="true"
         data-text="Untitled"
-        autofocus
         @paste="autoSave"
         @input="autoSave"
         @mouseenter="showTooltip($event, 'Click to Rename')"
@@ -122,7 +121,6 @@ export default {
       this.timeout = setTimeout(() => {
         this.editor.save().then((data) => {
           const head = document.getElementById("init_head");
-          /* this.boardMeta.name = data.blocks[0].data.text; */
           if (data === undefined) {
             db.ref(
               `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
@@ -144,14 +142,14 @@ export default {
               });
           } else {
             db.ref(
-              `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+              `Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
             )
               .update({
                 meta: {
                   name: head.innerText,
                   stamp: Date.now(),
                 },
-                data: this.tempdata,
+                data: data,
               })
               .then(() => {
                 this.isSaved = true;
@@ -160,6 +158,9 @@ export default {
                   id: this.$route.params._slug,
                   status: this.upStatus,
                 });
+              })
+              .catch((err) => {
+                console.log(err);
               });
           }
         });
