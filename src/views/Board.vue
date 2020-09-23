@@ -32,6 +32,7 @@ const Table = require("@editorjs/table");
 const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
+const SimpleImage = require("@editorjs/simple-image");
 export default {
   name: "Board",
   data() {
@@ -227,6 +228,7 @@ export default {
           class: Marker,
           shortcut: "CMD+SHIFT+M",
         },
+        image: SimpleImage,
       },
       data: this.boardData.data,
       logLevel: "ERROR",
@@ -252,7 +254,7 @@ export default {
   mounted() {
     const head = document.getElementById("init_head");
     head.innerHTML = this.boardData.meta.name;
-    this._keyListener = function(e) {
+    this._keyListener = (e) => {
       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         this.autoSave();
