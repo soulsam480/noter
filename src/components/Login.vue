@@ -74,9 +74,27 @@
                     />
                   </div>
 
-                  <button data-dismiss="modal" class=" n-btn" @click="login">
+                  <button
+                    data-dismiss="modal"
+                    class="n-btn"
+                    style="width:100%; margin:0;"
+                    @click="login"
+                  >
                     Login
                   </button>
+                  <br />
+                  <br />
+                  <div class="text-center">
+                    <label>Login with Social Media</label>
+                    <div>
+                      <span @click="googleLogin" data-dismiss="modal"
+                        ><img
+                          class="login-logo"
+                          src="../assets/google.svg"
+                          alt=""
+                      /></span>
+                    </div>
+                  </div>
                 </form>
               </div>
               <div
@@ -111,7 +129,12 @@
                     />
                   </div>
 
-                  <button data-dismiss="modal" class=" n-btn" @click="signUp">
+                  <button
+                    data-dismiss="modal"
+                    style="width:100%; margin:0;"
+                    class=" n-btn"
+                    @click="signUp"
+                  >
                     Sign Up
                   </button>
                 </form>
@@ -125,7 +148,7 @@
 </template>
 
 <script>
-import { auth } from "../firebase/index";
+import { auth, googleProvider } from "../firebase/index";
 export default {
   name: "Login",
   data() {
@@ -137,26 +160,38 @@ export default {
   props: [],
   computed: {},
   methods: {
-    login() {
+    async googleLogin() {
+      auth
+        .signInWithPopup(googleProvider)
+        .then(() => {
+          this.email = "";
+          this.pass = "";
+        })
+        .catch((error) => {
+          this.email = "";
+          this.pass = "";
+          window.alert(error.message);
+        });
+    },
+    async login() {
       auth
         .signInWithEmailAndPassword(this.email, this.pass)
         .then(() => {
           this.email = "";
           this.pass = "";
         })
-        .catch(function(error) {
+        .catch((error) => {
           this.email = "";
           this.pass = "";
           window.alert(error.message);
         });
     },
-    signUp() {
+    async signUp() {
       auth
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(() => {
           this.email = "";
           this.pass = "";
-          this.$router.replace({ path: "/user" });
         })
         .catch((err) => {
           this.email = "";

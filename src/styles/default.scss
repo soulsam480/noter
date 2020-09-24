@@ -135,7 +135,11 @@ a {
 }
 
 // ** Login
-
+.login-logo {
+  width: 20px;
+  margin: 5px;
+  cursor: pointer;
+}
 .modal-backdrop {
   display: none !important;
 }

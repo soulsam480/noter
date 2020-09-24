@@ -1,22 +1,31 @@
 <template>
   <div class="usernav">
+    //?context and tooltip
     <Context
       :command="command"
       v-if="contextActive"
       v-on:close-context="closeContext"
     />
     <Tooltip :dat="dat" v-if="isTooltip" />
+    //? topbar starts here
     <div class="topbar">
       <span
-        class="top-link top-head"
+        class="top-head"
         v-if="this.$route.fullPath === '/boards' || hasStatus === 'init'"
       >
         {{ this.user.data.name }}'s Noter
       </span>
-      <span class="top-link top-head" v-if="hasStatus">
+      <span class="top-head" v-if="hasStatus">
         <span style="color:green" v-if="hasStatus === 'updated'"> ✓ Saved</span>
         <span v-if="hasStatus === 'updating'">Saving</span>
       </span>
+      <!--   <span v-if="hasStatus" class="top-head top-toggle">
+      //?topbar context menu
+        <a @click="togTopContext">
+          <img src="../assets/upload.svg" ref="topContext" alt="" />
+        </a>
+      </span> -->
+      <!--  <span class="b-context"><span></span></span> -->
       <a
         @click="hamToggle"
         class="ham hamburger--arrowturn is-active"
@@ -27,6 +36,7 @@
         </span>
       </a>
     </div>
+    //? sidebar starts here
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
         <span @click="sideShutMobile">
@@ -107,6 +117,10 @@ export default {
     },
   },
   methods: {
+    togTopContext() {
+      console.log("yolo");
+      this.$refs.topContext.classList.toggle("tog-active");
+    },
     showTooltip(event, text) {
       this.isTooltip = true;
       this.dat = {
@@ -303,9 +317,9 @@ $secondary-light: #e1e1ff;
     position: absolute;
     border-radius: 2px;
     color: $primary;
-    z-index: 1000;
+    z-index: 100001;
     left: 170px;
-    le &:hover {
+    &:hover {
       color: white;
     }
     // ** sidebar board list context fire 3dot button
@@ -342,13 +356,23 @@ $secondary-light: #e1e1ff;
   width: 100%;
   height: 33px !important;
   background-color: $secondary;
-  .top-link {
-    padding: 6px 5px;
-  }
   .top-head {
+    padding: 6px 5px;
     font-weight: 600;
     text-align: right;
-    padding-right: 20px;
+  }
+  .top-toggle {
+    padding: 6px 10px 6px 5px;
+    img {
+      width: 16px;
+      transition-property: transform;
+      transition-duration: 0.15s;
+      transition-timing-function: ease-in;
+      cursor: pointer;
+    }
+    img.tog-active {
+      transform: rotate(180deg);
+    }
   }
 }
 .side-user {
