@@ -17,7 +17,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: "giveUser" })
   },
   components: {},
   methods: {
@@ -36,8 +36,8 @@ export default {
             this.$router.push({ path: "/boards" });
           }
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

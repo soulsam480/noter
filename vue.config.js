@@ -8,9 +8,9 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        sassOptions: {},
-      },
-    },
+        sassOptions: {}
+      }
+    }
   },
   pwa: {
     name: "Noter",
@@ -19,15 +19,15 @@ module.exports = {
     //todo webpack-workbox config
     workboxPluginMode: "InjectManifest",
     workboxOptions: {
-      swSrc: "./sw.js",
-    },
+      swSrc: "./sw.js"
+    }
   },
   configureWebpack: {
     optimization: {
       splitChunks: {
         minSize: 10000,
-        maxSize: 230000,
-      },
-    },
-  },
+        maxSize: 230000
+      }
+    }
+  }
 };

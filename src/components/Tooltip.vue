@@ -11,7 +11,7 @@ export default {
   mounted() {
     this.$refs.tooltip.style.left = `${this.dat.left - 20}px`;
     this.$refs.tooltip.style.top = `${this.dat.top + 10}px`;
-  },
+  }
 };
 </script>
 

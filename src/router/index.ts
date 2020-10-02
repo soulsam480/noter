@@ -13,7 +13,7 @@ const routes = [
       if (!auth.currentUser) {
         next();
       } else next({ path: "/boards" });
-    },
+    }
   },
   {
     path: "/user",
@@ -23,7 +23,7 @@ const routes = [
       if (auth.currentUser) {
         next();
       } else next({ path: "/" });
-    },
+    }
   },
   {
     path: "/boards",
@@ -39,14 +39,14 @@ const routes = [
         path: ":_slug",
         name: "Board",
         component: () => import("../views/Board.vue"),
-        params: true,
-      },
-    ],
-  },
+        params: true
+      }
+    ]
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 export default router;

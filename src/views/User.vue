@@ -31,18 +31,18 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters } from "vuex";
 import { auth } from "../firebase/index";
 export default {
   name: "User",
   data() {
     return {
-      imgUrl: "",
+      imgUrl: ""
     };
   },
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: "giveUser" })
   },
   methods: {
     logout() {
@@ -53,19 +53,19 @@ export default {
           this.$store.dispatch("fetchUser", null);
           this.$store.commit("Boards", null);
         })
-        .catch((err) => {
+        .catch(err => {
           window.alert(err);
         });
-    },
+    }
   },
   metaInfo() {
     return {
-      title: "Home",
+      title: "Home"
     };
   },
   created() {
     this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
-  },
+  }
 };
 </script>
 

@@ -29,9 +29,9 @@ import { mapGetters } from "vuex";
 export default {
   name: "Navbar",
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: "giveUser" })
   },
-  methods: {},
+  methods: {}
 };
 </script>
 

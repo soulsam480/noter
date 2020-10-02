@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Tooltip from "@/components/Tooltip.vue";
 import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";

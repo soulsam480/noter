@@ -20,7 +20,7 @@ export default {
   name: "Context",
   props: ["command"],
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: "giveUser" })
   },
   methods: {
     close() {
@@ -38,12 +38,12 @@ export default {
           }
         });
       this.$emit("close-context");
-    },
+    }
   },
   mounted() {
     this.$refs.context.style.left = `${this.command.left}px`;
     this.$refs.context.style.top = `${this.command.top}px`;
-  },
+  }
 };
 </script>
 

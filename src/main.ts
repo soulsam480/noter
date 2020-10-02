@@ -12,7 +12,7 @@ Vue.use(VueMeta);
 //firebase auth fires each time the auth state is changed
 Vue.config.productionTip = false;
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(user => {
   if (user) {
     store.dispatch("fetchUser", user);
     store.commit("Boards", user.uid);
@@ -26,5 +26,5 @@ auth.onAuthStateChanged((user) => {
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");

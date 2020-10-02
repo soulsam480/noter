@@ -154,7 +154,7 @@ export default {
   data() {
     return {
       email: "",
-      pass: "",
+      pass: ""
     };
   },
   props: [],
@@ -167,7 +167,7 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch((error) => {
+        .catch(error => {
           this.email = "";
           this.pass = "";
           window.alert(error.message);
@@ -180,7 +180,7 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch((error) => {
+        .catch(error => {
           this.email = "";
           this.pass = "";
           window.alert(error.message);
@@ -193,13 +193,13 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch((err) => {
+        .catch(err => {
           this.email = "";
           this.pass = "";
           window.alert(err.message);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

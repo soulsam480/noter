@@ -7,10 +7,10 @@ export default new Vuex.Store({
   state: {
     user: {
       loggedIn: false,
-      data: null,
+      data: null
     },
     boards: [],
-    boardStatus: {},
+    boardStatus: {}
   },
   mutations: {
     setLogIn(state, value) {
@@ -20,14 +20,14 @@ export default new Vuex.Store({
       state.user.data = data;
     },
     Boards: (state, uid) => {
-      db.ref(`/Users/${uid}/Boards`).on("value", (snap) => {
+      db.ref(`/Users/${uid}/Boards`).on("value", snap => {
         state.boards = [];
-        snap.forEach((csnap) => {
-          if (!state.boards.find((el) => el.key === csnap.key)) {
+        snap.forEach(csnap => {
+          if (!state.boards.find(el => el.key === csnap.key)) {
             state.boards.push({
               key: csnap.key,
               data: csnap.val().data,
-              meta: csnap.val().meta,
+              meta: csnap.val().meta
             });
           }
         });
@@ -38,7 +38,7 @@ export default new Vuex.Store({
     },
     setBoard: (state, data) => {
       state.boardStatus = data;
-    },
+    }
   },
   actions: {
     fetchUser({ commit }, user) {
@@ -50,23 +50,23 @@ export default new Vuex.Store({
           img: user.photoURL,
           uid: user.uid,
           num: user.phoneNumber,
-          eVer: user.emailVerified,
+          eVer: user.emailVerified
         });
       } else {
         commit("setUser", null);
       }
-    },
+    }
   },
   getters: {
-    giveUser: (state) => {
+    giveUser: state => {
       return state.user;
     },
-    boards: (state) => {
+    boards: state => {
       return state.boards;
     },
-    boardStatus: (state) => {
+    boardStatus: state => {
       return state.boardStatus;
-    },
+    }
   },
-  modules: {},
+  modules: {}
 });

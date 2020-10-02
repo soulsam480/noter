@@ -19,11 +19,11 @@ export default {
   components: {
     Navbar,
     Login,
-    Sidebar,
+    Sidebar
   },
   data() {
     return {
-      isMobile: null,
+      isMobile: null
     };
   },
   methods: {
@@ -35,7 +35,7 @@ export default {
           this.$refs.child.classList.remove("content");
         }
       }
-    },
+    }
   },
   computed: {
     ...mapGetters({ user: "giveUser" }),
@@ -56,7 +56,7 @@ export default {
           return true;
         }
       }
-    },
+    }
   },
   mounted() {
     if (window.innerWidth < 768) {
@@ -65,9 +65,9 @@ export default {
   },
   metaInfo() {
     return {
-      titleTemplate: this.defTitle,
+      titleTemplate: this.defTitle
     };
-  },
+  }
 };
 </script>
 <style lang="scss"></style>
