@@ -7,6 +7,7 @@
         <span @click="deleteBoard"
           ><li class="context-option">Delete Board</li></span
         >
+        <!--   <span @click="print"><li class="context-option">Export PDF</li></span> -->
       </ul>
     </div>
   </div>
@@ -19,12 +20,15 @@ export default {
   name: "Context",
   props: ["command"],
   computed: {
-    ...mapGetters({ user: "giveUser", boards: "boards" }),
+    ...mapGetters({ user: "giveUser" }),
   },
   methods: {
     close() {
       this.$emit("close-context");
     },
+    /*   print() {
+      window.print();
+    }, */
     deleteBoard() {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
         .remove()
@@ -49,14 +53,14 @@ $primary: #101629;
 $primary-light: #434449;
 $secondary: #d4d4f5;
 $secondary-light: #e1e1ff;
-// ** conetxt menu
+// ** context menu
 .context {
   width: 150px;
   box-shadow: 0 5px 10px 0.5px #00000057;
   background-color: $secondary;
   position: absolute;
   z-index: 2000;
-  border-radius: 5px;
+  border-radius: 2px;
   .context-options {
     list-style: none;
     padding: 5px 0;

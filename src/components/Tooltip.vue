@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <span ref="tooltip" class="tooltiptext">
-      {{ dat.text }}
-    </span>
-  </div>
+  <span ref="tooltip" class="tooltiptext">
+    {{ dat.text }}
+  </span>
 </template>
 
 <script>

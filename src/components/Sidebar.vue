@@ -1,13 +1,22 @@
 <template>
   <div class="usernav">
-    //?context and tooltip
+    <!--     // ?context and tooltip
+ -->
     <Context
       :command="command"
       v-if="contextActive"
       v-on:close-context="closeContext"
     />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    //? topbar starts here
+    <TopContext
+      v-if="hasStatus"
+      :data="bKey"
+      :class="{ topContextShow: isTopContext }"
+      class="top-context"
+      v-on:close-top="togTopContext"
+    />
+    <!--     // ? topbar starts here
+ -->
     <div class="topbar">
       <span
         class="top-head"
@@ -19,12 +28,13 @@
         <span style="color:green" v-if="hasStatus === 'updated'"> ✓ Saved</span>
         <span v-if="hasStatus === 'updating'">Saving</span>
       </span>
-      <!--   <span v-if="hasStatus" class="top-head top-toggle">
-      //?topbar context menu
+      <span v-if="hasStatus" class="top-head top-toggle">
+        <!--       // ?topbar context menu
+ -->
         <a @click="togTopContext">
           <img src="../assets/upload.svg" ref="topContext" alt="" />
         </a>
-      </span> -->
+      </span>
       <!--  <span class="b-context"><span></span></span> -->
       <a
         @click="hamToggle"
@@ -36,7 +46,8 @@
         </span>
       </a>
     </div>
-    //? sidebar starts here
+    <!--     // ? sidebar starts here
+ -->
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
         <span @click="sideShutMobile">
@@ -78,6 +89,7 @@
 </template>
 
 <script>
+import TopContext from "@/components/TopContext.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
 import { mapGetters } from "vuex";
@@ -92,11 +104,13 @@ export default {
       sideshut: null,
       dat: {},
       isTooltip: false,
+      isTopContext: false,
     };
   },
   components: {
     Context,
     Tooltip,
+    TopContext,
   },
   computed: {
     ...mapGetters({
@@ -115,19 +129,22 @@ export default {
         }
       }
     },
+    bKey() {
+      return this.$route.params._slug;
+    },
   },
   methods: {
     togTopContext() {
-      console.log("yolo");
       this.$refs.topContext.classList.toggle("tog-active");
+      this.isTopContext = !this.isTopContext;
     },
     showTooltip(event, text) {
-      this.isTooltip = true;
       this.dat = {
         text: text,
         left: event.pageX,
         top: event.pageY,
       };
+      this.isTooltip = true;
       setTimeout(() => {
         this.isTooltip = false;
       }, 1000);
@@ -149,13 +166,13 @@ export default {
       }
     },
     contextFire(key, event) {
-      this.contextActive = true;
       this.command = {
         left: event.pageX,
         top: event.pageY,
         key: key,
         display: "block",
       };
+      this.contextActive = true;
     },
     hamToggle() {
       this.sideActive = !this.sideActive;
@@ -185,6 +202,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// todo top context
+.top-context {
+  display: none;
+}
+.topContextShow {
+  display: block;
+}
+
 //todo colors
 $bg-primary: #ffffff;
 $primary: #101629;

@@ -28,12 +28,13 @@
         <li>Code Blocks</li>
         <li>Links with Preview</li>
         <li>Tables</li>
+        <li>Images (from link)</li>
       </ul>
       <br />
       <h4>What's in store for <em>Noter</em> 😋 ?</h4>
       <ul class="b-ul">
         <li>Board sharing support is coming sooon !</li>
-        <li>Image Support inside Blocks.</li>
+        <li>Image Support inside Blocks. (uploadable)</li>
         <li>Improvement in error handling.</li>
         <li>Refining the end-user experience.</li>
         <li>Accessibility Improvements.</li>
