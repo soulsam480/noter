@@ -88,7 +88,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import TopContext from "@/components/TopContext.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
@@ -104,19 +104,19 @@ export default {
       sideshut: null,
       dat: {},
       isTooltip: false,
-      isTopContext: false
+      isTopContext: false,
     };
   },
   components: {
     Context,
     Tooltip,
-    TopContext
+    TopContext,
   },
   computed: {
     ...mapGetters({
       boards: "boards",
       user: "giveUser",
-      boardStatus: "boardStatus"
+      boardStatus: "boardStatus",
     }),
     hasStatus() {
       if (this.$route.fullPath === "/boards") {
@@ -131,7 +131,7 @@ export default {
     },
     bKey() {
       return this.$route.params._slug;
-    }
+    },
   },
   methods: {
     togTopContext() {
@@ -142,7 +142,7 @@ export default {
       this.dat = {
         text: text,
         left: event.pageX,
-        top: event.pageY
+        top: event.pageY,
       };
       this.isTooltip = true;
       setTimeout(() => {
@@ -170,7 +170,7 @@ export default {
         left: event.pageX,
         top: event.pageY,
         key: key,
-        display: "block"
+        display: "block",
       };
       this.contextActive = true;
     },
@@ -186,7 +186,7 @@ export default {
         .substr(2)
         .toUpperCase();
       this.$router.push({ name: "Board", params: { _slug: id } });
-    }
+    },
   },
   mounted() {
     this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
@@ -197,7 +197,7 @@ export default {
       this.$refs.ham.classList.toggle("is-active");
       this.$refs.sidebar.classList.toggle("sidebar-active");
     }
-  }
+  },
 };
 </script>
 

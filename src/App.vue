@@ -9,7 +9,7 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import "./styles/default.scss";
 import Login from "@/components/Login.vue";
 import Navbar from "@/components/Navbar.vue";
@@ -19,15 +19,15 @@ export default {
   components: {
     Navbar,
     Login,
-    Sidebar
+    Sidebar,
   },
   data() {
     return {
-      isMobile: null
+      isMobile: null as null | boolean,
     };
   },
   methods: {
-    contentShift(dat) {
+    contentShift(dat: any) {
       if (this.user.loggedIn) {
         if (dat === true) {
           this.$refs.child.classList.add("content");
@@ -35,7 +35,7 @@ export default {
           this.$refs.child.classList.remove("content");
         }
       }
-    }
+    },
   },
   computed: {
     ...mapGetters({ user: "giveUser" }),
@@ -56,7 +56,7 @@ export default {
           return true;
         }
       }
-    }
+    },
   },
   mounted() {
     if (window.innerWidth < 768) {
@@ -65,9 +65,9 @@ export default {
   },
   metaInfo() {
     return {
-      titleTemplate: this.defTitle
+      titleTemplate: this.defTitle as string,
     };
-  }
+  },
 };
 </script>
 <style lang="scss"></style>

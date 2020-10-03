@@ -1,3 +1,4 @@
+import { Board, User } from './../ entities/models';
 import Vue from "vue";
 import Vuex from "vuex";
 import { db } from "../firebase/index";
@@ -8,8 +9,8 @@ export default new Vuex.Store({
     user: {
       loggedIn: false,
       data: null
-    },
-    boards: [],
+    } as User,
+    boards: [] as Board[],
     boardStatus: {}
   },
   mutations: {
@@ -25,7 +26,7 @@ export default new Vuex.Store({
         snap.forEach(csnap => {
           if (!state.boards.find(el => el.key === csnap.key)) {
             state.boards.push({
-              key: csnap.key,
+              key: csnap.key as string,
               data: csnap.val().data,
               meta: csnap.val().meta
             });

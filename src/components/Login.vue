@@ -147,14 +147,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { auth, googleProvider } from "../firebase/index";
 export default {
   name: "Login",
   data() {
     return {
-      email: "",
-      pass: ""
+      email: "" as string,
+      pass: "" as string,
     };
   },
   props: [],
@@ -167,7 +167,7 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch(error => {
+        .catch((error) => {
           this.email = "";
           this.pass = "";
           window.alert(error.message);
@@ -180,7 +180,7 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch(error => {
+        .catch((error) => {
           this.email = "";
           this.pass = "";
           window.alert(error.message);
@@ -193,13 +193,13 @@ export default {
           this.email = "";
           this.pass = "";
         })
-        .catch(err => {
+        .catch((err) => {
           this.email = "";
           this.pass = "";
           window.alert(err.message);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

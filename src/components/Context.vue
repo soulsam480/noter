@@ -13,14 +13,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { db } from "../firebase/index";
 import { mapGetters } from "vuex";
 export default {
   name: "Context",
   props: ["command"],
   computed: {
-    ...mapGetters({ user: "giveUser" })
+    ...mapGetters({ user: "giveUser" }),
   },
   methods: {
     close() {
@@ -38,12 +38,14 @@ export default {
           }
         });
       this.$emit("close-context");
-    }
+    },
   },
   mounted() {
+    //@ts-ignore
     this.$refs.context.style.left = `${this.command.left}px`;
+    //@ts-ignore
     this.$refs.context.style.top = `${this.command.top}px`;
-  }
+  },
 };
 </script>
 

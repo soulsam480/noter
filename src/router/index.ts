@@ -9,7 +9,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (!auth.currentUser) {
         next();
       } else next({ path: "/boards" });
@@ -19,7 +19,7 @@ const routes = [
     path: "/user",
     name: "User",
     component: () => import("../views/User.vue"),
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (auth.currentUser) {
         next();
       } else next({ path: "/" });
@@ -29,7 +29,7 @@ const routes = [
     path: "/boards",
     name: "Boards",
     component: () => import("../views/Boards.vue"),
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (auth.currentUser) {
         next();
       } else next({ path: "/" });

@@ -1,4 +1,4 @@
-import EditorJS from "@editorjs/editorjs";
+/* import EditorJS from "@editorjs/editorjs";
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -10,3 +10,4 @@ const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
 const SimpleImage = require("@editorjs/simple-image");
+ */

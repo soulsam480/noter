@@ -22,6 +22,8 @@ import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";
 import EditorJS from "@editorjs/editorjs";
 import { mapGetters } from "vuex";
+// eslint-disable-next-line
+import { Board } from "@/ entities/models";
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -37,9 +39,9 @@ export default {
   name: "Board",
   data() {
     return {
-      editor: null,
+      editor: null as null | EditorJS,
       isSaved: false,
-      timeout: null,
+      timeout: null as null | number,
       upStatus: "",
       dat: {},
       isTooltip: false,
@@ -66,7 +68,7 @@ export default {
           },
         ],
         version: "2.18.0",
-      },
+      } as object,
     };
   },
   components: {
@@ -75,33 +77,38 @@ export default {
   computed: {
     ...mapGetters({ user: "giveUser", boards: "boards" }),
     boardData() {
-      if (this.boards.find((el) => el.key === this.$route.params._slug)) {
+      if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
         return {
-          data: this.boards.find((el) => el.key === this.$route.params._slug)
-            .data,
-          meta: this.boards.find((el) => el.key === this.$route.params._slug)
-            .meta,
-        };
+          data: this.boards.find(
+            (el: any) => el.key === this.$route.params._slug
+          ).data,
+          meta: this.boards.find(
+            (el: any) => el.key === this.$route.params._slug
+          ).meta,
+        } as Board;
       } else {
         return {
+          // @ts-ignore
           data: this.tempdata,
           meta: {
             name: "😕 Untitled",
           },
-        };
+        } as Board;
       }
     },
     boardMeta() {
-      return { name: this.boardData.meta.name };
+      //@ts-ignore
+      return { name: this.boardData.meta.name } as { name: string };
     },
   },
   metaInfo() {
     return {
+      //@ts-ignore
       title: this.boardMeta.name,
-    };
+    } as { title: string };
   },
   methods: {
-    showTooltip(event, text) {
+    showTooltip(event: MouseEvent, text: string) {
       this.isTooltip = true;
       this.dat = {
         text: text,
@@ -120,14 +127,16 @@ export default {
       });
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        this.editor.save().then((data) => {
-          const head = document.getElementById("init_head");
+        //@ts-ignore
+        this.editor.save().then((data: object) => {
+          const head = document.getElementById("init_head") as HTMLElement;
           if (data === undefined) {
             db.ref(
               `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
             )
               .update({
                 meta: {
+                  // @ts-ignore
                   name: head.innerText,
                   stamp: Date.now(),
                 },
@@ -231,13 +240,14 @@ export default {
         image: SimpleImage,
       },
       data: this.boardData.data,
+      //@ts-ignore
       logLevel: "ERROR",
       onChange: () => {
         this.autoSave();
       },
-    });
+    }) as EditorJS;
 
-    if (this.boards.find((el) => el.key === this.$route.params._slug)) {
+    if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
       this.upStatus = "updated";
       this.$store.commit("setBoard", {
@@ -252,18 +262,22 @@ export default {
     }
   },
   mounted() {
-    const head = document.getElementById("init_head");
+    const head = document.getElementById("init_head") as HTMLElement;
     head.innerHTML = this.boardData.meta.name;
+    //@ts-ignore
     this._keyListener = (e) => {
       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         this.autoSave();
       }
     };
+    //@ts-ignore
     document.addEventListener("keydown", this._keyListener.bind(this));
   },
   beforeDestroy() {
+    //@ts-ignore
     document.removeEventListener("keydown", this._keyListener);
+    //@ts-ignore
     this.editor.destroy();
   },
 };
