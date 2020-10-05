@@ -93,13 +93,51 @@ import TopContext from "@/components/TopContext.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+import { Board, BoardStatus, User } from "@/ entities/models";
+interface Data {
+  imgUrl: string;
+  sideActive: boolean;
+  command: {
+    left?: number;
+    top?: number;
+    key?: string;
+    display?: string;
+  };
+  contextActive: boolean;
+  sideshut: null | boolean;
+  dat: {
+    text?: string;
+    left?: number;
+    top?: number;
+  };
+  isTooltip: boolean;
+  isTopContext: boolean;
+}
+interface Computed {
+  user: User;
+  boards: Board[];
+  boardStatus: BoardStatus;
+  hasStatus: null | string;
+  bKey: string;
+}
+interface Methods {
+  togTopContext: () => void;
+  showTooltip: (event: any, text: string) => void;
+  sideShutMobile: () => void;
+  closeContext: () => void;
+  trunc_name: (str: string) => string;
+  contextFire: (key: string, event: any) => void;
+  hamToggle: () => void;
+  createBoard: () => void;
+}
+export default Vue.extend<Data, Methods, Computed>({
   name: "Sidebar",
   data() {
     return {
       imgUrl: "",
       sideActive: true,
-      command: null,
+      command: {},
       contextActive: false,
       sideshut: null,
       dat: {},
@@ -113,11 +151,15 @@ export default {
     TopContext,
   },
   computed: {
-    ...mapGetters({
-      boards: "boards",
-      user: "giveUser",
-      boardStatus: "boardStatus",
-    }),
+    user() {
+      return this.$store.getters.giveUser;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
+    boardStatus() {
+      return this.$store.getters.boardStatus;
+    },
     hasStatus() {
       if (this.$route.fullPath === "/boards") {
         return null;
@@ -135,6 +177,7 @@ export default {
   },
   methods: {
     togTopContext() {
+      //@ts-ignore
       this.$refs.topContext.classList.toggle("tog-active");
       this.isTopContext = !this.isTopContext;
     },
@@ -177,7 +220,9 @@ export default {
     hamToggle() {
       this.sideActive = !this.sideActive;
       this.$emit("side_event", this.sideActive);
+      //@ts-ignore
       this.$refs.ham.classList.toggle("is-active");
+      //@ts-ignore
       this.$refs.sidebar.classList.toggle("sidebar-active");
     },
     createBoard() {
@@ -194,11 +239,13 @@ export default {
       this.sideshut = true;
       this.sideActive = !this.sideActive;
       this.$emit("side_event", this.sideActive);
+      //@ts-ignore
       this.$refs.ham.classList.toggle("is-active");
+      //@ts-ignore
       this.$refs.sidebar.classList.toggle("sidebar-active");
     }
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

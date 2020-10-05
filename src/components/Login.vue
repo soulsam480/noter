@@ -149,7 +149,8 @@
 
 <script lang="ts">
 import { auth, googleProvider } from "../firebase/index";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "Login",
   data() {
     return {
@@ -200,7 +201,7 @@ export default {
         });
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

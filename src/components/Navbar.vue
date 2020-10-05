@@ -26,13 +26,14 @@
 
 <script>
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "Navbar",
   computed: {
-    ...mapGetters({ user: "giveUser" })
+    ...mapGetters({ user: "giveUser" }),
   },
-  methods: {}
-};
+  methods: {},
+});
 </script>
 
 <style lang="scss" scoped></style>

@@ -32,17 +32,31 @@
 </template>
 
 <script lang="ts">
-import { mapGetters } from "vuex";
 import { auth } from "../firebase/index";
-export default {
-  name: "User",
+import Vue from "vue";
+import { User } from "@/ entities/models";
+
+interface Data {
+  imgUrl: string;
+}
+
+interface Computed {
+  user: User;
+}
+interface Methods {
+  logout: () => void;
+}
+export default Vue.extend<Data, Methods, Computed>({
+  /*  name: "User", */
   data() {
     return {
-      imgUrl: "" as string,
+      imgUrl: "",
     };
   },
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    user() {
+      return this.$store.getters.giveUser;
+    },
   },
   methods: {
     logout() {
@@ -66,7 +80,7 @@ export default {
   created() {
     this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

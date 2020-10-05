@@ -17,13 +17,13 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import Tooltip from "@/components/Tooltip.vue";
-import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";
-import EditorJS from "@editorjs/editorjs";
-import { mapGetters } from "vuex";
-// eslint-disable-next-line
-import { Board } from "@/ entities/models";
+import endpoint from "../miscred/prelink";
+import EditorJS from "@editorjs/editorjs"; // eslint-disable-next-line
+/* import { mapGetters } from "vuex";
+ */ import { Blocks, Board, User } from "@/ entities/models";
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -35,7 +35,27 @@ const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
 const SimpleImage = require("@editorjs/simple-image");
-export default {
+//todo adding interface and types for the Vue 2 Options API. It better to move to Vue 3 😫
+interface Data {
+  editor: null | EditorJS;
+  isSaved: boolean;
+  timeout: null | number;
+  upStatus: string;
+  dat: object;
+  isTooltip: boolean;
+  tempdata: object;
+}
+interface Computed {
+  boardData: Board;
+  user: User;
+  boards: Board[];
+}
+interface Methods {
+  showTooltip: (event: MouseEvent, text: string) => void;
+  autoSave: () => void;
+}
+// todo using types in the instance
+export default Vue.extend<Data, Methods, Computed>({
   name: "Board",
   data() {
     return {
@@ -43,7 +63,7 @@ export default {
       isSaved: false,
       timeout: null as null | number,
       upStatus: "",
-      dat: {},
+      dat: {} as object,
       isTooltip: false,
       tempdata: {
         blocks: [
@@ -68,24 +88,32 @@ export default {
           },
         ],
         version: "2.18.0",
-      } as object,
+      },
     };
   },
   components: {
     Tooltip,
   },
   computed: {
-    ...mapGetters({ user: "giveUser", boards: "boards" }),
+    user() {
+      return this.$store.getters.giveUser as User;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
+    //@ts-ignore
     boardData() {
       if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
         return {
+          //@ts-ignore
           data: this.boards.find(
-            (el: any) => el.key === this.$route.params._slug
+            (el: Board) => el.key === this.$route.params._slug
           ).data,
+          //@ts-ignore
           meta: this.boards.find(
-            (el: any) => el.key === this.$route.params._slug
+            (el: Board) => el.key === this.$route.params._slug
           ).meta,
-        } as Board;
+        };
       } else {
         return {
           // @ts-ignore
@@ -93,19 +121,15 @@ export default {
           meta: {
             name: "😕 Untitled",
           },
-        } as Board;
+        };
       }
-    },
-    boardMeta() {
-      //@ts-ignore
-      return { name: this.boardData.meta.name } as { name: string };
     },
   },
   metaInfo() {
     return {
       //@ts-ignore
-      title: this.boardMeta.name,
-    } as { title: string };
+      title: this.boardData.meta.name,
+    };
   },
   methods: {
     showTooltip(event: MouseEvent, text: string) {
@@ -280,7 +304,7 @@ export default {
     //@ts-ignore
     this.editor.destroy();
   },
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

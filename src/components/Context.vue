@@ -16,7 +16,9 @@
 <script lang="ts">
 import { db } from "../firebase/index";
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "Context",
   props: ["command"],
   computed: {
@@ -46,7 +48,7 @@ export default {
     //@ts-ignore
     this.$refs.context.style.top = `${this.command.top}px`;
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

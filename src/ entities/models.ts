@@ -1,5 +1,5 @@
 export interface Board {
-    key: string,
+    key?: string,
     data: {
         blocks: [],
         version: string
@@ -9,7 +9,19 @@ export interface Board {
         stamp: number
     }
 }
-
+//? unused
+export interface Blocks {
+    blocks: [{
+        data?: {
+            level?: number,
+            text?: string,
+            items?: [""],
+            style?: string
+        },
+        type?: string
+    }],
+    version: string
+}
 export interface User {
     loggedIn: boolean,
     data: {
@@ -19,5 +31,10 @@ export interface User {
         img: string,
         num: number,
         eVer: boolean
-    } | null
+    }
+}
+
+export interface BoardStatus {
+    id: string,
+    status: string
 }

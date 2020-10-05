@@ -1,4 +1,4 @@
-import { Board, User } from './../ entities/models';
+import { Board, User, BoardStatus } from './../ entities/models';
 import Vue from "vue";
 import Vuex from "vuex";
 import { db } from "../firebase/index";
@@ -8,10 +8,10 @@ export default new Vuex.Store({
   state: {
     user: {
       loggedIn: false,
-      data: null
+      data: {}
     } as User,
     boards: [] as Board[],
-    boardStatus: {}
+    boardStatus: {} as BoardStatus
   },
   mutations: {
     setLogIn(state, value) {
@@ -54,7 +54,7 @@ export default new Vuex.Store({
           eVer: user.emailVerified
         });
       } else {
-        commit("setUser", null);
+        commit("setUser", {});
       }
     }
   },

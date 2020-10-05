@@ -10,14 +10,15 @@
 <script>
 import { mapGetters } from "vuex";
 import { db } from "../firebase/index";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "TopContext",
   props: ["data"],
   data() {
     return {};
   },
   computed: {
-    ...mapGetters({ user: "giveUser" })
+    ...mapGetters({ user: "giveUser" }),
   },
   components: {},
   methods: {
@@ -36,9 +37,9 @@ export default {
             this.$router.push({ path: "/boards" });
           }
         });
-    }
-  }
-};
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

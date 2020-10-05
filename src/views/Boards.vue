@@ -50,10 +50,34 @@
 
 <script lang="ts">
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+import { User } from 'firebase';
+import { Board } from '@/ entities/models';
+//todo interfaces 
+
+interface Computed{
+  user: User;
+  boards: Board[];
+}
+
+interface Methods{
+  createBoard: ()=>void
+}
+
+interface Data{
+
+}
+
+export default Vue.extend<Computed, Methods,Data>({
   name: "Boards",
   computed: {
-    ...mapGetters({ boards: "boards", user: "giveUser" }),
+  /*   ...mapGetters({ boards: "boards", user: "giveUser" }), */
+      user() {
+      return this.$store.getters.giveUser as User;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
   },
   methods: {
     createBoard() {
@@ -70,7 +94,7 @@ export default {
     };
   },
   components: {},
-};
+});
 </script>
 
 <style lang="scss" scoped>
