@@ -68,7 +68,7 @@
             :to="{ name: 'Board', params: { _slug: board.key } }"
             :class="{ boardActive: $route.params._slug === board.key }"
           >
-            {{ trunc_name(board.meta.name) }}
+            {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
             <span
               class="b-context"
               @click.prevent="contextFire(board.key, $event)"
@@ -92,8 +92,8 @@
 import TopContext from "@/components/TopContext.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
-import { mapGetters } from "vuex";
 import Vue from "vue";
+// eslint-disable-next-line
 import { Board, BoardStatus, User } from "@/ entities/models";
 interface Data {
   imgUrl: string;
@@ -201,7 +201,7 @@ export default Vue.extend<Data, Methods, Computed>({
       this.contextActive = false;
     },
     trunc_name(str) {
-      const length = 22;
+      const length = 18;
       if (str.length > length) {
         return str.substring(0, length - 3) + "...";
       } else {

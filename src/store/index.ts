@@ -1,4 +1,4 @@
-import { Board, User, BoardStatus } from './../ entities/models';
+import { Board, User, BoardStatus, UserData } from "./../ entities/models";
 import Vue from "vue";
 import Vuex from "vuex";
 import { db } from "../firebase/index";
@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     user: {
       loggedIn: false,
-      data: {}
+      data: {},
     } as User,
     boards: [] as Board[],
     boardStatus: {} as BoardStatus
@@ -17,7 +17,7 @@ export default new Vuex.Store({
     setLogIn(state, value) {
       state.user.loggedIn = value;
     },
-    setUser(state, data) {
+    setUser(state, data: UserData) {
       state.user.data = data;
     },
     Boards: (state, uid) => {
@@ -28,8 +28,8 @@ export default new Vuex.Store({
             state.boards.push({
               key: csnap.key as string,
               data: csnap.val().data,
-              meta: csnap.val().meta
-            });
+              meta: csnap.val().meta,
+            } as Board);
           }
         });
         state.boards.sort((a, b) => {
@@ -43,6 +43,13 @@ export default new Vuex.Store({
   },
   actions: {
     fetchUser({ commit }, user) {
+      //todo BUG
+      /**
+       * ? exp
+       * for the setlogin mutation two work properly, the user needs to be either null or an object
+       * As in the user type , it can only be a object this may break the code
+       * todo check this
+       */
       commit("setLogIn", user !== null);
       if (user) {
         commit("setUser", {
@@ -52,20 +59,20 @@ export default new Vuex.Store({
           uid: user.uid,
           num: user.phoneNumber,
           eVer: user.emailVerified
-        });
+        } as UserData);
       } else {
-        commit("setUser", {});
+        commit("setUser", null);
       }
     }
   },
   getters: {
-    giveUser: state => {
+    giveUser: (state): User => {
       return state.user;
     },
-    boards: state => {
+    boards: (state): Board[] => {
       return state.boards;
     },
-    boardStatus: state => {
+    boardStatus: (state): BoardStatus => {
       return state.boardStatus;
     }
   },

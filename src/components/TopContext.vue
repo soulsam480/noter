@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <ul class="child">
-      <li @click="print">Export PDF</li>
+      <li @click="print">Print PDF</li>
       <li @click="deleteBoard">Delete</li>
     </ul>
   </div>

@@ -1,7 +1,18 @@
 <template>
   <div>
+    <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    <div id="editor">
+<!--     main editor container
+ -->    <div id="editor">
+      <h1
+        class="board-cover"
+        @click="togEmoji"
+        id="init_cover"
+        @mouseenter="showTooltip($event, 'Change Cover')"
+        @mouseleave="isTooltip = false"
+      >
+        {{ boardData.meta.cover }}
+      </h1>
       <h2
         id="init_head"
         class="init_head"
@@ -9,7 +20,7 @@
         data-text="Untitled"
         @paste="autoSave"
         @input="autoSave"
-        @mouseenter="showTooltip($event, 'Click to Rename')"
+        @mouseenter="showTooltip($event, 'Change Title')"
         @mouseleave="isTooltip = false"
       ></h2>
     </div>
@@ -22,8 +33,9 @@ import Tooltip from "@/components/Tooltip.vue";
 import { db } from "../firebase/index";
 import endpoint from "../miscred/prelink";
 import EditorJS from "@editorjs/editorjs"; // eslint-disable-next-line
-/* import { mapGetters } from "vuex";
- */ import { Blocks, Board, User } from "@/ entities/models";
+import { Board, User } from "@/ entities/models";
+import VEmojiPicker from "v-emoji-picker";
+
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -35,7 +47,7 @@ const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
 const SimpleImage = require("@editorjs/simple-image");
-//todo adding interface and types for the Vue 2 Options API. It better to move to Vue 3 😫
+//todo adding interface and types for the Vue 2 Options API. It's better to move to Vue 3 😫
 interface Data {
   editor: null | EditorJS;
   isSaved: boolean;
@@ -44,6 +56,8 @@ interface Data {
   dat: object;
   isTooltip: boolean;
   tempdata: object;
+  isCover: boolean;
+  cover: string;
 }
 interface Computed {
   boardData: Board;
@@ -53,18 +67,22 @@ interface Computed {
 interface Methods {
   showTooltip: (event: MouseEvent, text: string) => void;
   autoSave: () => void;
+  selectEmoji: (emoji: any) => void;
+  togEmoji: () => void;
 }
 // todo using types in the instance
 export default Vue.extend<Data, Methods, Computed>({
   name: "Board",
   data() {
     return {
-      editor: null as null | EditorJS,
+      editor: null,
       isSaved: false,
-      timeout: null as null | number,
+      timeout: null,
       upStatus: "",
-      dat: {} as object,
+      dat: {},
       isTooltip: false,
+      isCover: false,
+      cover: "",
       tempdata: {
         blocks: [
           {
@@ -93,6 +111,7 @@ export default Vue.extend<Data, Methods, Computed>({
   },
   components: {
     Tooltip,
+    VEmojiPicker,
   },
   computed: {
     user() {
@@ -119,7 +138,8 @@ export default Vue.extend<Data, Methods, Computed>({
           // @ts-ignore
           data: this.tempdata,
           meta: {
-            name: "😕 Untitled",
+            name: "Untitled",
+            cover: "🔰",
           },
         };
       }
@@ -128,10 +148,18 @@ export default Vue.extend<Data, Methods, Computed>({
   metaInfo() {
     return {
       //@ts-ignore
-      title: this.boardData.meta.name,
+      title: `${this.boardData.meta.cover}  ${this.boardData.meta.name}`,
     };
   },
   methods: {
+    togEmoji() {
+      this.isCover = !this.isCover;
+    },
+    selectEmoji(emoji): void {
+      this.cover = emoji.data;
+      this.autoSave();
+      this.isCover = false;
+    },
     showTooltip(event: MouseEvent, text: string) {
       this.isTooltip = true;
       this.dat = {
@@ -154,27 +182,30 @@ export default Vue.extend<Data, Methods, Computed>({
         //@ts-ignore
         this.editor.save().then((data: object) => {
           const head = document.getElementById("init_head") as HTMLElement;
-          if (data === undefined) {
-            db.ref(
-              `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
-            )
-              .update({
-                meta: {
-                  // @ts-ignore
-                  name: head.innerText,
-                  stamp: Date.now(),
-                },
-                data: data,
-              })
-              .then(() => {
-                this.isSaved = true;
-                this.upStatus = "updated";
-                this.$store.commit("setBoard", {
-                  id: this.$route.params._slug,
-                  status: this.upStatus,
-                });
+          //?opt
+          /*           if (data === undefined) {
+           */ db.ref(
+            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+          )
+            .update({
+              meta: {
+                // @ts-ignore
+                name: head.innerText,
+                stamp: Date.now(),
+                cover: this.cover,
+              },
+              data: data,
+            })
+            .then(() => {
+              this.isSaved = true;
+              this.upStatus = "updated";
+              this.$store.commit("setBoard", {
+                id: this.$route.params._slug,
+                status: this.upStatus,
               });
-          } else {
+            });
+          //?opt
+          /*    } else {
             db.ref(
               `Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
             )
@@ -196,7 +227,7 @@ export default Vue.extend<Data, Methods, Computed>({
               .catch((err) => {
                 console.log(err);
               });
-          }
+          } */
         });
       }, 1000);
     },
@@ -287,6 +318,7 @@ export default Vue.extend<Data, Methods, Computed>({
   },
   mounted() {
     const head = document.getElementById("init_head") as HTMLElement;
+    this.cover = this.boardData.meta.cover;
     head.innerHTML = this.boardData.meta.name;
     //@ts-ignore
     this._keyListener = (e) => {
