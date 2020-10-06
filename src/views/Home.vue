@@ -9,18 +9,20 @@
     <div class="px-lg-5">
       <h4>
         <em><u>Noter</u></em> is a free note taking and sharing platform built
-        with Vuejs & Firebase. It lets users take and share notes in realtime
-        and also for free without any limits!! Most of the features are
-        currently in alpha.
+        with Vuejs & Firebase. <br />
+        It lets users take and share notes in realtime and also for free without
+        any limits!! Most of the features are currently in beta.
       </h4>
       <br />
+      <h4>🎊 Noter is out for open beta</h4>
+      <br />
       <h4>
-        Login or Signup to Explore alpha features. <br />
+        🔰 Login or Signup to Explore 🔰<br />
         <br />
         Peace ☮✌🏼
       </h4>
       <br />
-      <h4>Current v0.3.0.alpha</h4>
+      <h4>Current v0.3.0.beta</h4>
     </div>
   </div>
 </template>
@@ -30,7 +32,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Home",
-  components: {
-  }
+  components: {},
 });
 </script>
