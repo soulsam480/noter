@@ -34,6 +34,7 @@
 <script lang="ts">
 import { auth } from "../firebase/index";
 import Vue from "vue";
+//eslint-disable-next-line
 import { User } from "@/ entities/models";
 
 interface Data {

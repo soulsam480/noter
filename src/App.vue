@@ -15,6 +15,7 @@ import "./styles/default.scss";
 import Login from "@/components/Login.vue";
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
+//eslint-disable-next-line
 import { User } from "./ entities/models";
 interface Data {
   isMobile: null | boolean;

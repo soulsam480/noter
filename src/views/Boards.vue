@@ -49,30 +49,27 @@
 </template>
 
 <script lang="ts">
-import { mapGetters } from "vuex";
 import Vue from "vue";
-import { User } from 'firebase';
-import { Board } from '@/ entities/models';
-//todo interfaces 
+//eslint-disable-next-line
+import { Board, User } from "@/ entities/models";
+//todo interfaces
 
-interface Computed{
+interface Computed {
   user: User;
   boards: Board[];
 }
 
-interface Methods{
-  createBoard: ()=>void
+interface Methods {
+  createBoard: () => void;
 }
 
-interface Data{
+interface Data {}
 
-}
-
-export default Vue.extend<Computed, Methods,Data>({
+export default Vue.extend<Computed, Methods, Data>({
   name: "Boards",
   computed: {
-  /*   ...mapGetters({ boards: "boards", user: "giveUser" }), */
-      user() {
+    /*   ...mapGetters({ boards: "boards", user: "giveUser" }), */
+    user() {
       return this.$store.getters.giveUser as User;
     },
     boards() {

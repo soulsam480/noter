@@ -67,6 +67,7 @@
           <router-link
             :to="{ name: 'Board', params: { _slug: board.key } }"
             :class="{ boardActive: $route.params._slug === board.key }"
+            :title="board.meta.name"
           >
             {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
             <span

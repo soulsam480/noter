@@ -2,8 +2,9 @@
   <div>
     <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
-<!--     main editor container
- -->    <div id="editor">
+    <!--     main editor container
+ -->
+    <div id="editor">
       <h1
         class="board-cover"
         @click="togEmoji"
@@ -317,8 +318,17 @@ export default Vue.extend<Data, Methods, Computed>({
     }
   },
   mounted() {
+    if (
+      this.boardData.meta.cover === "" ||
+      this.boardData.meta.cover === undefined ||
+      this.cover === undefined
+    ) {
+      this.cover = "🔰";
+      this.autoSave();
+    } else {
+      this.cover = this.boardData.meta.cover;
+    }
     const head = document.getElementById("init_head") as HTMLElement;
-    this.cover = this.boardData.meta.cover;
     head.innerHTML = this.boardData.meta.name;
     //@ts-ignore
     this._keyListener = (e) => {
