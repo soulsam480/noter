@@ -147,14 +147,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { auth, googleProvider } from "../firebase/index";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "Login",
   data() {
     return {
-      email: "",
-      pass: "",
+      email: "" as string,
+      pass: "" as string,
     };
   },
   props: [],
@@ -200,7 +201,7 @@ export default {
         });
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

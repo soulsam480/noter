@@ -25,19 +25,12 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "home",
-  computed: {},
-  data() {
-    return {};
-  },
-  components: {},
-  created() {},
-  metaInfo: {
-    title: "Noter | A collborative note taking app",
-  },
-};
-</script>
+<script lang="ts">
+import Vue from "vue";
 
-<style lang="scss" scoped></style>
+export default Vue.extend({
+  name: "Home",
+  components: {
+  }
+});
+</script>

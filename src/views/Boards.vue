@@ -28,12 +28,13 @@
         <li>Code Blocks</li>
         <li>Links with Preview</li>
         <li>Tables</li>
+        <li>Images (from link)</li>
       </ul>
       <br />
       <h4>What's in store for <em>Noter</em> 😋 ?</h4>
       <ul class="b-ul">
         <li>Board sharing support is coming sooon !</li>
-        <li>Image Support inside Blocks.</li>
+        <li>Image Support inside Blocks. (uploadable)</li>
         <li>Improvement in error handling.</li>
         <li>Refining the end-user experience.</li>
         <li>Accessibility Improvements.</li>
@@ -47,12 +48,36 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+import { User } from 'firebase';
+import { Board } from '@/ entities/models';
+//todo interfaces 
+
+interface Computed{
+  user: User;
+  boards: Board[];
+}
+
+interface Methods{
+  createBoard: ()=>void
+}
+
+interface Data{
+
+}
+
+export default Vue.extend<Computed, Methods,Data>({
   name: "Boards",
   computed: {
-    ...mapGetters({ boards: "boards", user: "giveUser" }),
+  /*   ...mapGetters({ boards: "boards", user: "giveUser" }), */
+      user() {
+      return this.$store.getters.giveUser as User;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
   },
   methods: {
     createBoard() {
@@ -69,7 +94,7 @@ export default {
     };
   },
   components: {},
-};
+});
 </script>
 
 <style lang="scss" scoped>

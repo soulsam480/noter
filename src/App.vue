@@ -9,13 +9,25 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from "vue";
 import "./styles/default.scss";
 import Login from "@/components/Login.vue";
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import { mapGetters } from "vuex";
-export default {
+import { User } from "./ entities/models";
+interface Data {
+  isMobile: null | boolean;
+}
+interface Methods {
+  contentShift: (dat: any) => void;
+}
+interface Computed {
+  user: User;
+  defTitle: string;
+  isHome: boolean;
+}
+export default Vue.extend<Data, Methods, Computed>({
   components: {
     Navbar,
     Login,
@@ -23,22 +35,26 @@ export default {
   },
   data() {
     return {
-      isMobile: null,
+      isMobile: null as null | boolean,
     };
   },
   methods: {
-    contentShift(dat) {
+    contentShift(dat: any) {
       if (this.user.loggedIn) {
         if (dat === true) {
+          //@ts-ignore
           this.$refs.child.classList.add("content");
         } else {
+          //@ts-ignore
           this.$refs.child.classList.remove("content");
         }
       }
     },
   },
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    user() {
+      return this.$store.getters.giveUser;
+    },
     defTitle() {
       if (this.user.loggedIn) {
         return `%s | ${this.user.data.name}'s Noter`;
@@ -65,9 +81,9 @@ export default {
   },
   metaInfo() {
     return {
-      titleTemplate: this.defTitle,
+      titleTemplate: this.defTitle as string,
     };
   },
-};
+});
 </script>
 <style lang="scss"></style>

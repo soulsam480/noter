@@ -1,7 +1,18 @@
 <template>
   <div>
+    <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    <div id="editor">
+<!--     main editor container
+ -->    <div id="editor">
+      <h1
+        class="board-cover"
+        @click="togEmoji"
+        id="init_cover"
+        @mouseenter="showTooltip($event, 'Change Cover')"
+        @mouseleave="isTooltip = false"
+      >
+        {{ boardData.meta.cover }}
+      </h1>
       <h2
         id="init_head"
         class="init_head"
@@ -9,19 +20,22 @@
         data-text="Untitled"
         @paste="autoSave"
         @input="autoSave"
-        @mouseenter="showTooltip($event, 'Click to Rename')"
+        @mouseenter="showTooltip($event, 'Change Title')"
         @mouseleave="isTooltip = false"
       ></h2>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import Tooltip from "@/components/Tooltip.vue";
-import endpoint from "../miscred/prelink";
 import { db } from "../firebase/index";
-import EditorJS from "@editorjs/editorjs";
-import { mapGetters } from "vuex";
+import endpoint from "../miscred/prelink";
+import EditorJS from "@editorjs/editorjs"; // eslint-disable-next-line
+import { Board, User } from "@/ entities/models";
+import VEmojiPicker from "v-emoji-picker";
+
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -33,7 +47,31 @@ const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
 const SimpleImage = require("@editorjs/simple-image");
-export default {
+//todo adding interface and types for the Vue 2 Options API. It's better to move to Vue 3 😫
+interface Data {
+  editor: null | EditorJS;
+  isSaved: boolean;
+  timeout: null | number;
+  upStatus: string;
+  dat: object;
+  isTooltip: boolean;
+  tempdata: object;
+  isCover: boolean;
+  cover: string;
+}
+interface Computed {
+  boardData: Board;
+  user: User;
+  boards: Board[];
+}
+interface Methods {
+  showTooltip: (event: MouseEvent, text: string) => void;
+  autoSave: () => void;
+  selectEmoji: (emoji: any) => void;
+  togEmoji: () => void;
+}
+// todo using types in the instance
+export default Vue.extend<Data, Methods, Computed>({
   name: "Board",
   data() {
     return {
@@ -43,6 +81,8 @@ export default {
       upStatus: "",
       dat: {},
       isTooltip: false,
+      isCover: false,
+      cover: "",
       tempdata: {
         blocks: [
           {
@@ -71,37 +111,56 @@ export default {
   },
   components: {
     Tooltip,
+    VEmojiPicker,
   },
   computed: {
-    ...mapGetters({ user: "giveUser", boards: "boards" }),
+    user() {
+      return this.$store.getters.giveUser as User;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
+    //@ts-ignore
     boardData() {
-      if (this.boards.find((el) => el.key === this.$route.params._slug)) {
+      if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
         return {
-          data: this.boards.find((el) => el.key === this.$route.params._slug)
-            .data,
-          meta: this.boards.find((el) => el.key === this.$route.params._slug)
-            .meta,
+          //@ts-ignore
+          data: this.boards.find(
+            (el: Board) => el.key === this.$route.params._slug
+          ).data,
+          //@ts-ignore
+          meta: this.boards.find(
+            (el: Board) => el.key === this.$route.params._slug
+          ).meta,
         };
       } else {
         return {
+          // @ts-ignore
           data: this.tempdata,
           meta: {
-            name: "😕 Untitled",
+            name: "Untitled",
+            cover: "🔰",
           },
         };
       }
     },
-    boardMeta() {
-      return { name: this.boardData.meta.name };
-    },
   },
   metaInfo() {
     return {
-      title: this.boardMeta.name,
+      //@ts-ignore
+      title: `${this.boardData.meta.cover}  ${this.boardData.meta.name}`,
     };
   },
   methods: {
-    showTooltip(event, text) {
+    togEmoji() {
+      this.isCover = !this.isCover;
+    },
+    selectEmoji(emoji): void {
+      this.cover = emoji.data;
+      this.autoSave();
+      this.isCover = false;
+    },
+    showTooltip(event: MouseEvent, text: string) {
       this.isTooltip = true;
       this.dat = {
         text: text,
@@ -120,28 +179,33 @@ export default {
       });
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        this.editor.save().then((data) => {
-          const head = document.getElementById("init_head");
-          if (data === undefined) {
-            db.ref(
-              `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
-            )
-              .update({
-                meta: {
-                  name: head.innerText,
-                  stamp: Date.now(),
-                },
-                data: data,
-              })
-              .then(() => {
-                this.isSaved = true;
-                this.upStatus = "updated";
-                this.$store.commit("setBoard", {
-                  id: this.$route.params._slug,
-                  status: this.upStatus,
-                });
+        //@ts-ignore
+        this.editor.save().then((data: object) => {
+          const head = document.getElementById("init_head") as HTMLElement;
+          //?opt
+          /*           if (data === undefined) {
+           */ db.ref(
+            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+          )
+            .update({
+              meta: {
+                // @ts-ignore
+                name: head.innerText,
+                stamp: Date.now(),
+                cover: this.cover,
+              },
+              data: data,
+            })
+            .then(() => {
+              this.isSaved = true;
+              this.upStatus = "updated";
+              this.$store.commit("setBoard", {
+                id: this.$route.params._slug,
+                status: this.upStatus,
               });
-          } else {
+            });
+          //?opt
+          /*    } else {
             db.ref(
               `Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
             )
@@ -163,7 +227,7 @@ export default {
               .catch((err) => {
                 console.log(err);
               });
-          }
+          } */
         });
       }, 1000);
     },
@@ -231,13 +295,14 @@ export default {
         image: SimpleImage,
       },
       data: this.boardData.data,
+      //@ts-ignore
       logLevel: "ERROR",
       onChange: () => {
         this.autoSave();
       },
-    });
+    }) as EditorJS;
 
-    if (this.boards.find((el) => el.key === this.$route.params._slug)) {
+    if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
       this.upStatus = "updated";
       this.$store.commit("setBoard", {
@@ -252,21 +317,26 @@ export default {
     }
   },
   mounted() {
-    const head = document.getElementById("init_head");
+    const head = document.getElementById("init_head") as HTMLElement;
+    this.cover = this.boardData.meta.cover;
     head.innerHTML = this.boardData.meta.name;
+    //@ts-ignore
     this._keyListener = (e) => {
       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         this.autoSave();
       }
     };
+    //@ts-ignore
     document.addEventListener("keydown", this._keyListener.bind(this));
   },
   beforeDestroy() {
+    //@ts-ignore
     document.removeEventListener("keydown", this._keyListener);
+    //@ts-ignore
     this.editor.destroy();
   },
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

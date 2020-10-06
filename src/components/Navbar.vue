@@ -13,7 +13,7 @@
             data-toggle="modal"
             data-target="#loginModal"
             class="nav-link float-right"
-            >Login/Signup
+            >👉🏼 Login/Signup
           </a>
           <router-link class="nav-link" v-else :to="{ path: '/user' }"
             >{{ user.data.name }}
@@ -26,13 +26,14 @@
 
 <script>
 import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "Navbar",
   computed: {
     ...mapGetters({ user: "giveUser" }),
   },
   methods: {},
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

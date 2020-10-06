@@ -1,13 +1,22 @@
 <template>
   <div class="usernav">
-    //?context and tooltip
+    <!--     // ?context and tooltip
+ -->
     <Context
       :command="command"
       v-if="contextActive"
       v-on:close-context="closeContext"
     />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    //? topbar starts here
+    <TopContext
+      v-if="hasStatus"
+      :data="bKey"
+      :class="{ topContextShow: isTopContext }"
+      class="top-context"
+      v-on:close-top="togTopContext"
+    />
+    <!--     // ? topbar starts here
+ -->
     <div class="topbar">
       <span
         class="top-head"
@@ -19,12 +28,13 @@
         <span style="color:green" v-if="hasStatus === 'updated'"> ✓ Saved</span>
         <span v-if="hasStatus === 'updating'">Saving</span>
       </span>
-      <!--   <span v-if="hasStatus" class="top-head top-toggle">
-      //?topbar context menu
+      <span v-if="hasStatus" class="top-head top-toggle">
+        <!--       // ?topbar context menu
+ -->
         <a @click="togTopContext">
           <img src="../assets/upload.svg" ref="topContext" alt="" />
         </a>
-      </span> -->
+      </span>
       <!--  <span class="b-context"><span></span></span> -->
       <a
         @click="hamToggle"
@@ -36,7 +46,8 @@
         </span>
       </a>
     </div>
-    //? sidebar starts here
+    <!--     // ? sidebar starts here
+ -->
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
         <span @click="sideShutMobile">
@@ -57,7 +68,7 @@
             :to="{ name: 'Board', params: { _slug: board.key } }"
             :class="{ boardActive: $route.params._slug === board.key }"
           >
-            {{ trunc_name(board.meta.name) }}
+            {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
             <span
               class="b-context"
               @click.prevent="contextFire(board.key, $event)"
@@ -77,33 +88,78 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import TopContext from "@/components/TopContext.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import Context from "@/components/Context.vue";
-import { mapGetters } from "vuex";
-export default {
+import Vue from "vue";
+// eslint-disable-next-line
+import { Board, BoardStatus, User } from "@/ entities/models";
+interface Data {
+  imgUrl: string;
+  sideActive: boolean;
+  command: {
+    left?: number;
+    top?: number;
+    key?: string;
+    display?: string;
+  };
+  contextActive: boolean;
+  sideshut: null | boolean;
+  dat: {
+    text?: string;
+    left?: number;
+    top?: number;
+  };
+  isTooltip: boolean;
+  isTopContext: boolean;
+}
+interface Computed {
+  user: User;
+  boards: Board[];
+  boardStatus: BoardStatus;
+  hasStatus: null | string;
+  bKey: string;
+}
+interface Methods {
+  togTopContext: () => void;
+  showTooltip: (event: any, text: string) => void;
+  sideShutMobile: () => void;
+  closeContext: () => void;
+  trunc_name: (str: string) => string;
+  contextFire: (key: string, event: any) => void;
+  hamToggle: () => void;
+  createBoard: () => void;
+}
+export default Vue.extend<Data, Methods, Computed>({
   name: "Sidebar",
   data() {
     return {
       imgUrl: "",
       sideActive: true,
-      command: null,
+      command: {},
       contextActive: false,
       sideshut: null,
       dat: {},
       isTooltip: false,
+      isTopContext: false,
     };
   },
   components: {
     Context,
     Tooltip,
+    TopContext,
   },
   computed: {
-    ...mapGetters({
-      boards: "boards",
-      user: "giveUser",
-      boardStatus: "boardStatus",
-    }),
+    user() {
+      return this.$store.getters.giveUser;
+    },
+    boards() {
+      return this.$store.getters.boards;
+    },
+    boardStatus() {
+      return this.$store.getters.boardStatus;
+    },
     hasStatus() {
       if (this.$route.fullPath === "/boards") {
         return null;
@@ -115,19 +171,23 @@ export default {
         }
       }
     },
+    bKey() {
+      return this.$route.params._slug;
+    },
   },
   methods: {
     togTopContext() {
-      console.log("yolo");
+      //@ts-ignore
       this.$refs.topContext.classList.toggle("tog-active");
+      this.isTopContext = !this.isTopContext;
     },
     showTooltip(event, text) {
-      this.isTooltip = true;
       this.dat = {
         text: text,
         left: event.pageX,
         top: event.pageY,
       };
+      this.isTooltip = true;
       setTimeout(() => {
         this.isTooltip = false;
       }, 1000);
@@ -141,7 +201,7 @@ export default {
       this.contextActive = false;
     },
     trunc_name(str) {
-      const length = 22;
+      const length = 18;
       if (str.length > length) {
         return str.substring(0, length - 3) + "...";
       } else {
@@ -149,18 +209,20 @@ export default {
       }
     },
     contextFire(key, event) {
-      this.contextActive = true;
       this.command = {
         left: event.pageX,
         top: event.pageY,
         key: key,
         display: "block",
       };
+      this.contextActive = true;
     },
     hamToggle() {
       this.sideActive = !this.sideActive;
       this.$emit("side_event", this.sideActive);
+      //@ts-ignore
       this.$refs.ham.classList.toggle("is-active");
+      //@ts-ignore
       this.$refs.sidebar.classList.toggle("sidebar-active");
     },
     createBoard() {
@@ -177,14 +239,24 @@ export default {
       this.sideshut = true;
       this.sideActive = !this.sideActive;
       this.$emit("side_event", this.sideActive);
+      //@ts-ignore
       this.$refs.ham.classList.toggle("is-active");
+      //@ts-ignore
       this.$refs.sidebar.classList.toggle("sidebar-active");
     }
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
+// todo top context
+.top-context {
+  display: none;
+}
+.topContextShow {
+  display: block;
+}
+
 //todo colors
 $bg-primary: #ffffff;
 $primary: #101629;

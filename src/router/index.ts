@@ -9,27 +9,27 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (!auth.currentUser) {
         next();
       } else next({ path: "/boards" });
-    },
+    }
   },
   {
     path: "/user",
     name: "User",
     component: () => import("../views/User.vue"),
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (auth.currentUser) {
         next();
       } else next({ path: "/" });
-    },
+    }
   },
   {
     path: "/boards",
     name: "Boards",
     component: () => import("../views/Boards.vue"),
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: any, from: any, next: any) => {
       if (auth.currentUser) {
         next();
       } else next({ path: "/" });
@@ -39,14 +39,14 @@ const routes = [
         path: ":_slug",
         name: "Board",
         component: () => import("../views/Board.vue"),
-        params: true,
-      },
-    ],
-  },
+        params: true
+      }
+    ]
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 export default router;
