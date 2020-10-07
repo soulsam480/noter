@@ -4,15 +4,19 @@
     <Tooltip :dat="dat" v-if="isTooltip" />
     <!--     main editor container
  -->
+    <div class="board-cover" :style="coverBg"></div>
     <div id="editor">
-      <h1
-        class="board-cover"
-        @click="togEmoji"
-        id="init_cover"
-        @mouseenter="showTooltip($event, 'Change Cover')"
-        @mouseleave="isTooltip = false"
-      >
-        {{ boardData.meta.cover }}
+      <button class="n-btn board-cover-change" @click="getgrad">
+        Change Cover
+      </button>
+      <h1 class="board-icon" id="init_cover">
+        <span
+          @click="togEmoji"
+          @mouseenter="showTooltip($event, 'Change Icon')"
+          @mouseleave="isTooltip = false"
+        >
+          {{ boardData.meta.cover }}
+        </span>
       </h1>
       <h2
         id="init_head"
@@ -32,11 +36,12 @@
 import Vue from "vue";
 import Tooltip from "@/components/Tooltip.vue";
 import { db } from "../firebase/index";
-import endpoint from "../miscred/prelink";
-import EditorJS from "@editorjs/editorjs"; // eslint-disable-next-line
+import EditorJS from "@editorjs/editorjs";
+import endpoint from "@/miscred/prelink";
+// eslint-disable-next-line
 import { Board, User } from "@/ entities/models";
 import VEmojiPicker from "v-emoji-picker";
-
+import { randgen } from "@/helpers/randgen";
 const Checklist = require("@editorjs/checklist");
 const Header = require("@editorjs/header");
 const Link = require("@editorjs/link");
@@ -48,6 +53,7 @@ const Embed = require("@editorjs/embed");
 const Quote = require("@editorjs/quote");
 const Marker = require("@editorjs/marker");
 const SimpleImage = require("@editorjs/simple-image");
+
 //todo adding interface and types for the Vue 2 Options API. It's better to move to Vue 3 😫
 interface Data {
   editor: null | EditorJS;
@@ -59,6 +65,7 @@ interface Data {
   tempdata: object;
   isCover: boolean;
   cover: string;
+  coverBg: object;
 }
 interface Computed {
   boardData: Board;
@@ -70,10 +77,13 @@ interface Methods {
   autoSave: () => void;
   selectEmoji: (emoji: any) => void;
   togEmoji: () => void;
+  getgrad: () => void;
 }
 // todo using types in the instance
 export default Vue.extend<Data, Methods, Computed>({
   name: "Board",
+
+  //todo Data =========================================
   data() {
     return {
       editor: null,
@@ -84,6 +94,7 @@ export default Vue.extend<Data, Methods, Computed>({
       isTooltip: false,
       isCover: false,
       cover: "",
+      coverBg: {},
       tempdata: {
         blocks: [
           {
@@ -114,6 +125,8 @@ export default Vue.extend<Data, Methods, Computed>({
     Tooltip,
     VEmojiPicker,
   },
+
+  //todo computed ================================================
   computed: {
     user() {
       return this.$store.getters.giveUser as User;
@@ -141,6 +154,10 @@ export default Vue.extend<Data, Methods, Computed>({
           meta: {
             name: "Untitled",
             cover: "🔰",
+            coverBg: {
+              background:
+                "linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)",
+            },
           },
         };
       }
@@ -152,7 +169,16 @@ export default Vue.extend<Data, Methods, Computed>({
       title: `${this.boardData.meta.cover}  ${this.boardData.meta.name}`,
     };
   },
+
+  //todo methods =====================================
   methods: {
+    getgrad() {
+      const colors = randgen();
+      this.coverBg = {
+        background: `linear-gradient(90deg, ${colors[1]} 25%, ${colors[2]} 50%, ${colors[3]} 75%)`,
+      };
+      this.autoSave();
+    },
     togEmoji() {
       this.isCover = !this.isCover;
     },
@@ -194,6 +220,7 @@ export default Vue.extend<Data, Methods, Computed>({
                 name: head.innerText,
                 stamp: Date.now(),
                 cover: this.cover,
+                coverBg: this.coverBg,
               },
               data: data,
             })
@@ -233,6 +260,7 @@ export default Vue.extend<Data, Methods, Computed>({
       }, 1000);
     },
   },
+  //todo created =====================================
   created() {
     this.editor = new EditorJS({
       autofocus: true,
@@ -317,17 +345,40 @@ export default Vue.extend<Data, Methods, Computed>({
       });
     }
   },
+  //todo mounted ===================================
   mounted() {
+    //todo checking for those boards whoch don't have a cover image \\// for backwards compatibility
+    if (
+      Object.keys(this.coverBg).includes("background") ||
+      this.boardData.meta.coverBg === undefined ||
+      this.coverBg === undefined
+    ) {
+      //todo if they don't have one assign one
+      const colors = randgen();
+      this.coverBg = {
+        background: `linear-gradient(90deg, ${colors[1]} 25%, ${colors[2]} 50%, ${colors[3]} 75%)`,
+      };
+      this.autoSave();
+    } else {
+      //todo or load from data
+      this.coverBg = this.boardData.meta.coverBg;
+    }
+    // ?---------------------------------------------
+    //todo checking for the boards which don't have a cover icon  \\// backwards cmpatibility
     if (
       this.boardData.meta.cover === "" ||
       this.boardData.meta.cover === undefined ||
       this.cover === undefined
     ) {
+      //todo if they don't have one assign one
       this.cover = "🔰";
       this.autoSave();
     } else {
+      // todo or load from data
       this.cover = this.boardData.meta.cover;
     }
+
+    //todo syncing the board title
     const head = document.getElementById("init_head") as HTMLElement;
     head.innerHTML = this.boardData.meta.name;
     //@ts-ignore
@@ -349,4 +400,59 @@ export default Vue.extend<Data, Methods, Computed>({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+// ** borad styles
+.init_head {
+  position: relative;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 1em 0;
+  margin-bottom: -0.9em;
+  line-height: 1.5em;
+  outline: none;
+  font-weight: bold;
+  &:empty:not(:focus):before {
+    position: absolute;
+    content: attr(data-text);
+    color: grey;
+  }
+}
+.board-icon {
+  position: relative;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 2rem 0 1.5rem 0;
+  margin-bottom: -0.9em;
+  line-height: 1.5em;
+  outline: none;
+  font-size: 50px;
+  span {
+    cursor: pointer;
+  }
+  &:empty:not(:focus):before {
+    position: absolute;
+    content: attr(data-text);
+    color: grey;
+  }
+}
+.board-cover {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 7rem 0;
+}
+#editor {
+  padding: 8rem 0;
+  position: relative;
+  z-index: 10;
+}
+.board-cover-change {
+  position: absolute;
+  top: 10rem;
+  right: 0;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+</style>

@@ -187,7 +187,7 @@ export default Vue.extend({
           window.alert(error.message);
         });
     },
-    async signUp() {
+    async signUp()  {
       auth
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(() => {

@@ -45,6 +45,8 @@ a {
   margin: 5px;
   display: inline-block;
   font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0.5px 0.5px 7px 0.1px #3535353d;
   &:hover {
     color: $primary;
     background-color: $secondary-light;
@@ -195,38 +197,6 @@ p {
   margin: 0 4px;
 }
 
-// ** borad styles
-.init_head {
-  position: relative;
-  max-width: 650px;
-  margin: 0 auto;
-  padding: 1em 0;
-  margin-bottom: -0.9em;
-  line-height: 1.5em;
-  outline: none;
-  font-weight: bold;
-  &:empty:not(:focus):before {
-    position: absolute;
-    content: attr(data-text);
-    color: grey;
-  }
-}
-.board-cover {
-  cursor: pointer;
-  position: relative;
-  max-width: 650px;
-  margin: 0 auto;
-  padding: 2rem 0 1.5rem 0;
-  margin-bottom: -0.9em;
-  line-height: 1.5em;
-  outline: none;
-  font-size: 50px;
-  &:empty:not(:focus):before {
-    position: absolute;
-    content: attr(data-text);
-    color: grey;
-  }
-}
 // ** app margin animation
 .content-def {
   transition-property: margin-left;
@@ -252,5 +222,5 @@ p {
 .emoji-picker {
   position: absolute;
   z-index: 100;
-  margin: 70px 0 0 40px;
+  margin: 210px 0 0 30px;
 }

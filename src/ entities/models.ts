@@ -7,22 +7,10 @@ export interface Board {
     meta: {
         name: string,
         stamp: number,
-        cover: string
+        cover: string,
+        coverBg: object
     }
 }
-/* //? unused
-export interface Blocks {
-    blocks: [{
-        data?: {
-            level?: number,
-            text?: string,
-            items?: [""],
-            style?: string
-        },
-        type?: string
-    }],
-    version: string
-} */
 export interface User {
     loggedIn: boolean,
     data: {

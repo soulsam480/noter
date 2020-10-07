@@ -2,7 +2,8 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firebase-database";
 import "firebase/firebase-auth";
-import config from "./cred";
+import config from './cred';
+
 
 firebase.initializeApp(config);
 
