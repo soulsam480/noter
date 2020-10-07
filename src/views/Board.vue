@@ -454,5 +454,6 @@ export default Vue.extend<Data, Methods, Computed>({
   right: 0;
   padding: 5px 10px;
   font-size: 11px;
+  z-index: 11;
 }
 </style>
