@@ -32,10 +32,10 @@
 </template>
 
 <script lang="ts">
-import { auth } from "../firebase/index";
-import Vue from "vue";
+import { auth } from '../firebase/index';
+import Vue from 'vue';
 //eslint-disable-next-line
-import { User } from "@/ entities/models";
+import { User } from '@/ entities/models';
 
 interface Data {
   imgUrl: string;
@@ -51,7 +51,7 @@ export default Vue.extend<Data, Methods, Computed>({
   /*  name: "User", */
   data() {
     return {
-      imgUrl: "",
+      imgUrl: '',
     };
   },
   computed: {
@@ -64,9 +64,9 @@ export default Vue.extend<Data, Methods, Computed>({
       auth
         .signOut()
         .then(() => {
-          this.$router.replace({ path: "/" });
-          this.$store.dispatch("fetchUser", null);
-          this.$store.commit("Boards", null);
+          this.$router.replace({ path: '/' });
+          this.$store.dispatch('fetchUser', null);
+          this.$store.commit('Boards', null);
         })
         .catch((err) => {
           window.alert(err);
@@ -75,11 +75,11 @@ export default Vue.extend<Data, Methods, Computed>({
   },
   metaInfo() {
     return {
-      title: "Home",
+      title: 'Home',
     };
   },
   created() {
-    this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
+    this.imgUrl = `https://avatars.dicebear.com/api/bottts/${this.user.data.uid}.svg`;
   },
 });
 </script>

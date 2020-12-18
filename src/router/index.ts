@@ -1,9 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import { auth } from "../firebase/index";
 Vue.use(VueRouter);
-
+import {auth} from "../firebase/index"
 const routes = [
   {
     path: "/",

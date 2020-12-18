@@ -1,7 +1,8 @@
-import { Board, User, BoardStatus, UserData } from "./../ entities/models";
-import Vue from "vue";
-import Vuex from "vuex";
-import { db } from "../firebase/index";
+import { Board, User, BoardStatus, UserData } from './../ entities/models';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import { db } from '@/firebase';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -11,7 +12,7 @@ export default new Vuex.Store({
       data: {},
     } as User,
     boards: [] as Board[],
-    boardStatus: {} as BoardStatus
+    boardStatus: {} as BoardStatus,
   },
   mutations: {
     setLogIn(state, value) {
@@ -21,10 +22,10 @@ export default new Vuex.Store({
       state.user.data = data;
     },
     Boards: (state, uid) => {
-      db.ref(`/Users/${uid}/Boards`).on("value", snap => {
+      db.ref(`/Users/${uid}/Boards`).on('value', (snap) => {
         state.boards = [];
-        snap.forEach(csnap => {
-          if (!state.boards.find(el => el.key === csnap.key)) {
+        snap.forEach((csnap) => {
+          if (!state.boards.find((el) => el.key === csnap.key)) {
             state.boards.push({
               key: csnap.key as string,
               data: csnap.val().data,
@@ -39,7 +40,7 @@ export default new Vuex.Store({
     },
     setBoard: (state, data) => {
       state.boardStatus = data;
-    }
+    },
   },
   actions: {
     fetchUser({ commit }, user) {
@@ -50,20 +51,20 @@ export default new Vuex.Store({
        * As in the user type , it can only be a object this may break the code
        * todo check this
        */
-      commit("setLogIn", user !== null);
+      commit('setLogIn', user !== null);
       if (user) {
-        commit("setUser", {
-          name: user.email.split("@")[0].toLowerCase(),
+        commit('setUser', {
+          name: user.email.split('@')[0].toLowerCase(),
           email: user.email,
           img: user.photoURL,
           uid: user.uid,
           num: user.phoneNumber,
-          eVer: user.emailVerified
+          eVer: user.emailVerified,
         } as UserData);
       } else {
-        commit("setUser", null);
+        commit('setUser', null);
       }
-    }
+    },
   },
   getters: {
     giveUser: (state): User => {
@@ -74,7 +75,7 @@ export default new Vuex.Store({
     },
     boardStatus: (state): BoardStatus => {
       return state.boardStatus;
-    }
+    },
   },
-  modules: {}
+  modules: {},
 });
