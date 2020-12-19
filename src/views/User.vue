@@ -32,8 +32,8 @@
 </template>
 
 <script lang="ts">
-import { auth } from "../firebase/index";
-import Vue from "vue";
+/* import { auth } from "../firebase/index";
+ */import Vue from "vue";
 //eslint-disable-next-line
 import { User } from "@/ entities/models";
 
@@ -59,7 +59,7 @@ export default Vue.extend<Data, Methods, Computed>({
       return this.$store.getters.giveUser;
     },
   },
-  methods: {
+ /*  methods: {
     logout() {
       auth
         .signOut()
@@ -72,7 +72,7 @@ export default Vue.extend<Data, Methods, Computed>({
           window.alert(err);
         });
     },
-  },
+  }, */
   metaInfo() {
     return {
       title: "Home",

@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts">
-import { db } from "../firebase/index";
-import { mapGetters } from "vuex";
+/* import { db } from "../firebase/index";
+ */import { mapGetters } from "vuex";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -32,13 +32,13 @@ export default Vue.extend({
       window.print();
     }, */
     deleteBoard() {
-      db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
+     /*  db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
         .remove()
         .then(() => {
           if (this.$route.fullPath !== "/boards") {
             this.$router.push({ path: "/boards" });
           }
-        });
+        }); */
       this.$emit("close-context");
     },
   },

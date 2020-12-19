@@ -1,7 +1,7 @@
-import { Board, User, BoardStatus, UserData } from "./../ entities/models";
-import Vue from "vue";
-import Vuex from "vuex";
-import { db } from "../firebase/index";
+import { Board, User, BoardStatus, UserData } from './../ entities/models';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -10,17 +10,21 @@ export default new Vuex.Store({
       loggedIn: false,
       data: {},
     } as User,
-    boards: [] as Board[],
-    boardStatus: {} as BoardStatus
+    TOKEN: '' as string,
+    /*    boards: [] as Board[],
+    boardStatus: {} as BoardStatus */
   },
   mutations: {
-    setLogIn(state, value) {
+    setToken: (state, token: string) => {
+      state.TOKEN = token;
+    },
+    setLogin(state, value) {
       state.user.loggedIn = value;
     },
     setUser(state, data: UserData) {
       state.user.data = data;
     },
-    Boards: (state, uid) => {
+    /*     Boards: (state, uid) => {
       db.ref(`/Users/${uid}/Boards`).on("value", snap => {
         state.boards = [];
         snap.forEach(csnap => {
@@ -39,42 +43,91 @@ export default new Vuex.Store({
     },
     setBoard: (state, data) => {
       state.boardStatus = data;
-    }
+    } */
   },
   actions: {
-    fetchUser({ commit }, user) {
-      //todo BUG
-      /**
-       * ? exp
-       * for the setlogin mutation two work properly, the user needs to be either null or an object
-       * As in the user type , it can only be a object this may break the code
-       * todo check this
-       */
-      commit("setLogIn", user !== null);
-      if (user) {
-        commit("setUser", {
-          name: user.email.split("@")[0].toLowerCase(),
-          email: user.email,
-          img: user.photoURL,
-          uid: user.uid,
-          num: user.phoneNumber,
-          eVer: user.emailVerified
-        } as UserData);
+    USER: ({ commit }, data) => {
+      commit('setLogin', data !== null);
+      if (data !== null) {
+        commit('setUser', data);
       } else {
-        commit("setUser", null);
+        commit('setLogin', false);
       }
-    }
+    },
+    REGISTER: ({ commit, dispatch }, user) => {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:4000/register',
+          method: 'post',
+          data: {
+            username: user.username,
+            email: user.email,
+            password: user.password,
+          },
+        })
+          .then((res) => {
+            dispatch('USER', {
+              email: res.data.email,
+              username: res.data.username,
+              name: res.data.name,
+              uid: res.data.userId,
+              img: res.data.imgUrl,
+            } as UserData);
+            commit('setToken', res.data.accessToken);
+            resolve(res);
+          })
+          .catch((err) => {
+            dispatch('USER', null);
+            commit('setToken', null);
+            reject(err);
+          });
+      });
+    },
+    LOGIN: ({ commit, dispatch }, user) => {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:4000/login',
+          method: 'post',
+          data: {
+            email: user.email,
+            password: user.password,
+          },
+        })
+          .then((res) => {
+            dispatch('USER', {
+              email: res.data.email,
+              username: res.data.username,
+              name: res.data.name,
+              uid: res.data.userId,
+              img: res.data.imgUrl,
+            } as UserData);
+            commit('setToken', res.data.accessToken);
+            resolve(res);
+          })
+          .catch((err) => {
+            dispatch('USER', null);
+            commit('setToken', null);
+            reject(err);
+          });
+      });
+    },
+    setToken: ({ commit }, dat: string) => {
+      commit('setToken', dat);
+    },
   },
   getters: {
     giveUser: (state): User => {
       return state.user;
     },
-    boards: (state): Board[] => {
+    getToken: (state) => {
+      return state.TOKEN;
+    },
+    /*    boards: (state): Board[] => {
       return state.boards;
     },
     boardStatus: (state): BoardStatus => {
       return state.boardStatus;
-    }
+    } */
   },
-  modules: {}
+  modules: {},
 });

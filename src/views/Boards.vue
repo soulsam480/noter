@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-if="this.$route.fullPath === '/boards'"
+      v-if="$route.fullPath === '/boards'"
       class="container boards-intro"
     >
       <br />
@@ -43,7 +43,7 @@
     </div>
 
     <div>
-      <router-view :key="this.$route.params._slug"></router-view>
+      <router-view :key="$route.params._slug"></router-view>
     </div>
   </div>
 </template>

@@ -31,7 +31,6 @@
 <script lang="ts">
 import Vue from "vue";
 import Tooltip from "@/components/Tooltip.vue";
-import { db } from "../firebase/index";
 import endpoint from "../miscred/prelink";
 import EditorJS from "@editorjs/editorjs"; // eslint-disable-next-line
 import { Board, User } from "@/ entities/models";
@@ -181,11 +180,11 @@ export default Vue.extend<Data, Methods, Computed>({
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         //@ts-ignore
-        this.editor.save().then((data: object) => {
-          const head = document.getElementById("init_head") as HTMLElement;
-          //?opt
+        this.editor.save().then((/* data: object */) => {
+/*           const head = document.getElementById("init_head") as HTMLElement;
+ */          //?opt
           /*           if (data === undefined) {
-           */ db.ref(
+           *//*  db.ref(
             `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
           )
             .update({
@@ -204,7 +203,7 @@ export default Vue.extend<Data, Methods, Computed>({
                 id: this.$route.params._slug,
                 status: this.upStatus,
               });
-            });
+            }); */
           //?opt
           /*    } else {
             db.ref(

@@ -2,33 +2,34 @@
   <div class="parent">
     <ul class="child">
       <li @click="print">Print PDF</li>
-      <li @click="deleteBoard">Delete</li>
+      <!--       <li @click="deleteBoard">Delete</li>
+ -->
     </ul>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { db } from "../firebase/index";
-import Vue from "vue";
+import { mapGetters } from 'vuex';
+/* import { db } from "../firebase/index";
+ */ import Vue from 'vue';
 export default Vue.extend({
-  name: "TopContext",
-  props: ["data"],
+  name: 'TopContext',
+  props: ['data'],
   data() {
     return {};
   },
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: 'giveUser' }),
   },
   components: {},
   methods: {
     print() {
-      this.$emit("close-top");
+      this.$emit('close-top');
       setTimeout(() => {
         window.print();
       }, 300);
     },
-    deleteBoard() {
+    /*  deleteBoard() {
       this.$emit("close-top");
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.data}`)
         .remove()
@@ -37,7 +38,7 @@ export default Vue.extend({
             this.$router.push({ path: "/boards" });
           }
         });
-    },
+    }, */
   },
 });
 </script>

@@ -84,17 +84,6 @@
                   </button>
                   <br />
                   <br />
-                  <div class="text-center">
-                    <label>Login with Social Media</label>
-                    <div>
-                      <span @click="googleLogin" data-dismiss="modal"
-                        ><img
-                          class="login-logo"
-                          src="../assets/google.svg"
-                          alt=""
-                      /></span>
-                    </div>
-                  </div>
                 </form>
               </div>
               <div
@@ -148,56 +137,51 @@
 </template>
 
 <script lang="ts">
-import { auth, googleProvider } from "../firebase/index";
-import Vue from "vue";
+import Vue from 'vue';
 export default Vue.extend({
-  name: "Login",
+  name: 'Login',
   data() {
     return {
-      email: "" as string,
-      pass: "" as string,
+      email: '',
+      pass: '',
     };
   },
   props: [],
   computed: {},
   methods: {
-    async googleLogin() {
-      auth
-        .signInWithPopup(googleProvider)
-        .then(() => {
-          this.email = "";
-          this.pass = "";
-        })
-        .catch((error) => {
-          this.email = "";
-          this.pass = "";
-          window.alert(error.message);
-        });
-    },
     async login() {
-      auth
-        .signInWithEmailAndPassword(this.email, this.pass)
-        .then(() => {
-          this.email = "";
-          this.pass = "";
+      
+      await this.$store
+        .dispatch('LOGIN', {
+          email: this.email,
+          password: this.pass,
         })
-        .catch((error) => {
-          this.email = "";
-          this.pass = "";
-          window.alert(error.message);
+        .then((res) => {
+          console.log(res);
+          this.email = '';
+          this.pass = '';
+        })
+        .catch((err) => {
+          this.email = '';
+          this.pass = '';
+          console.log(err);
         });
     },
     async signUp() {
-      auth
-        .createUserWithEmailAndPassword(this.email, this.pass)
-        .then(() => {
-          this.email = "";
-          this.pass = "";
+      await this.$store
+        .dispatch('REGISTER', {
+          email: this.email,
+          password: this.pass,
+        })
+        .then((res) => {
+          console.log(res);
+          this.email = '';
+          this.pass = '';
         })
         .catch((err) => {
-          this.email = "";
-          this.pass = "";
-          window.alert(err.message);
+          this.email = '';
+          this.pass = '';
+          console.log(err);
         });
     },
   },
