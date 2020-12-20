@@ -1,5 +1,5 @@
 export interface Board {
-  key?: string;
+  id?: string;
   data: {
     blocks: [];
     version: string;

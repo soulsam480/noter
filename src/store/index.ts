@@ -1,8 +1,11 @@
+import { createWs } from './../utils/sock';
 import { Board, User, BoardStatus, UserData } from './../ entities/models';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-Vue.use(Vuex);
+import { sock } from '@/utils/sock';
+/* import { sock } from '@/utils/sock';
+ */ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -11,8 +14,11 @@ export default new Vuex.Store({
       data: {},
     } as User,
     TOKEN: '' as string,
-    /*    boards: [] as Board[],
-    boardStatus: {} as BoardStatus */
+    boards: [] as Board[],
+    boardStatus: {
+      id: 'sd',
+      status: '',
+    } as BoardStatus,
   },
   mutations: {
     setToken: (state, token: string) => {
@@ -24,24 +30,10 @@ export default new Vuex.Store({
     setUser(state, data: UserData) {
       state.user.data = data;
     },
-    /*     Boards: (state, uid) => {
-      db.ref(`/Users/${uid}/Boards`).on("value", snap => {
-        state.boards = [];
-        snap.forEach(csnap => {
-          if (!state.boards.find(el => el.key === csnap.key)) {
-            state.boards.push({
-              key: csnap.key as string,
-              data: csnap.val().data,
-              meta: csnap.val().meta,
-            } as Board);
-          }
-        });
-        state.boards.sort((a, b) => {
-          return b.meta.stamp - a.meta.stamp;
-        });
-      });
+    setBoards: (state, dat) => {
+      state.boards = dat;
     },
-    setBoard: (state, data) => {
+    /*  setBoard: (state, data) => {
       state.boardStatus = data;
     } */
   },
@@ -83,7 +75,7 @@ export default new Vuex.Store({
           });
       });
     },
-    LOGIN: ({ commit, dispatch }, user) => {
+    LOGIN: ({ commit, dispatch, state }, user) => {
       return new Promise((resolve, reject) => {
         axios({
           url: 'http://localhost:4000/login',
@@ -102,6 +94,7 @@ export default new Vuex.Store({
               img: res.data.imgUrl,
             } as UserData);
             commit('setToken', res.data.accessToken);
+            createWs(state.TOKEN);
             resolve(res);
           })
           .catch((err) => {
@@ -114,6 +107,25 @@ export default new Vuex.Store({
     setToken: ({ commit }, dat: string) => {
       commit('setToken', dat);
     },
+    getBoards: ({ commit }) => {
+      sock.on('boards', (data: any) => {
+        commit('setBoards', data);
+      });
+      /*  axios({
+        url: 'http://localhost:4000/boards',
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${state.TOKEN}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          commit('setBoards', res);
+        })
+        .catch((err) => {
+          console.log(err);
+        }); */
+    },
   },
   getters: {
     giveUser: (state): User => {
@@ -122,12 +134,12 @@ export default new Vuex.Store({
     getToken: (state) => {
       return state.TOKEN;
     },
-    /*    boards: (state): Board[] => {
+    boards: (state): Board[] => {
       return state.boards;
     },
     boardStatus: (state): BoardStatus => {
       return state.boardStatus;
-    } */
+    },
   },
   modules: {},
 });

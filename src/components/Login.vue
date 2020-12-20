@@ -150,21 +150,18 @@ export default Vue.extend({
   computed: {},
   methods: {
     async login() {
-      
       await this.$store
         .dispatch('LOGIN', {
           email: this.email,
           password: this.pass,
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.email = '';
           this.pass = '';
         })
-        .catch((err) => {
+        .catch(() => {
           this.email = '';
           this.pass = '';
-          console.log(err);
         });
     },
     async signUp() {

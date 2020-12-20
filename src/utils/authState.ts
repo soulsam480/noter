@@ -4,6 +4,7 @@ import axios from 'axios';
 import store from '@/store';
 import { getCookie } from './index';
 import { computed } from '@vue/composition-api';
+import router from '@/router';
 
 export default async () => {
   //todo check for refresh token
@@ -41,6 +42,9 @@ export default async () => {
                 img: res.data.imgUrl,
               });
               createWs(mainToken.value);
+
+              store.dispatch('getBoards', res.data.userId);
+              router.push('/boards');
             })
             .catch((err) => {
               console.log(err);
@@ -50,5 +54,22 @@ export default async () => {
     } catch (err) {
       console.log(err);
     }
+
+    setTimeout(async () => {
+      try {
+        axios({
+          method: 'post',
+          url: 'http://localhost:4000/token',
+          withCredentials: true,
+        }).then((res) => {
+          console.log(res);
+          store.commit('setToken', res.data.accesToken);
+        });
+      } catch (err) {
+        console.log(err);
+        store.commit('adduser', null);
+        store.commit('addToken', null);
+      }
+    }, 840000);
   }
 };

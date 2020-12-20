@@ -20,9 +20,9 @@
     <div class="topbar">
       <span
         class="top-head"
-        v-if="this.$route.fullPath === '/boards' || hasStatus === 'init'"
+        v-if="$route.fullPath === '/boards' || hasStatus === 'init'"
       >
-        {{ this.user.data.name }}'s Noter
+        {{ user.data.name }}'s Noter
       </span>
       <span class="top-head" v-if="hasStatus">
         <span style="color:green" v-if="hasStatus === 'updated'"> ✓ Saved</span>
@@ -61,18 +61,18 @@
         <br />
         <span
           v-for="board in boards"
-          :key="board.key"
-          @contextmenu.prevent="contextFire(board.key, $event)"
+          :key="board.id"
+          @contextmenu.prevent="contextFire(board.id, $event)"
         >
           <router-link
-            :to="{ name: 'Board', params: { _slug: board.key } }"
-            :class="{ boardActive: $route.params._slug === board.key }"
+            :to="{ name: 'Board', params: { _slug: board.id } }"
+            :class="{ boardActive: $route.params._slug === board.id }"
             :title="board.meta.name"
           >
             {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
             <span
               class="b-context"
-              @click.prevent="contextFire(board.key, $event)"
+              @click.prevent="contextFire(board.id, $event)"
               ><span></span
             ></span>
           </router-link>
@@ -90,12 +90,14 @@
 </template>
 
 <script lang="ts">
-import TopContext from "@/components/TopContext.vue";
-import Tooltip from "@/components/Tooltip.vue";
-import Context from "@/components/Context.vue";
-import Vue from "vue";
+import TopContext from '@/components/TopContext.vue';
+import Tooltip from '@/components/Tooltip.vue';
+import Context from '@/components/Context.vue';
+
+import Vue from 'vue';
 // eslint-disable-next-line
-import { Board, BoardStatus, User } from "@/ entities/models";
+import { Board, BoardStatus, User } from '@/ entities/models';
+import { tempBoard } from '@/constants';
 interface Data {
   imgUrl: string;
   sideActive: boolean;
@@ -133,10 +135,10 @@ interface Methods {
   createBoard: () => void;
 }
 export default Vue.extend<Data, Methods, Computed>({
-  name: "Sidebar",
+  name: 'Sidebar',
   data() {
     return {
-      imgUrl: "",
+      imgUrl: '',
       sideActive: true,
       command: {},
       contextActive: false,
@@ -162,7 +164,7 @@ export default Vue.extend<Data, Methods, Computed>({
       return this.$store.getters.boardStatus;
     },
     hasStatus() {
-      if (this.$route.fullPath === "/boards") {
+      if (this.$route.fullPath === '/boards') {
         return null;
       } else {
         if (this.boardStatus.id === this.$route.params._slug) {
@@ -179,7 +181,7 @@ export default Vue.extend<Data, Methods, Computed>({
   methods: {
     togTopContext() {
       //@ts-ignore
-      this.$refs.topContext.classList.toggle("tog-active");
+      this.$refs.topContext.classList.toggle('tog-active');
       this.isTopContext = !this.isTopContext;
     },
     showTooltip(event, text) {
@@ -204,7 +206,7 @@ export default Vue.extend<Data, Methods, Computed>({
     trunc_name(str) {
       const length = 18;
       if (str.length > length) {
-        return str.substring(0, length - 3) + "...";
+        return str.substring(0, length - 3) + '...';
       } else {
         return str;
       }
@@ -214,24 +216,32 @@ export default Vue.extend<Data, Methods, Computed>({
         left: event.pageX,
         top: event.pageY,
         key: key,
-        display: "block",
+        display: 'block',
       };
       this.contextActive = true;
     },
     hamToggle() {
       this.sideActive = !this.sideActive;
-      this.$emit("side_event", this.sideActive);
+      this.$emit('side_event', this.sideActive);
       //@ts-ignore
-      this.$refs.ham.classList.toggle("is-active");
+      this.$refs.ham.classList.toggle('is-active');
       //@ts-ignore
-      this.$refs.sidebar.classList.toggle("sidebar-active");
+      this.$refs.sidebar.classList.toggle('sidebar-active');
     },
     createBoard() {
       const id = Math.random()
         .toString(20)
         .substr(2)
         .toUpperCase();
-      this.$router.push({ name: "Board", params: { _slug: id } });
+      this.$io.send('create-board', {
+        data: tempBoard,
+        meta: {
+          name: 'Untitled',
+          cover: '🔰',
+        },
+        userId: this.user.data.uid,
+      });
+      this.$router.push({ name: 'Board', params: { _slug: id } });
     },
   },
   mounted() {
@@ -239,11 +249,11 @@ export default Vue.extend<Data, Methods, Computed>({
     if (window.innerWidth < 768) {
       this.sideshut = true;
       this.sideActive = !this.sideActive;
-      this.$emit("side_event", this.sideActive);
+      this.$emit('side_event', this.sideActive);
       //@ts-ignore
-      this.$refs.ham.classList.toggle("is-active");
+      this.$refs.ham.classList.toggle('is-active');
       //@ts-ignore
-      this.$refs.sidebar.classList.toggle("sidebar-active");
+      this.$refs.sidebar.classList.toggle('sidebar-active');
     }
   },
 });
@@ -316,7 +326,7 @@ $secondary-light: #e1e1ff;
 }
 .hamburger-inner::before,
 .hamburger-inner::after {
-  content: "";
+  content: '';
   display: block;
 }
 .hamburger-inner::before {
@@ -407,7 +417,7 @@ $secondary-light: #e1e1ff;
       height: 5px;
       background-color: $primary;
       border-radius: 1000px;
-      content: "";
+      content: '';
       display: block;
     }
     span:before {

@@ -11,21 +11,14 @@ import authState from './utils/authState';
 Vue.use(VueCompositionAPI);
 Vue.use(VueMeta);
 
-//firebase auth fires each time the auth state is changed
 Vue.config.productionTip = false;
 
-/* auth.onAuthStateChanged(user => {
-  if (user) {
-    store.dispatch("fetchUser", user);
-    store.commit("Boards", user.uid);
-    router.push({ path: "/boards" });
-  } else {
-    store.dispatch("fetchUser", null);
-    store.commit("Boards", []);
-  }
-}); */
-
 authState();
+
+/* const user = store.getters.giveUser;
+if (user.loggedIn === true) {
+ 
+} */
 new Vue({
   router,
   store,
