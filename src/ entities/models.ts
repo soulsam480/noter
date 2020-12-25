@@ -8,6 +8,7 @@ export interface Board {
     name: string;
     stamp: number;
     cover: string;
+    coverBg: {};
   };
 }
 export interface User {

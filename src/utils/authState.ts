@@ -20,7 +20,10 @@ export default async () => {
       //todo new token
       axios({
         method: 'post',
-        url: 'http://localhost:4000/token',
+        url:
+          process.env.NODE_ENV === 'production'
+            ? process.env.VUE_APP_TOKEN
+            : 'http://localhost:4000/token' /* 'http://localhost:4000/token' */,
         withCredentials: true,
       }).then((res) => {
         //todo store token in state
@@ -28,7 +31,10 @@ export default async () => {
           //todo silent login
           await axios({
             method: 'get',
-            url: 'http://localhost:4000/user',
+            url:
+              process.env.NODE_ENV === 'production'
+                ? process.env.VUE_APP_USER
+                : 'http://localhost:4000/user' /* 'http://localhost:4000/user' */,
             headers: {
               Authorization: `Bearer ${mainToken.value}`,
             },
@@ -42,7 +48,6 @@ export default async () => {
                 img: res.data.imgUrl,
               });
               createWs(mainToken.value);
-
               store.dispatch('getBoards', res.data.userId);
               router.push('/boards');
             })
@@ -59,7 +64,10 @@ export default async () => {
       try {
         axios({
           method: 'post',
-          url: 'http://localhost:4000/token',
+          url:
+          process.env.NODE_ENV === 'production'
+          ? process.env.VUE_APP_TOKEN
+          : 'http://localhost:4000/token' /* 'http://localhost:4000/token' */,
           withCredentials: true,
         }).then((res) => {
           console.log(res);

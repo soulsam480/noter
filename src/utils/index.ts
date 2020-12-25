@@ -1,3 +1,4 @@
+import randomColor from 'randomcolor';
 /**
  * @method getCookie
  * @param  name the name of the cookie
@@ -13,3 +14,12 @@ export const getCookie = (name: string) => {
       .split(';')
       .shift();
 };
+
+const randgen = (): string[] => {
+  return randomColor({
+    luminosity: 'light',
+    count: 4,
+  });
+};
+
+export { randgen };

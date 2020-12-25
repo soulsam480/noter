@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prod": "vue-cli-service serve --mode production"
   },
   "dependencies": {
     "@editorjs/checklist": "^1.1.0",
@@ -28,6 +29,7 @@
     "core-js": "^3.6.5",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
+    "randomcolor": "^0.6.2",
     "register-service-worker": "^1.7.1",
     "socket.io-client": "^3.0.4",
     "v-emoji-picker": "^2.3.0",
@@ -44,6 +46,7 @@
     "@types/jquery": "^3.5.1",
     "@types/node-sass": "^4.11.1",
     "@types/prettier": "^1.19.1",
+    "@types/randomcolor": "^0.5.5",
     "@types/socket.io-client": "^1.4.34",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",

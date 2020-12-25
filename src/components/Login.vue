@@ -95,6 +95,24 @@
                 <!--//todo Signup Form-->
                 <form>
                   <div class="form-group">
+                    <label for="name">Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      v-model="name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      v-model="username"
+                    />
+                  </div>
+                  <div class="form-group">
                     <label for="exampleInputEmail2">Email address</label>
                     <input
                       type="email"
@@ -144,6 +162,8 @@ export default Vue.extend({
     return {
       email: '',
       pass: '',
+      username: '',
+      name: '',
     };
   },
   props: [],
@@ -169,6 +189,8 @@ export default Vue.extend({
         .dispatch('REGISTER', {
           email: this.email,
           password: this.pass,
+          username: this.username,
+          name: this.name,
         })
         .then((res) => {
           console.log(res);

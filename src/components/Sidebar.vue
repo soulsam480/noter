@@ -229,19 +229,21 @@ export default Vue.extend<Data, Methods, Computed>({
       this.$refs.sidebar.classList.toggle('sidebar-active');
     },
     createBoard() {
-      const id = Math.random()
-        .toString(20)
-        .substr(2)
-        .toUpperCase();
-      this.$io.send('create-board', {
-        data: tempBoard,
-        meta: {
-          name: 'Untitled',
-          cover: '🔰',
-        },
-        userId: this.user.data.uid,
-      });
-      this.$router.push({ name: 'Board', params: { _slug: id } });
+      this.$io
+        .emit('create-board', {
+          data: tempBoard,
+          meta: {
+            name: 'Untitled',
+            cover: '🔰',
+          },
+          userId: this.user.data.uid,
+        })
+        .on('board-created', (board: Board) => {
+          this.$router.push({
+            name: 'Board',
+            params: { _slug: board.id as string },
+          });
+        });
     },
   },
   mounted() {

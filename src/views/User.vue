@@ -33,9 +33,10 @@
 
 <script lang="ts">
 /* import { auth } from "../firebase/index";
- */import Vue from "vue";
+ */ import Vue from 'vue';
 //eslint-disable-next-line
-import { User } from "@/ entities/models";
+import { User } from '@/ entities/models';
+import Axios from 'axios';
 
 interface Data {
   imgUrl: string;
@@ -51,7 +52,7 @@ export default Vue.extend<Data, Methods, Computed>({
   /*  name: "User", */
   data() {
     return {
-      imgUrl: "",
+      imgUrl: '',
     };
   },
   computed: {
@@ -59,23 +60,19 @@ export default Vue.extend<Data, Methods, Computed>({
       return this.$store.getters.giveUser;
     },
   },
- /*  methods: {
-    logout() {
-      auth
-        .signOut()
-        .then(() => {
-          this.$router.replace({ path: "/" });
-          this.$store.dispatch("fetchUser", null);
-          this.$store.commit("Boards", null);
-        })
-        .catch((err) => {
-          window.alert(err);
-        });
+  methods: {
+    async logout() {
+      await Axios({
+        url: 'http://localhost:4000/logout',
+        withCredentials: true,
+      }).then(() => {
+        this.$router.push('/');
+      });
     },
-  }, */
+  },
   metaInfo() {
     return {
-      title: "Home",
+      title: 'Home',
     };
   },
   created() {

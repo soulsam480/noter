@@ -4,8 +4,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { sock } from '@/utils/sock';
-/* import { sock } from '@/utils/sock';
- */ Vue.use(Vuex);
+import router from '@/router';
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -15,10 +15,7 @@ export default new Vuex.Store({
     } as User,
     TOKEN: '' as string,
     boards: [] as Board[],
-    boardStatus: {
-      id: 'sd',
-      status: '',
-    } as BoardStatus,
+    boardStatus: {} as BoardStatus,
   },
   mutations: {
     setToken: (state, token: string) => {
@@ -31,11 +28,31 @@ export default new Vuex.Store({
       state.user.data = data;
     },
     setBoards: (state, dat) => {
-      state.boards = dat;
+      if (dat) {
+        dat.forEach((el: any) => {
+          const tempBoard = {
+            ...el,
+            data: JSON.parse(el.data),
+            meta: JSON.parse(el.meta),
+          };
+          if (!state.boards.find((db) => db.id === el.id)) {
+            state.boards.push(tempBoard);
+          } else {
+            state.boards.splice(
+              state.boards.findIndex((bd) => bd.id === el.id),
+              1,
+              tempBoard,
+            );
+          }
+        });
+        state.boards.sort((a, b) => {
+          return b.meta.stamp - a.meta.stamp;
+        });
+      }
     },
-    /*  setBoard: (state, data) => {
+    setBoard: (state, data) => {
       state.boardStatus = data;
-    } */
+    },
   },
   actions: {
     USER: ({ commit }, data) => {
@@ -46,15 +63,20 @@ export default new Vuex.Store({
         commit('setLogin', false);
       }
     },
-    REGISTER: ({ commit, dispatch }, user) => {
+    REGISTER: ({ commit, dispatch, state }, user) => {
       return new Promise((resolve, reject) => {
         axios({
-          url: 'http://localhost:4000/register',
+          url:
+            process.env.NODE_ENV === 'production'
+              ? process.env.VUE_APP_REGISTER
+              : 'http://localhost:4000/login',
           method: 'post',
+          withCredentials: true,
           data: {
             username: user.username,
             email: user.email,
             password: user.password,
+            name: user.name,
           },
         })
           .then((res) => {
@@ -66,6 +88,9 @@ export default new Vuex.Store({
               img: res.data.imgUrl,
             } as UserData);
             commit('setToken', res.data.accessToken);
+            createWs(state.TOKEN);
+            dispatch('getBoards', res.data.userId);
+            router.push('/boards');
             resolve(res);
           })
           .catch((err) => {
@@ -78,8 +103,12 @@ export default new Vuex.Store({
     LOGIN: ({ commit, dispatch, state }, user) => {
       return new Promise((resolve, reject) => {
         axios({
-          url: 'http://localhost:4000/login',
+          url:
+            process.env.NODE_ENV === 'production'
+              ? process.env.VUE_APP_LOGIN
+              : 'http://localhost:4000/login',
           method: 'post',
+          withCredentials: true,
           data: {
             email: user.email,
             password: user.password,
@@ -95,6 +124,8 @@ export default new Vuex.Store({
             } as UserData);
             commit('setToken', res.data.accessToken);
             createWs(state.TOKEN);
+            dispatch('getBoards', res.data.userId);
+            router.push('/boards');
             resolve(res);
           })
           .catch((err) => {
@@ -107,24 +138,13 @@ export default new Vuex.Store({
     setToken: ({ commit }, dat: string) => {
       commit('setToken', dat);
     },
-    getBoards: ({ commit }) => {
-      sock.on('boards', (data: any) => {
+    getBoards: ({ commit }, uid) => {
+      sock.emit('get-boards', { uid: uid }).on('boards', (data: any) => {
         commit('setBoards', data);
       });
-      /*  axios({
-        url: 'http://localhost:4000/boards',
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${state.TOKEN}`,
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          commit('setBoards', res);
-        })
-        .catch((err) => {
-          console.log(err);
-        }); */
+    },
+    updateBoard: ({ commit, state }, dat: object) => {
+      sock.emit('update-board', dat);
     },
   },
   getters: {

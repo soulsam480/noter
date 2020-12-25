@@ -6,9 +6,9 @@ $secondary: #d4d4f5;
 $secondary-light: #e1e1ff;
 //todo fonts
 @font-face {
-  font-family: "Merriweather Regular";
-  src: url(~@/assets/Merriweather-Regular.woff2) format("woff2"),
-    url(~@/assets/Merriweather-Regular.woff) format("woff");
+  font-family: 'Merriweather Regular';
+  src: url(~@/assets/Merriweather-Regular.woff2) format('woff2'),
+    url(~@/assets/Merriweather-Regular.woff) format('woff');
 }
 //todo default styles
 :root,
@@ -195,7 +195,7 @@ p {
   margin: 0 4px;
 }
 
-// ** borad styles
+/* // ** borad styles
 .init_head {
   position: relative;
   max-width: 650px;
@@ -226,7 +226,7 @@ p {
     content: attr(data-text);
     color: grey;
   }
-}
+} */
 // ** app margin animation
 .content-def {
   transition-property: margin-left;
