@@ -1,5 +1,4 @@
 import { createWs } from './sock';
-// todo Helper function for persisting user and silent log in
 import axios from 'axios';
 import store from '@/store';
 import { getCookie } from './index';
@@ -7,34 +6,29 @@ import { computed } from '@vue/composition-api';
 import router from '@/router';
 
 export default async () => {
-  //todo check for refresh token
   const rtoken = getCookie('loggedIn');
 
   if (rtoken === 'true') {
-    //todo get reactive token from store after getting new token
     const mainToken = computed(() => {
       return store.getters.getToken;
     });
 
     try {
-      //todo new token
       axios({
         method: 'post',
         url:
           process.env.NODE_ENV === 'production'
             ? process.env.VUE_APP_TOKEN
-            : 'http://localhost:4000/token' /* 'http://localhost:4000/token' */,
+            : 'http://localhost:4000/token',
         withCredentials: true,
       }).then((res) => {
-        //todo store token in state
         store.dispatch('setToken', res.data.accessToken).then(async () => {
-          //todo silent login
           await axios({
             method: 'get',
             url:
               process.env.NODE_ENV === 'production'
                 ? process.env.VUE_APP_USER
-                : 'http://localhost:4000/user' /* 'http://localhost:4000/user' */,
+                : 'http://localhost:4000/user',
             headers: {
               Authorization: `Bearer ${mainToken.value}`,
             },
@@ -65,9 +59,9 @@ export default async () => {
         axios({
           method: 'post',
           url:
-          process.env.NODE_ENV === 'production'
-          ? process.env.VUE_APP_TOKEN
-          : 'http://localhost:4000/token' /* 'http://localhost:4000/token' */,
+            process.env.NODE_ENV === 'production'
+              ? process.env.VUE_APP_TOKEN
+              : 'http://localhost:4000/token',
           withCredentials: true,
         }).then((res) => {
           console.log(res);

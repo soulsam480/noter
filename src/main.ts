@@ -15,10 +15,6 @@ Vue.config.productionTip = false;
 
 authState();
 
-/* const user = store.getters.giveUser;
-if (user.loggedIn === true) {
- 
-} */
 new Vue({
   router,
   store,

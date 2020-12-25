@@ -11,7 +11,6 @@
       <div class="modal-dialog ">
         <div class="modal-content">
           <div class="modal-header d-flex justify-contents-center">
-            <!--//todo these are tab navs-->
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
                 <a
@@ -40,7 +39,6 @@
             </ul>
           </div>
           <div class="modal-body ">
-            <!--//todo these are tab content forms-->
             <div class="tab-content" id="myTabContent">
               <div
                 class="tab-pane fade show active"
@@ -48,7 +46,6 @@
                 role="tabpanel"
                 aria-labelledby="home-tab"
               >
-                <!--//todo Login form-->
                 <form>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>

@@ -12,7 +12,7 @@ export default new Vuex.Store({
     user: {
       loggedIn: false,
       data: {},
-    } as User,
+    } as User ,
     TOKEN: '' as string,
     boards: [] as Board[],
     boardStatus: {} as BoardStatus,
@@ -53,6 +53,11 @@ export default new Vuex.Store({
     setBoard: (state, data) => {
       state.boardStatus = data;
     },
+    logoutUser:(state)=>{
+      state.user.data = null,
+      state.user.loggedIn = false,
+      state.boards = []
+    }
   },
   actions: {
     USER: ({ commit }, data) => {
@@ -90,7 +95,6 @@ export default new Vuex.Store({
             commit('setToken', res.data.accessToken);
             createWs(state.TOKEN);
             dispatch('getBoards', res.data.userId);
-            router.push('/boards');
             resolve(res);
           })
           .catch((err) => {
@@ -125,7 +129,6 @@ export default new Vuex.Store({
             commit('setToken', res.data.accessToken);
             createWs(state.TOKEN);
             dispatch('getBoards', res.data.userId);
-            router.push('/boards');
             resolve(res);
           })
           .catch((err) => {
@@ -146,6 +149,9 @@ export default new Vuex.Store({
     updateBoard: ({ commit, state }, dat: object) => {
       sock.emit('update-board', dat);
     },
+    logout:({commit})=>{
+      commit('logoutUser')
+    }
   },
   getters: {
     giveUser: (state): User => {

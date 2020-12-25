@@ -195,38 +195,6 @@ p {
   margin: 0 4px;
 }
 
-/* // ** borad styles
-.init_head {
-  position: relative;
-  max-width: 650px;
-  margin: 0 auto;
-  padding: 1em 0;
-  margin-bottom: -0.9em;
-  line-height: 1.5em;
-  outline: none;
-  font-weight: bold;
-  &:empty:not(:focus):before {
-    position: absolute;
-    content: attr(data-text);
-    color: grey;
-  }
-}
-.board-cover {
-  cursor: pointer;
-  position: relative;
-  max-width: 650px;
-  margin: 0 auto;
-  padding: 2rem 0 1.5rem 0;
-  margin-bottom: -0.9em;
-  line-height: 1.5em;
-  outline: none;
-  font-size: 50px;
-  &:empty:not(:focus):before {
-    position: absolute;
-    content: attr(data-text);
-    color: grey;
-  }
-} */
 // ** app margin animation
 .content-def {
   transition-property: margin-left;

@@ -19,7 +19,7 @@ export interface User {
     uid: string;
     img: string;
     username: string;
-  };
+  } | null;
 }
 export interface UserData {
   name: string;

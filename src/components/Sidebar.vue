@@ -247,7 +247,7 @@ export default Vue.extend<Data, Methods, Computed>({
     },
   },
   mounted() {
-    this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
+    this.imgUrl = `https://avatars.dicebear.com/4.5/api/bottts/${this.user.data?.uid}.svg`;
     if (window.innerWidth < 768) {
       this.sideshut = true;
       this.sideActive = !this.sideActive;

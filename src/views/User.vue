@@ -13,10 +13,8 @@
                 <div class="card-text">
                   <p>{{ user.data.email }}</p>
                 </div>
-                <!--  <button class="n-btn btn-sm">
-                  <router-link :to="{ path: '/boards' }">My Boards</router-link>
-                </button> -->
-                <button class="n-btn" @click="logout">
+
+                <button class="n-btn btn-sm" @click="logout">
                   Log Out
                 </button>
               </div>
@@ -32,8 +30,7 @@
 </template>
 
 <script lang="ts">
-/* import { auth } from "../firebase/index";
- */ import Vue from 'vue';
+import Vue from 'vue';
 //eslint-disable-next-line
 import { User } from '@/ entities/models';
 import Axios from 'axios';
@@ -49,7 +46,6 @@ interface Methods {
   logout: () => void;
 }
 export default Vue.extend<Data, Methods, Computed>({
-  /*  name: "User", */
   data() {
     return {
       imgUrl: '',
@@ -66,6 +62,7 @@ export default Vue.extend<Data, Methods, Computed>({
         url: 'http://localhost:4000/logout',
         withCredentials: true,
       }).then(() => {
+        this.$store.dispatch('logout');
         this.$router.push('/');
       });
     },
@@ -76,7 +73,7 @@ export default Vue.extend<Data, Methods, Computed>({
     };
   },
   created() {
-    this.imgUrl = `https://api.adorable.io/avatars/285/${this.user.data.uid}.png`;
+    this.imgUrl = `https://avatars.dicebear.com/4.5/api/bottts/${this.user.data?.uid}.svg`;
   },
 });
 </script>

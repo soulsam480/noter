@@ -4,8 +4,6 @@
       <router-link class="navbar-brand" :to="{ path: '/' }">
         <img src="../assets/logo.png" alt="" /> <span>Noter</span>
       </router-link>
-
-      <!--      <b>Noter</b> -->
       <ul class="navbar-nav">
         <li class="nav-item">
           <a
@@ -25,12 +23,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Vue from "vue";
+import { mapGetters } from 'vuex';
+import Vue from 'vue';
 export default Vue.extend({
-  name: "Navbar",
+  name: 'Navbar',
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: 'giveUser' }),
   },
   methods: {},
 });
