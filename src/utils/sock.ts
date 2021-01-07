@@ -1,3 +1,4 @@
+import store from '@/store';
 import { io, Socket } from 'socket.io-client';
 import Vue from 'vue';
 //todo get reactive token from store after getting new token
@@ -19,6 +20,9 @@ export const createWs = (mainToken: string) => {
   );
   sock.on('connect', () => {
     console.log('connected');
+  });
+  sock.on('boards', (data: any) => {
+    store.commit('setBoards', data);
   });
   Vue.prototype.$io = sock;
   return sock;

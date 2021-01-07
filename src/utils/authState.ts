@@ -65,7 +65,7 @@ export default async () => {
           withCredentials: true,
         }).then((res) => {
           console.log(res);
-          store.commit('setToken', res.data.accesToken);
+          store.commit('setToken', res.data.accessToken);
         });
       } catch (err) {
         console.log(err);

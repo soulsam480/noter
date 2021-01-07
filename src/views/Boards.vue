@@ -52,6 +52,7 @@
 import Vue from "vue";
 //eslint-disable-next-line
 import { Board, User } from "@/ entities/models";
+import { tempBoard } from "@/constants";
 //todo interfaces
 
 interface Computed {
@@ -78,11 +79,21 @@ export default Vue.extend<Computed, Methods, Data>({
   },
   methods: {
     createBoard() {
-      const id = Math.random()
-        .toString(20)
-        .substr(2)
-        .toUpperCase();
-      this.$router.push({ name: "Board", params: { _slug: id } });
+      this.$io
+        .emit('create-board', {
+          data: tempBoard,
+          meta: {
+            name: 'Untitled',
+            cover: '🔰',
+          },
+          userId: this.user.data.uid,
+        })
+        .on('board-created', (board: Board) => {
+          this.$router.push({
+            name: 'Board',
+            params: { _slug: board.id as string },
+          });
+        });
     },
   },
   metaInfo() {

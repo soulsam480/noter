@@ -4,7 +4,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { sock } from '@/utils/sock';
-import router from '@/router';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -12,7 +11,7 @@ export default new Vuex.Store({
     user: {
       loggedIn: false,
       data: {},
-    } as User ,
+    } as User,
     TOKEN: '' as string,
     boards: [] as Board[],
     boardStatus: {} as BoardStatus,
@@ -29,22 +28,14 @@ export default new Vuex.Store({
     },
     setBoards: (state, dat) => {
       if (dat) {
-        dat.forEach((el: any) => {
-          const tempBoard = {
+        state.boards = dat.map((el: any) => {
+          return {
             ...el,
             data: JSON.parse(el.data),
             meta: JSON.parse(el.meta),
           };
-          if (!state.boards.find((db) => db.id === el.id)) {
-            state.boards.push(tempBoard);
-          } else {
-            state.boards.splice(
-              state.boards.findIndex((bd) => bd.id === el.id),
-              1,
-              tempBoard,
-            );
-          }
         });
+
         state.boards.sort((a, b) => {
           return b.meta.stamp - a.meta.stamp;
         });
@@ -53,11 +44,11 @@ export default new Vuex.Store({
     setBoard: (state, data) => {
       state.boardStatus = data;
     },
-    logoutUser:(state)=>{
-      state.user.data = null,
-      state.user.loggedIn = false,
-      state.boards = []
-    }
+    logoutUser: (state) => {
+      (state.user.data = null),
+        (state.user.loggedIn = false),
+        (state.boards = []);
+    },
   },
   actions: {
     USER: ({ commit }, data) => {
@@ -74,7 +65,7 @@ export default new Vuex.Store({
           url:
             process.env.NODE_ENV === 'production'
               ? process.env.VUE_APP_REGISTER
-              : 'http://localhost:4000/login',
+              : 'http://localhost:4000/register',
           method: 'post',
           withCredentials: true,
           data: {
@@ -141,17 +132,15 @@ export default new Vuex.Store({
     setToken: ({ commit }, dat: string) => {
       commit('setToken', dat);
     },
-    getBoards: ({ commit }, uid) => {
-      sock.emit('get-boards', { uid: uid }).on('boards', (data: any) => {
-        commit('setBoards', data);
-      });
+    getBoards: () => {
+      sock.emit('get-boards');
     },
     updateBoard: ({ commit, state }, dat: object) => {
       sock.emit('update-board', dat);
     },
-    logout:({commit})=>{
-      commit('logoutUser')
-    }
+    logout: ({ commit }) => {
+      commit('logoutUser');
+    },
   },
   getters: {
     giveUser: (state): User => {

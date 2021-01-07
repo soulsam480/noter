@@ -236,7 +236,6 @@ export default Vue.extend<Data, Methods, Computed>({
             name: 'Untitled',
             cover: '🔰',
           },
-          userId: this.user.data.uid,
         })
         .on('board-created', (board: Board) => {
           this.$router.push({

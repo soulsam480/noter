@@ -211,7 +211,6 @@ export default Vue.extend<Data, Methods, Computed>({
                 coverBg: this.coverBg,
               },
               data: data,
-              userId: this.user.data.uid,
               boardId: this.$route.params._slug,
             })
             .then(() => {
