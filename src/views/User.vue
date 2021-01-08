@@ -62,8 +62,14 @@ export default Vue.extend<Data, Methods, Computed>({
         url: 'http://localhost:4000/logout',
         withCredentials: true,
       }).then(() => {
-        this.$store.dispatch('logout');
-        this.$router.push('/');
+        this.$store
+          .dispatch('logout')
+          .then(() => {
+            this.$router.push('/');
+          })
+          .catch(() => {
+            this.$router.push('/');
+          });
       });
     },
   },

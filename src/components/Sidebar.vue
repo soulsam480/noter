@@ -236,6 +236,10 @@ export default Vue.extend<Data, Methods, Computed>({
             name: 'Untitled',
             cover: '🔰',
           },
+          coverBg: {
+            background:
+              'linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)',
+          },
         })
         .on('board-created', (board: Board) => {
           this.$router.push({

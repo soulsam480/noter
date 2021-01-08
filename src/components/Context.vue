@@ -30,7 +30,12 @@ export default Vue.extend({
     deleteBoard() {
       this.$io
         .emit('delete-board', { boardId: this.command.key })
-        .on('success', (data: any) => console.log(data));
+        .on('success', () => {
+          if (this.$route.path !== '/boards') this.$router.push('/boards');
+        })
+        .on('error', (data: any) => {
+          console.log(data);
+        });
       this.$emit('close-context');
     },
   },

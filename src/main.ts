@@ -13,6 +13,25 @@ Vue.use(VueMeta);
 
 Vue.config.productionTip = false;
 
+const main = () => {
+  store.watch(
+    (state) => state.user.loggedIn,
+    (val) => {
+      if (!val) {
+        router.push('/');
+      } else {
+        router.currentRoute.query.redirectTo
+          ? router.push({
+              path: router.currentRoute.query.redirectTo as string,
+            })
+          : router.push('/boards');
+      }
+    },
+  );
+};
+
+main();
+
 authState();
 
 new Vue({

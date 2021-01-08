@@ -4,6 +4,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import { sock } from '@/utils/sock';
+import { Promise } from 'core-js';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -45,9 +46,9 @@ export default new Vuex.Store({
       state.boardStatus = data;
     },
     logoutUser: (state) => {
-      (state.user.data = null),
-        (state.user.loggedIn = false),
-        (state.boards = []);
+      state.user.data = null;
+      state.user.loggedIn = false;
+      state.boards = [];
     },
   },
   actions: {
@@ -141,6 +142,15 @@ export default new Vuex.Store({
     logout: ({ commit }) => {
       commit('logoutUser');
     },
+    checkAuth: ({ state }): Promise<boolean> => {
+      return new Promise((res, rej) => {
+        if (state.user.loggedIn === true) {
+          res(true);
+        } else {
+          rej(false);
+        }
+      });
+    },
   },
   getters: {
     giveUser: (state): User => {
@@ -154,6 +164,12 @@ export default new Vuex.Store({
     },
     boardStatus: (state): BoardStatus => {
       return state.boardStatus;
+    },
+    userStatus(state) {
+      return state.user.loggedIn;
+    },
+    giveBoard: (state) => (id: string) => {
+      return state.boards.find((el) => el.id === id);
     },
   },
   modules: {},

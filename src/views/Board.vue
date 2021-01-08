@@ -2,8 +2,6 @@
   <div>
     <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    <!--     main editor container
- -->
     <div class="board-cover" :style="coverBg"></div>
     <div id="editor">
       <button class="n-btn board-cover-change" @click="getgrad">
@@ -40,6 +38,7 @@ import EditorJS from '@editorjs/editorjs'; // eslint-disable-next-line
 import { Board, User } from '@/ entities/models';
 import VEmojiPicker from 'v-emoji-picker';
 import { randgen } from '@/utils';
+import { tempBoard } from '@/constants';
 
 const Checklist = require('@editorjs/checklist');
 const Header = require('@editorjs/header');
@@ -60,7 +59,7 @@ interface Data {
   upStatus: string;
   dat: object;
   isTooltip: boolean;
-  tempdata: object;
+
   isCover: boolean;
   cover: string;
   coverBg: object;
@@ -91,30 +90,6 @@ export default Vue.extend<Data, Methods, Computed>({
       isCover: false,
       cover: '',
       coverBg: {},
-      tempdata: {
-        blocks: [
-          {
-            data: {
-              level: 6,
-              text: "<mark class ='cdx-marker'>Guide/</mark>",
-            },
-            type: 'header',
-          },
-          {
-            data: {
-              items: [
-                "<mark class ='cdx-marker'><b>Click anywhere to add content</b></mark>",
-                "<mark class ='cdx-marker'><b>Hit tab for block types</b></mark>",
-                "<mark class ='cdx-marker'><b>Saved automatically on typing! </b></mark>",
-                "<mark class ='cdx-marker'><b>Ctrl/Cmd + S to force save</b></mark>",
-              ],
-              style: 'ordered',
-            },
-            type: 'list',
-          },
-        ],
-        version: '2.18.0',
-      },
     };
   },
   components: {
@@ -125,26 +100,21 @@ export default Vue.extend<Data, Methods, Computed>({
     user() {
       return this.$store.getters.giveUser as User;
     },
-    boards() {
+    boards(): Board[] {
       return this.$store.getters.boards;
     },
     //@ts-ignore
     boardData() {
-      if (this.boards.find((el: any) => el.id === this.$route.params._slug)) {
+      if (this.boards.find((el) => el.id === this.$route.params._slug)) {
         return {
-          //@ts-ignore
-          data: this.boards.find(
-            (el: Board) => el.id === this.$route.params._slug,
-          ).data,
-          //@ts-ignore
-          meta: this.boards.find(
-            (el: Board) => el.id === this.$route.params._slug,
-          ).meta,
+          data: this.boards.find((el) => el.id === this.$route.params._slug)
+            ?.data,
+          meta: this.boards.find((el) => el.id === this.$route.params._slug)
+            ?.meta,
         };
       } else {
         return {
-          // @ts-ignore
-          data: this.tempdata,
+          data: tempBoard,
           meta: {
             name: 'Untitled',
             cover: '🔰',
@@ -287,7 +257,7 @@ export default Vue.extend<Data, Methods, Computed>({
         },
         image: SimpleImage,
       },
-      data: this.boardData.data,
+      data: this.boardData?.data,
       //@ts-ignore
       logLevel: 'ERROR',
       onChange: () => {
@@ -310,33 +280,10 @@ export default Vue.extend<Data, Methods, Computed>({
     }
   },
   mounted() {
-    if (
-      Object.keys(this.coverBg).includes('background') ||
-      this.boardData.meta.coverBg === undefined ||
-      this.coverBg === undefined
-    ) {
-      //todo if they don't have one assign one
-      const colors = randgen();
-      this.coverBg = {
-        background: `linear-gradient(90deg, ${colors[1]} 25%, ${colors[2]} 50%, ${colors[3]} 75%)`,
-      };
-      this.autoSave();
-    } else {
-      //todo or load from data
-      this.coverBg = this.boardData.meta.coverBg;
-    }
-    if (
-      this.boardData.meta.cover === '' ||
-      this.boardData.meta.cover === undefined ||
-      this.cover === undefined
-    ) {
-      this.cover = '🔰';
-      this.autoSave();
-    } else {
-      this.cover = this.boardData.meta.cover;
-    }
     const head = document.getElementById('init_head') as HTMLElement;
-    head.innerHTML = this.boardData.meta.name;
+    this.coverBg = this.boardData?.meta.coverBg;
+    this.cover = this.boardData?.meta.cover;
+    head.innerHTML = this.boardData?.meta.name as string;
     //@ts-ignore
     this._keyListener = (e) => {
       if (e.key === 's' && (e.ctrlKey || e.metaKey)) {

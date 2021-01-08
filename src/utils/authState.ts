@@ -1,7 +1,7 @@
 import { createWs } from './sock';
 import axios from 'axios';
 import store from '@/store';
-import { getCookie } from './index';
+import { getCookie, createDispatchEvent } from './index';
 import { computed } from '@vue/composition-api';
 import router from '@/router';
 
@@ -34,24 +34,28 @@ export default async () => {
             },
           })
             .then((res) => {
-              store.dispatch('USER', {
+              const user = {
                 email: res.data.email,
                 username: res.data.username,
                 name: res.data.name,
                 uid: res.data.userId,
                 img: res.data.imgUrl,
-              });
+              };
+              store.dispatch('USER', user);
               createWs(mainToken.value);
               store.dispatch('getBoards', res.data.userId);
-              router.push('/boards');
+              // document.dispatchEvent(createDispatchEvent('currentUser', user));
+              // router.push('');
             })
             .catch((err) => {
               console.log(err);
+              // document.dispatchEvent(createDispatchEvent('currentUser', null));
             });
         });
       });
     } catch (err) {
       console.log(err);
+      // document.dispatchEvent(createDispatchEvent('currentUser', null));
     }
 
     setTimeout(async () => {

@@ -22,4 +22,13 @@ const randgen = (): string[] => {
   });
 };
 
+export const createDispatchEvent = (name: string, data: object | null) => {
+  const event = new CustomEvent(name, {
+    detail: {
+      user: data,
+    },
+  });
+  return event;
+};
+
 export { randgen };

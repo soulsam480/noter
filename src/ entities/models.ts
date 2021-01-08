@@ -10,6 +10,9 @@ export interface Board {
     cover: string;
     coverBg: {};
   };
+  createdAt?: Date;
+  updateAt?: Date;
+  access?: string[];
 }
 export interface User {
   loggedIn: boolean;

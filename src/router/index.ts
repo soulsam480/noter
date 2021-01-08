@@ -1,7 +1,6 @@
 import store from '@/store';
-
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter, { NavigationGuardNext, Route } from 'vue-router';
 import Home from '../views/Home.vue';
 Vue.use(VueRouter);
 
@@ -10,30 +9,35 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-    beforeEnter: (to: any, from: any, next: any) => {
-      if (!store.getters.giveUser.loggedIn) {
-        next();
-      } else next({ path: '/boards' });
-    },
   },
   {
     path: '/user',
     name: 'User',
     component: () => import('../views/User.vue'),
-    beforeEnter: (to: any, from: any, next: any) => {
-      if (store.getters.giveUser.loggedIn) {
-        next();
-      } else next({ path: '/' });
+    beforeEnter: async (to: Route, from: Route, next: NavigationGuardNext) => {
+      try {
+        const user: boolean = await store.dispatch('checkAuth');
+        if (user) {
+          next();
+        } else next({ path: '/' });
+      } catch (error) {
+        next({ path: '/', query: { redirectTo: to.path } });
+      }
     },
   },
   {
     path: '/boards',
     name: 'Boards',
     component: () => import('../views/Boards.vue'),
-    beforeEnter: (to: any, from: any, next: any) => {
-      if (store.getters.giveUser.loggedIn) {
-        next();
-      } else next({ path: '/' });
+    beforeEnter: async (to: Route, from: Route, next: NavigationGuardNext) => {
+      try {
+        const user: boolean = await store.dispatch('checkAuth');
+        if (user) {
+          next();
+        } else next({ path: '/' });
+      } catch (error) {
+        next({ path: '/', query: { redirectTo: to.path } });
+      }
     },
     children: [
       {
