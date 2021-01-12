@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      v-if="$route.fullPath === '/boards'"
-      class="container boards-intro"
-    >
+    <div v-if="$route.fullPath === '/boards'" class="container boards-intro">
       <br />
       <h4>Hi {{ user.data.name }} 👋🏼 !</h4>
       <h3 class="">👏🏼 Welcome to <em>Noter</em> 👏🏼</h3>
@@ -49,10 +46,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 //eslint-disable-next-line
-import { Board, User } from "@/ entities/models";
-import { tempBoard } from "@/constants";
+import { Board, User } from '@/ entities/models';
+import { tempBoard } from '@/constants';
 //todo interfaces
 
 interface Computed {
@@ -67,9 +64,8 @@ interface Methods {
 interface Data {}
 
 export default Vue.extend<Computed, Methods, Data>({
-  name: "Boards",
+  name: 'Boards',
   computed: {
-    /*   ...mapGetters({ boards: "boards", user: "giveUser" }), */
     user() {
       return this.$store.getters.giveUser as User;
     },
@@ -86,11 +82,11 @@ export default Vue.extend<Computed, Methods, Data>({
             name: 'Untitled',
             cover: '🔰',
           },
-          userId: this.user.data.uid,
+          userId: this.user.data?.uid,
         })
         .on('board-created', (board: Board) => {
           this.$router.push({
-            name: 'Board',
+            name: '/boards',
             params: { _slug: board.id as string },
           });
         });
@@ -98,7 +94,7 @@ export default Vue.extend<Computed, Methods, Data>({
   },
   metaInfo() {
     return {
-      title: "Boards",
+      title: 'Boards',
     };
   },
   components: {},
