@@ -1,8 +1,7 @@
 <template>
   <div class="usernav">
-    <!--     // ?context and tooltip
- -->
     <Context
+      v-click-outside="closeContext"
       :command="command"
       v-if="contextActive"
       v-on:close-context="closeContext"
@@ -15,8 +14,8 @@
       class="top-context"
       v-on:close-top="togTopContext"
     />
-    <!--     // ? topbar starts here
- -->
+    <!-- v-click-outside="togTopContext" -->
+
     <div class="topbar">
       <span
         class="top-head"
@@ -29,13 +28,11 @@
         <span v-if="hasStatus === 'updating'">Saving</span>
       </span>
       <span v-if="hasStatus" class="top-head top-toggle">
-        <!--       // ?topbar context menu
- -->
-        <a @click="togTopContext">
+        <a @click.prevent.stop="togTopContext">
           <img src="../assets/upload.svg" ref="topContext" alt="" />
         </a>
       </span>
-      <!--  <span class="b-context"><span></span></span> -->
+
       <a
         @click="hamToggle"
         class="ham hamburger--arrowturn is-active"
@@ -46,8 +43,7 @@
         </span>
       </a>
     </div>
-    <!--     // ? sidebar starts here
- -->
+
     <div class="sidebar sidebar-active" ref="sidebar">
       <div class="sidebar-inner">
         <span @click="sideShutMobile">
@@ -59,24 +55,55 @@
           >
         </span>
         <br />
-        <span
-          v-for="board in boards"
-          :key="board.key"
-          @contextmenu.prevent="contextFire(board.key, $event)"
+
+        <a
+          class="boardActive"
+          href="https://github.com/soulsam480/noter"
+          target="_blank"
+          style="margin-bottom:5px;"
         >
-          <router-link
-            :to="{ name: 'Board', params: { _slug: board.key } }"
-            :class="{ boardActive: $route.params._slug === board.key }"
-            :title="board.meta.name"
+          Visit project repo @
+          <img class="img" src="../assets/github.svg" alt="noter github" />
+          <br />
+          and drop us a star ⭐ <br />
+          Thank you
+        </a>
+        <a
+          class="boardActive"
+          href="https://forms.gle/JVG1LhiSMEueB1TV8"
+          target="_blank"
+          style="margin-bottom:5px;"
+        >
+          Report a bug 🐛 !!
+        </a>
+        <a
+          @click="createBoard"
+          @mouseenter="showTooltip($event, 'Click to Add Board')"
+          @mouseleave="isTooltip = false"
+        >
+          <b>+</b> Add a new Board </a
+        ><br />
+        <div>
+          <span
+            v-for="board in boards"
+            :key="board.key"
+            @contextmenu.prevent="contextFire(board.key, $event)"
           >
-            {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
-            <span
-              class="b-context"
-              @click.prevent="contextFire(board.key, $event)"
-              ><span></span
-            ></span>
-          </router-link>
-        </span>
+            <router-link
+              :to="{ name: 'Board', params: { _slug: board.key } }"
+              :class="{ boardActive: $route.params._slug === board.key }"
+              :title="board.meta.name"
+            >
+              {{ board.meta.cover }} {{ trunc_name(board.meta.name) }}
+              <span
+                class="b-context"
+                @click.prevent.stop="contextFire(board.key, $event)"
+                ><span></span
+              ></span>
+            </router-link>
+          </span>
+        </div>
+        <br />
         <a
           @click="createBoard"
           @mouseenter="showTooltip($event, 'Click to Add Board')"
@@ -90,6 +117,9 @@
 </template>
 
 <script lang="ts">
+//@ts-ignore
+import ClickOutside from 'vue-click-outside';
+
 import TopContext from '@/components/TopContext.vue';
 import Tooltip from '@/components/Tooltip.vue';
 import Context from '@/components/Context.vue';
@@ -179,7 +209,8 @@ export default Vue.extend<Data, Methods, Computed>({
   methods: {
     togTopContext() {
       //@ts-ignore
-      this.$refs.topContext.classList.toggle('tog-active');
+      const div = this.$refs.topContext as HTMLDivElement;
+      div.classList.toggle('tog-active');
       this.isTopContext = !this.isTopContext;
     },
     showTooltip(event, text) {
@@ -199,6 +230,7 @@ export default Vue.extend<Data, Methods, Computed>({
       }
     },
     closeContext() {
+      this.command = {};
       this.contextActive = false;
     },
     trunc_name(str) {
@@ -245,6 +277,9 @@ export default Vue.extend<Data, Methods, Computed>({
       //@ts-ignore
       this.$refs.sidebar.classList.toggle('sidebar-active');
     }
+  },
+  directives: {
+    ClickOutside,
   },
 });
 </script>
@@ -357,6 +392,7 @@ $secondary-light: #e1e1ff;
   left: 0;
   background-color: $secondary;
   overflow-x: hidden;
+  padding-bottom: 20px;
   a:not(.user-link) {
     cursor: pointer;
     padding: 6px 8px 6px 16px;
@@ -371,6 +407,7 @@ $secondary-light: #e1e1ff;
   }
   .boardActive {
     font-weight: 600;
+    background-color: $secondary-light !important;
   }
   .sidebar-inner {
     padding-top: 40px;
@@ -416,6 +453,25 @@ $secondary-light: #e1e1ff;
     span:after {
       bottom: -8px;
     }
+  }
+  /* width */
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #c8c8d3;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #c8c8e0;
   }
 }
 .topbar {
@@ -466,5 +522,8 @@ $secondary-light: #e1e1ff;
     font-size: 16px;
     padding: 0 5px;
   }
+}
+.img {
+  width: 20px;
 }
 </style>

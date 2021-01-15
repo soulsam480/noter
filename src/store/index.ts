@@ -13,6 +13,7 @@ export default new Vuex.Store({
     } as User,
     boards: [] as Board[],
     boardStatus: {} as BoardStatus,
+    isLoader: false,
   },
   mutations: {
     setLogIn(state, value) {
@@ -21,28 +22,39 @@ export default new Vuex.Store({
     setUser(state, data: UserData) {
       state.user.data = data;
     },
-    Boards: (state, uid) => {
-      db.ref(`/Users/${uid}/Boards`).on('value', (snap) => {
-        state.boards = [];
-        snap.forEach((csnap) => {
-          if (!state.boards.find((el) => el.key === csnap.key)) {
-            state.boards.push({
-              key: csnap.key as string,
-              data: csnap.val().data,
-              meta: csnap.val().meta,
-            } as Board);
-          }
-        });
-        state.boards.sort((a, b) => {
-          return b.meta.stamp - a.meta.stamp;
-        });
-      });
-    },
+
     setBoard: (state, data) => {
       state.boardStatus = data;
     },
+    setLoader: (state) => {
+      state.isLoader = !state.isLoader;
+    },
   },
   actions: {
+    Boards: ({ state }, uid) => {
+      return new Promise((reolve, reject) => {
+        if (uid !== null) {
+          db.ref(`/Users/${uid}/Boards`).on('value', (snap) => {
+            state.boards = [];
+            snap.forEach((csnap) => {
+              if (!state.boards.find((el) => el.key === csnap.key)) {
+                state.boards.push({
+                  key: csnap.key as string,
+                  data: csnap.val().data,
+                  meta: csnap.val().meta,
+                } as Board);
+              }
+            });
+            state.boards.sort((a, b) => {
+              return b.meta.stamp - a.meta.stamp;
+            });
+            reolve('success');
+          });
+        } else {
+          reject('error');
+        }
+      });
+    },
     fetchUser({ commit }, user) {
       //todo BUG
       /**
@@ -75,6 +87,9 @@ export default new Vuex.Store({
     },
     boardStatus: (state): BoardStatus => {
       return state.boardStatus;
+    },
+    getLoader: (state) => {
+      return state.isLoader;
     },
   },
   modules: {},

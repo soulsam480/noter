@@ -6,9 +6,9 @@ $secondary: #d4d4f5;
 $secondary-light: #e1e1ff;
 //todo fonts
 @font-face {
-  font-family: "Merriweather Regular";
-  src: url(~@/assets/Merriweather-Regular.woff2) format("woff2"),
-    url(~@/assets/Merriweather-Regular.woff) format("woff");
+  font-family: 'Merriweather Regular';
+  src: url(~@/assets/Merriweather-Regular.woff2) format('woff2'),
+    url(~@/assets/Merriweather-Regular.woff) format('woff');
 }
 //todo default styles
 :root,
@@ -92,6 +92,9 @@ a {
   // ** Boards styles
   .boards-intro {
     padding: 20px 100px 0 100px !important;
+  }
+  .content {
+    margin-left: 200px;
   }
 }
 // ** mobile
@@ -203,9 +206,7 @@ p {
   transition-duration: 0.15s;
   transition-timing-function: ease-in;
 }
-.content {
-  margin-left: 200px;
-}
+
 .tooltiptext {
   background-color: $secondary;
   color: $primary;

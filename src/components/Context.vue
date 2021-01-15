@@ -2,44 +2,54 @@
   <div>
     <div class="context" ref="context">
       <ul class="context-options ">
-        <span class="context-close" @click="close"> <span></span></span>
-        <br />
         <span @click="deleteBoard"
           ><li class="context-option">Delete Board</li></span
         >
-        <!--   <span @click="print"><li class="context-option">Export PDF</li></span> -->
+        <span>
+          <li
+            class="context-option"
+            @click="createBoard"
+            title="Create new Board!"
+          >
+            <b>+ </b> new Board
+          </li>
+        </span>
       </ul>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { db } from "../firebase/index";
-import { mapGetters } from "vuex";
-import Vue from "vue";
+import { db } from '../firebase/index';
+import { mapGetters } from 'vuex';
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "Context",
-  props: ["command"],
+  name: 'Context',
+  props: ['command'],
   computed: {
-    ...mapGetters({ user: "giveUser" }),
+    ...mapGetters({ user: 'giveUser' }),
   },
   methods: {
     close() {
-      this.$emit("close-context");
+      this.$emit('close-context');
     },
-    /*   print() {
-      window.print();
-    }, */
+    createBoard() {
+      const id = Math.random()
+        .toString(20)
+        .substr(2)
+        .toUpperCase();
+      this.$router.push({ name: 'Board', params: { _slug: id } });
+    },
     deleteBoard() {
       db.ref(`/Users/${this.user.data.uid}/Boards/${this.command.key}`)
         .remove()
         .then(() => {
-          if (this.$route.fullPath !== "/boards") {
-            this.$router.push({ path: "/boards" });
+          if (this.$route.fullPath !== '/boards') {
+            this.$router.push({ path: '/boards' });
           }
         });
-      this.$emit("close-context");
+      this.$emit('close-context');
     },
   },
   mounted() {
@@ -105,7 +115,7 @@ $secondary-light: #e1e1ff;
         height: 2.5px;
         background-color: red;
         border-radius: 2px;
-        content: "";
+        content: '';
         display: block;
       }
       span:before {

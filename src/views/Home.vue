@@ -14,7 +14,7 @@
         any limits!! Most of the features are currently in beta.
       </h4>
       <br />
-      <h4>🎊 Noter is out for open beta</h4>
+      <h4>🎊 The v0.5.0 release of Noter is live</h4>
       <br />
       <h4>
         🔰 Login or Signup to Explore 🔰<br />
@@ -22,16 +22,32 @@
         Peace ☮✌🏼
       </h4>
       <br />
-      <h4>Current v0.3.0.beta</h4>
+      <h4>Current v0.5.0</h4>
+      <br />
+      <center>
+        If noter helped you some way consider visiting the codebase and drop us
+        a star @
+        <button class="n-btn">
+          <a href="https://github.com/soulsam480/noter" target="_blank"
+            >Github
+            <img class="img" src="../assets/github.svg" alt="noter github"
+          /></a>
+        </button>
+      </center>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "Home",
+  name: 'Home',
   components: {},
 });
 </script>
+<style lang="scss" scoped>
+.img {
+  width: 20px;
+}
+</style>

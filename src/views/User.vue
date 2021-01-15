@@ -13,9 +13,6 @@
                 <div class="card-text">
                   <p>{{ user.data.email }}</p>
                 </div>
-                <!--  <button class="n-btn btn-sm">
-                  <router-link :to="{ path: '/boards' }">My Boards</router-link>
-                </button> -->
                 <button class="n-btn" @click="logout">
                   Log Out
                 </button>
@@ -28,6 +25,10 @@
       <br />
       <br />
     </div>
+    <div v-else>
+      <p>Please Log In</p>
+    </div>
+    <center>Thank you for using Noter 👏🏼🎆</center>
   </div>
 </template>
 
@@ -66,7 +67,8 @@ export default Vue.extend<Data, Methods, Computed>({
         .then(() => {
           this.$router.replace({ path: '/' });
           this.$store.dispatch('fetchUser', null);
-          this.$store.commit('Boards', null);
+          this.$store.dispatch('Boards', null);
+          this.$store.commit('setLoader');
         })
         .catch((err) => {
           window.alert(err);
@@ -117,5 +119,8 @@ a {
 }
 .row {
   align-items: center;
+}
+.img {
+  width: 20px;
 }
 </style>

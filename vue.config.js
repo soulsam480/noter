@@ -3,31 +3,34 @@ module.exports = {
   // domain name set publicPath: '/repo-name/'
 
   // If deploying to custom domain on github pages set publicPath: '/'
-  publicPath: "/",
+  devServer: {
+    port: 8500,
+  },
+  publicPath: '/',
   productionSourceMap: false,
   css: {
     loaderOptions: {
       sass: {
-        sassOptions: {}
-      }
-    }
+        sassOptions: {},
+      },
+    },
   },
   pwa: {
-    name: "Noter",
-    themeColor: "#d4d4f5",
-    msTileColor: "#d4d4f5",
+    name: 'Noter',
+    themeColor: '#d4d4f5',
+    msTileColor: '#d4d4f5',
     //todo webpack-workbox config
-    workboxPluginMode: "InjectManifest",
+    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: "./sw.js"
-    }
+      swSrc: './sw.js',
+    },
   },
   configureWebpack: {
     optimization: {
       splitChunks: {
         minSize: 10000,
-        maxSize: 230000
-      }
-    }
-  }
+        maxSize: 230000,
+      },
+    },
+  },
 };

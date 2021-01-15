@@ -148,14 +148,14 @@
 </template>
 
 <script lang="ts">
-import { auth, googleProvider } from "../firebase/index";
-import Vue from "vue";
+import { auth, googleProvider } from '../firebase/index';
+import Vue from 'vue';
 export default Vue.extend({
-  name: "Login",
+  name: 'Login',
   data() {
     return {
-      email: "" as string,
-      pass: "" as string,
+      email: '' as string,
+      pass: '' as string,
     };
   },
   props: [],
@@ -165,12 +165,13 @@ export default Vue.extend({
       auth
         .signInWithPopup(googleProvider)
         .then(() => {
-          this.email = "";
-          this.pass = "";
+          this.$store.commit('setLoader');
+          this.email = '';
+          this.pass = '';
         })
         .catch((error) => {
-          this.email = "";
-          this.pass = "";
+          this.email = '';
+          this.pass = '';
           window.alert(error.message);
         });
     },
@@ -178,25 +179,27 @@ export default Vue.extend({
       auth
         .signInWithEmailAndPassword(this.email, this.pass)
         .then(() => {
-          this.email = "";
-          this.pass = "";
+          this.$store.commit('setLoader');
+          this.email = '';
+          this.pass = '';
         })
         .catch((error) => {
-          this.email = "";
-          this.pass = "";
+          this.email = '';
+          this.pass = '';
           window.alert(error.message);
         });
     },
-    async signUp()  {
+    async signUp() {
       auth
         .createUserWithEmailAndPassword(this.email, this.pass)
         .then(() => {
-          this.email = "";
-          this.pass = "";
+          this.$store.commit('setLoader');
+          this.email = '';
+          this.pass = '';
         })
         .catch((err) => {
-          this.email = "";
-          this.pass = "";
+          this.email = '';
+          this.pass = '';
           window.alert(err.message);
         });
     },

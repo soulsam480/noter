@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <app-loader v-if="isLoader"></app-loader>
     <Login />
     <Navbar v-if="!user.loggedIn" />
     <Sidebar @side_event="contentShift" v-else />
@@ -10,13 +11,14 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import "./styles/default.scss";
-import Login from "@/components/Login.vue";
-import Navbar from "@/components/Navbar.vue";
-import Sidebar from "@/components/Sidebar.vue";
+import Vue from 'vue';
+import './styles/default.scss';
+import Login from '@/components/Login.vue';
+import Navbar from '@/components/Navbar.vue';
+import Sidebar from '@/components/Sidebar.vue';
+import AppLoader from '@/components/Loader.vue';
 //eslint-disable-next-line
-import { User } from "./ entities/models";
+import { User } from './ entities/models';
 interface Data {
   isMobile: null | boolean;
 }
@@ -27,12 +29,14 @@ interface Computed {
   user: User;
   defTitle: string;
   isHome: boolean;
+  isLoader: boolean;
 }
 export default Vue.extend<Data, Methods, Computed>({
   components: {
     Navbar,
     Login,
     Sidebar,
+    AppLoader,
   },
   data() {
     return {
@@ -44,10 +48,10 @@ export default Vue.extend<Data, Methods, Computed>({
       if (this.user.loggedIn) {
         if (dat === true) {
           //@ts-ignore
-          this.$refs.child.classList.add("content");
+          this.$refs.child.classList.add('content');
         } else {
           //@ts-ignore
-          this.$refs.child.classList.remove("content");
+          this.$refs.child.classList.remove('content');
         }
       }
     },
@@ -60,11 +64,14 @@ export default Vue.extend<Data, Methods, Computed>({
       if (this.user.loggedIn) {
         return `%s | ${this.user.data.name}'s Noter`;
       } else {
-        return "%s";
+        return '%s';
       }
     },
+    isLoader() {
+      return this.$store.getters.getLoader;
+    },
     isHome() {
-      if (this.$route.fullPath === "/") {
+      if (this.$route.fullPath === '/') {
         return false;
       } else {
         if (this.isMobile === true) {
