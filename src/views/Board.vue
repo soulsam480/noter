@@ -58,7 +58,7 @@ const SimpleImage = require("@editorjs/simple-image");
 interface Data {
   editor: null | EditorJS;
   isSaved: boolean;
-  timeout: null | number;
+  timeout: any;
   upStatus: string;
   dat: object;
   isTooltip: boolean;

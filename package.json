@@ -1,13 +1,26 @@
 {
   "name": "noter",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
-  "author": "soulsam480",
+  "author": {
+    "email": "soulsam480@hotmail.com",
+    "name": "soulsam480",
+    "url": "https://sambitsahoo.com"
+  },
+  "description": "Noter is a collaborative note-taking platform built for simplicity and productivity. It's free fast and open source.",
+  "homepage": "https://noter.sambitsahoo.com",
+  "repository": "https://github.com/soulsam480/noter",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve --no-sandbox",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon.png --output=build --flatten",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
+  "main": "background.js",
   "dependencies": {
     "@editorjs/checklist": "^1.1.0",
     "@editorjs/code": "^2.5.0",
@@ -40,6 +53,7 @@
   "devDependencies": {
     "@types/bootstrap": "^4.5.0",
     "@types/core-js": "^2.5.4",
+    "@types/electron-devtools-installer": "^2.2.0",
     "@types/eslint": "^6.8.1",
     "@types/eslint-plugin-prettier": "^3.1.0",
     "@types/jquery": "^3.5.1",
@@ -58,6 +72,9 @@
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/runtime-dom": "^3.0.2",
     "babel-eslint": "^10.1.0",
+    "electron": "^9.0.0",
+    "electron-devtools-installer": "^3.1.0",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
@@ -66,6 +83,7 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
     "typesync": "^0.7.0",
+    "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
     "vue-template-compiler": "^2.6.11"
   }
 }

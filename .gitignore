@@ -24,3 +24,5 @@ pnpm-debug.log*
 deploy.sh
 src/firebase/cred.ts
 src/miscred/prelink.ts
+#Electron-builder output
+/dist_electron

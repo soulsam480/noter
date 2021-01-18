@@ -33,4 +33,28 @@ module.exports = {
       },
     },
   },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        // name: 'Noter',
+        // description:
+        //   "Noter is a collaborative note-taking platform built for simplicity and productivity. It's free fast and open source.",
+        // homepage: 'https://noter.sambitsahoo.com',
+        // author: {
+        //   name: 'sambit Sahoo',
+        //   email: 'soulsam480@hotmail.com',
+        // },
+        // repository: 'https://github.com/soulsam480/noter',
+        // build: {
+        appId: 'com.sambitsahoo.noter',
+        productName: 'Noter',
+        copyright: 'Copyright © 2021 Sambit Sahoo',
+        buildVersion: '0.5.0',
+        nsis: {
+          oneClick: false,
+        },
+        // },
+      },
+    },
+  },
 };
