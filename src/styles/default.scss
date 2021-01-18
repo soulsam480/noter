@@ -3,7 +3,7 @@ $bg-primary: #ffffff;
 $primary: #101629;
 $primary-light: #434449;
 $secondary: #d4d4f5;
-$secondary-light: #e1e1ff;
+$secondary-light: #e1e1fb;
 //todo fonts
 @font-face {
   font-family: 'Merriweather Regular';
@@ -39,14 +39,14 @@ a {
 .n-btn {
   background: $secondary;
   color: $primary;
-  border-radius: 2px;
+  border-radius: 3px;
   border: none;
-  padding: 5px 15px;
+  padding: 7px 15px;
   margin: 5px;
   display: inline-block;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0.5px 0.5px 7px 0.1px #3535353d;
+  // box-shadow: 0.5px 0.5px 7px 0.1px #3535353d;
   &:hover {
     color: $primary;
     background-color: $secondary-light;
@@ -75,6 +75,10 @@ a {
   a {
     display: block;
     width: 100%;
+  }
+  &.sm {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 }
 
