@@ -34,7 +34,7 @@
 import Vue from 'vue';
 import Tooltip from '@/components/Tooltip.vue';
 import { db } from '../firebase/index';
-import EditorJS, { LogLevels } from '@editorjs/editorjs';
+import EditorJS from '@editorjs/editorjs';
 // eslint-disable-next-line
 import { Board, User } from '@/ entities/models';
 import VEmojiPicker from 'v-emoji-picker';
@@ -282,7 +282,8 @@ export default Vue.extend<Data, Methods, Computed>({
         image: SimpleImage,
       },
       data: this.boardData.data,
-      logLevel: LogLevels.ERROR,
+      //@ts-ignore
+      logLevel: 'ERROR',
       onChange: () => {
         this.autoSave();
       },

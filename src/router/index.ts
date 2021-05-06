@@ -29,7 +29,7 @@ const routes = [
       if (auth.currentUser) {
         next();
       } else {
-         next(`/?redirect=${to.path}`);
+        next(`/?redirect=${to.path}`);
       }
     },
   },
@@ -57,6 +57,7 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+  mode: process.env.NODE_ENV === 'development' ? 'hash' : 'history',
 });
 
 export default router;
