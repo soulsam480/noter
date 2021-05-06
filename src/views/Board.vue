@@ -2,8 +2,6 @@
   <div>
     <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
-    <!--     main editor container
- -->
     <div class="board-cover" :style="coverBg"></div>
     <div id="editor">
       <button class="n-btn board-cover-change" @click="getgrad">
@@ -33,28 +31,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Tooltip from "@/components/Tooltip.vue";
-import { db } from "../firebase/index";
-import EditorJS from "@editorjs/editorjs";
-import endpoint from "@/miscred/prelink";
+import Vue from 'vue';
+import Tooltip from '@/components/Tooltip.vue';
+import { db } from '../firebase/index';
+import EditorJS, { LogLevels } from '@editorjs/editorjs';
 // eslint-disable-next-line
-import { Board, User } from "@/ entities/models";
-import VEmojiPicker from "v-emoji-picker";
-import { randgen } from "@/helpers/randgen";
-const Checklist = require("@editorjs/checklist");
-const Header = require("@editorjs/header");
-const Link = require("@editorjs/link");
-const List = require("@editorjs/list");
-const CodeTool = require("@editorjs/code");
-const InlineCode = require("@editorjs/inline-code");
-const Table = require("@editorjs/table");
-const Embed = require("@editorjs/embed");
-const Quote = require("@editorjs/quote");
-const Marker = require("@editorjs/marker");
-const SimpleImage = require("@editorjs/simple-image");
-
-//todo adding interface and types for the Vue 2 Options API. It's better to move to Vue 3 😫
+import { Board, User } from '@/ entities/models';
+import VEmojiPicker from 'v-emoji-picker';
+import { randgen } from '@/helpers/randgen';
+const Checklist = require('@editorjs/checklist');
+const Header = require('@editorjs/header');
+const Link = require('@editorjs/link');
+const List = require('@editorjs/list');
+const CodeTool = require('@editorjs/code');
+const InlineCode = require('@editorjs/inline-code');
+const Table = require('@editorjs/table');
+const Embed = require('@editorjs/embed');
+const Quote = require('@editorjs/quote');
+const Marker = require('@editorjs/marker');
+const SimpleImage = require('@editorjs/simple-image');
 interface Data {
   editor: null | EditorJS;
   isSaved: boolean;
@@ -79,21 +74,18 @@ interface Methods {
   togEmoji: () => void;
   getgrad: () => void;
 }
-// todo using types in the instance
 export default Vue.extend<Data, Methods, Computed>({
-  name: "Board",
-
-  //todo Data =========================================
+  name: 'Board',
   data() {
     return {
       editor: null,
       isSaved: false,
       timeout: null,
-      upStatus: "",
+      upStatus: '',
       dat: {},
       isTooltip: false,
       isCover: false,
-      cover: "",
+      cover: '',
       coverBg: {},
       tempdata: {
         blocks: [
@@ -102,7 +94,7 @@ export default Vue.extend<Data, Methods, Computed>({
               level: 6,
               text: "<mark class ='cdx-marker'>Guide/</mark>",
             },
-            type: "header",
+            type: 'header',
           },
           {
             data: {
@@ -112,12 +104,12 @@ export default Vue.extend<Data, Methods, Computed>({
                 "<mark class ='cdx-marker'><b>Saved automatically on typing! </b></mark>",
                 "<mark class ='cdx-marker'><b>Ctrl/Cmd + S to force save</b></mark>",
               ],
-              style: "ordered",
+              style: 'ordered',
             },
-            type: "list",
+            type: 'list',
           },
         ],
-        version: "2.18.0",
+        version: '2.18.0',
       },
     };
   },
@@ -125,8 +117,6 @@ export default Vue.extend<Data, Methods, Computed>({
     Tooltip,
     VEmojiPicker,
   },
-
-  //todo computed ================================================
   computed: {
     user() {
       return this.$store.getters.giveUser as User;
@@ -140,23 +130,22 @@ export default Vue.extend<Data, Methods, Computed>({
         return {
           //@ts-ignore
           data: this.boards.find(
-            (el: Board) => el.key === this.$route.params._slug
+            (el: Board) => el.key === this.$route.params._slug,
           ).data,
           //@ts-ignore
           meta: this.boards.find(
-            (el: Board) => el.key === this.$route.params._slug
+            (el: Board) => el.key === this.$route.params._slug,
           ).meta,
         };
       } else {
         return {
-          // @ts-ignore
           data: this.tempdata,
           meta: {
-            name: "Untitled",
-            cover: "🔰",
+            name: 'Untitled',
+            cover: '🔰',
             coverBg: {
               background:
-                "linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)",
+                'linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)',
             },
           },
         };
@@ -165,12 +154,10 @@ export default Vue.extend<Data, Methods, Computed>({
   },
   metaInfo() {
     return {
-      //@ts-ignore
       title: `${this.boardData.meta.cover}  ${this.boardData.meta.name}`,
     };
   },
 
-  //todo methods =====================================
   methods: {
     getgrad() {
       const colors = randgen();
@@ -199,24 +186,20 @@ export default Vue.extend<Data, Methods, Computed>({
       }, 1000);
     },
     autoSave() {
-      this.upStatus = "updating";
-      this.$store.commit("setBoard", {
+      this.upStatus = 'updating';
+      this.$store.commit('setBoard', {
         id: this.$route.params._slug,
         status: this.upStatus,
       });
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        //@ts-ignore
-        this.editor.save().then((data: object) => {
-          const head = document.getElementById("init_head") as HTMLElement;
-          //?opt
-          /*           if (data === undefined) {
-           */ db.ref(
-            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
+        this.editor?.save().then((data: object) => {
+          const head = document.getElementById('init_head') as HTMLElement;
+          db.ref(
+            `/Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`,
           )
             .update({
               meta: {
-                // @ts-ignore
                 name: head.innerText,
                 stamp: Date.now(),
                 cover: this.cover,
@@ -226,86 +209,61 @@ export default Vue.extend<Data, Methods, Computed>({
             })
             .then(() => {
               this.isSaved = true;
-              this.upStatus = "updated";
-              this.$store.commit("setBoard", {
+              this.upStatus = 'updated';
+              this.$store.commit('setBoard', {
                 id: this.$route.params._slug,
                 status: this.upStatus,
               });
             });
-          //?opt
-          /*    } else {
-            db.ref(
-              `Users/${this.user.data.uid}/Boards/${this.$route.params._slug}`
-            )
-              .update({
-                meta: {
-                  name: head.innerText,
-                  stamp: Date.now(),
-                },
-                data: data,
-              })
-              .then(() => {
-                this.isSaved = true;
-                this.upStatus = "updated";
-                this.$store.commit("setBoard", {
-                  id: this.$route.params._slug,
-                  status: this.upStatus,
-                });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          } */
         });
       }, 1000);
     },
   },
-  //todo created =====================================
   created() {
     this.editor = new EditorJS({
       autofocus: true,
-      holder: "editor",
+      holder: 'editor',
       tools: {
         header: {
           class: Header,
-          inlineToolbar: ["link"],
+          inlineToolbar: ['link'],
           config: {
-            placeholder: "Header",
+            placeholder: 'Header',
           },
-          shortcut: "CMD+SHIFT+H",
+          shortcut: 'CMD+SHIFT+H',
         },
         list: {
           class: List,
           inlineToolbar: true,
-          shortcut: "CMD+SHIFT+L",
+          shortcut: 'CMD+SHIFT+L',
           config: {
-            placeholder: "Add a list!",
+            placeholder: 'Add a list!',
           },
         },
         checklist: {
           class: Checklist,
           inlineToolbar: true,
           config: {
-            placeholder: "Add a checklist !",
+            placeholder: 'Add a checklist !',
           },
         },
 
         code: {
           class: CodeTool,
-          shortcut: "CMD+SHIFT+C",
+          shortcut: 'CMD+SHIFT+C',
           config: {
-            placeholder: "Add a code block!",
+            placeholder: 'Add a code block!',
           },
         },
         linkTool: {
           class: Link,
           config: {
-            endpoint: endpoint,
+            endpoint: process.env.VUE_APP_API,
           },
         },
         inlineCode: {
           class: InlineCode,
-          shortcut: "CMD+SHIFT+M",
+          shortcut: 'CMD+SHIFT+M',
         },
         table: {
           class: Table,
@@ -319,13 +277,12 @@ export default Vue.extend<Data, Methods, Computed>({
         quote: Quote,
         Marker: {
           class: Marker,
-          shortcut: "CMD+SHIFT+M",
+          shortcut: 'CMD+SHIFT+M',
         },
         image: SimpleImage,
       },
       data: this.boardData.data,
-      //@ts-ignore
-      logLevel: "ERROR",
+      logLevel: LogLevels.ERROR,
       onChange: () => {
         this.autoSave();
       },
@@ -333,69 +290,58 @@ export default Vue.extend<Data, Methods, Computed>({
 
     if (this.boards.find((el: any) => el.key === this.$route.params._slug)) {
       this.isSaved = true;
-      this.upStatus = "updated";
-      this.$store.commit("setBoard", {
+      this.upStatus = 'updated';
+      this.$store.commit('setBoard', {
         id: this.$route.params._slug,
         status: this.upStatus,
       });
     } else {
-      this.$store.commit("setBoard", {
+      this.$store.commit('setBoard', {
         id: this.$route.params._slug,
-        status: "init",
+        status: 'init',
       });
     }
   },
-  //todo mounted ===================================
   mounted() {
-    //todo checking for those boards whoch don't have a cover image \\// for backwards compatibility
     if (
-      Object.keys(this.coverBg).includes("background") ||
+      Object.keys(this.coverBg).includes('background') ||
       this.boardData.meta.coverBg === undefined ||
       this.coverBg === undefined
     ) {
-      //todo if they don't have one assign one
       const colors = randgen();
       this.coverBg = {
         background: `linear-gradient(90deg, ${colors[1]} 25%, ${colors[2]} 50%, ${colors[3]} 75%)`,
       };
       this.autoSave();
     } else {
-      //todo or load from data
       this.coverBg = this.boardData.meta.coverBg;
     }
-    // ?---------------------------------------------
-    //todo checking for the boards which don't have a cover icon  \\// backwards cmpatibility
+
     if (
-      this.boardData.meta.cover === "" ||
+      this.boardData.meta.cover === '' ||
       this.boardData.meta.cover === undefined ||
       this.cover === undefined
     ) {
-      //todo if they don't have one assign one
-      this.cover = "🔰";
+      this.cover = '🔰';
       this.autoSave();
     } else {
-      // todo or load from data
       this.cover = this.boardData.meta.cover;
     }
 
-    //todo syncing the board title
-    const head = document.getElementById("init_head") as HTMLElement;
+    const head = document.getElementById('init_head') as HTMLElement;
     head.innerHTML = this.boardData.meta.name;
     //@ts-ignore
     this._keyListener = (e) => {
-      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+      if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         this.autoSave();
       }
     };
-    //@ts-ignore
-    document.addEventListener("keydown", this._keyListener.bind(this));
+    document.addEventListener('keydown', this._keyListener.bind(this));
   },
   beforeDestroy() {
-    //@ts-ignore
-    document.removeEventListener("keydown", this._keyListener);
-    //@ts-ignore
-    this.editor.destroy();
+    document.removeEventListener('keydown', this._keyListener);
+    this.editor?.destroy();
   },
 });
 </script>

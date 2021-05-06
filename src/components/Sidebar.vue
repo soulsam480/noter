@@ -119,7 +119,7 @@
 <script lang="ts">
 //@ts-ignore
 import ClickOutside from 'vue-click-outside';
-
+import { v4 as uuidv4 } from 'uuid';
 import TopContext from '@/components/TopContext.vue';
 import Tooltip from '@/components/Tooltip.vue';
 import Context from '@/components/Context.vue';
@@ -259,10 +259,7 @@ export default Vue.extend<Data, Methods, Computed>({
       this.$refs.sidebar.classList.toggle('sidebar-active');
     },
     createBoard() {
-      const id = Math.random()
-        .toString(20)
-        .substr(2)
-        .toUpperCase();
+      const id = uuidv4();
       this.$router.push({ name: 'Board', params: { _slug: id } });
     },
   },

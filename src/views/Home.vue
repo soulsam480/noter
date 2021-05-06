@@ -139,7 +139,6 @@ export default Vue.extend({
       .then((res) => res.json())
 
       .then((dat) => {
-        console.log(dat);
         this.version = dat.tag_name;
       });
   },

@@ -23,6 +23,7 @@ module.exports = {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: './sw.js',
+      exclude: [/_redirects/],
     },
   },
   configureWebpack: {
