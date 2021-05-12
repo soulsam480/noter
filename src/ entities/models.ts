@@ -1,15 +1,19 @@
 export interface Board {
   id?: string;
-  data: {
-    blocks: [];
-    version: string;
-  };
-  meta: {
-    name: string;
-    stamp: number;
-    cover: string;
-    coverBg: {};
-  };
+  data:
+    | {
+        blocks: [];
+        version: string;
+      }
+    | Record<string, any>;
+  meta:
+    | {
+        name: string;
+        stamp: number;
+        cover: string;
+        coverBg: {};
+      }
+    | Record<string, any>;
   createdAt?: Date;
   updateAt?: Date;
   access?: string[];

@@ -3,7 +3,7 @@
     <VEmojiPicker v-if="isCover" @select="selectEmoji" />
     <Tooltip :dat="dat" v-if="isTooltip" />
     <div class="board-cover" :style="coverBg"></div>
-    <div id="editor">
+    <div id="editor" :key="boardData.meta.stamp">
       <button class="n-btn board-cover-change" @click="getgrad">
         Change Cover
       </button>
@@ -11,8 +11,7 @@
         class="board-icon"
         @click="togEmoji"
         id="init_cover"
-        @mouseenter="showTooltip($event, 'Change Cover')"
-        @mouseleave="isTooltip = false"
+        title="Click to change"
       >
         {{ boardData.meta.cover }}
       </h1>
@@ -23,9 +22,12 @@
         data-text="Untitled"
         @paste="autoSave"
         @input="autoSave"
-        @mouseenter="showTooltip($event, 'Change Title')"
-        @mouseleave="isTooltip = false"
-      ></h2>
+        title="Click to change"
+        :key="boardData.meta.name"
+        ref="h1"
+      >
+        {{ boardData.meta.name }}
+      </h2>
     </div>
   </div>
 </template>
@@ -33,12 +35,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Tooltip from '@/components/Tooltip.vue';
-import endpoint from '../miscred/prelink';
-import EditorJS from '@editorjs/editorjs'; // eslint-disable-next-line
+/* eslint-disable no-unused-vars */
+import EditorJS, { OutputData } from '@editorjs/editorjs'; // eslint-disable-next-line
 import { Board, User } from '@/ entities/models';
 import VEmojiPicker from 'v-emoji-picker';
 import { randgen } from '@/utils';
 import { tempBoard } from '@/constants';
+// import { tempBoard } from '@/constants';
 
 const Checklist = require('@editorjs/checklist');
 const Header = require('@editorjs/header');
@@ -59,25 +62,17 @@ interface Data {
   upStatus: string;
   dat: object;
   isTooltip: boolean;
-
   isCover: boolean;
   cover: string;
   coverBg: object;
+  boardData: Board;
 }
 interface Computed {
-  boardData: Board;
   user: User;
   boards: Board[];
 }
-interface Methods {
-  showTooltip: (event: MouseEvent, text: string) => void;
-  autoSave: () => void;
-  selectEmoji: (emoji: any) => void;
-  togEmoji: () => void;
-  getgrad: () => void;
-}
 // todo using types in the instance
-export default Vue.extend<Data, Methods, Computed>({
+export default Vue.extend<Data, any, Computed>({
   name: 'Board',
   data() {
     return {
@@ -90,6 +85,7 @@ export default Vue.extend<Data, Methods, Computed>({
       isCover: false,
       cover: '',
       coverBg: {},
+      boardData: { data: {}, meta: {} },
     };
   },
   components: {
@@ -103,34 +99,10 @@ export default Vue.extend<Data, Methods, Computed>({
     boards(): Board[] {
       return this.$store.getters.boards;
     },
-    //@ts-ignore
-    boardData() {
-      if (this.boards.find((el) => el.id === this.$route.params._slug)) {
-        return {
-          data: this.boards.find((el) => el.id === this.$route.params._slug)
-            ?.data,
-          meta: this.boards.find((el) => el.id === this.$route.params._slug)
-            ?.meta,
-        };
-      } else {
-        return {
-          data: tempBoard,
-          meta: {
-            name: 'Untitled',
-            cover: '🔰',
-          },
-          coverBg: {
-            background:
-              'linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)',
-          },
-        };
-      }
-    },
   },
   metaInfo() {
     return {
-      //@ts-ignore
-      title: `${this.boardData.meta.cover}  ${this.boardData.meta.name}`,
+      title: `${this.boardData.meta?.cover}  ${this.boardData.meta?.name}`,
     };
   },
   methods: {
@@ -144,7 +116,7 @@ export default Vue.extend<Data, Methods, Computed>({
     togEmoji() {
       this.isCover = !this.isCover;
     },
-    selectEmoji(emoji): void {
+    selectEmoji(emoji: any): void {
       this.cover = emoji.data;
       this.autoSave();
       this.isCover = false;
@@ -168,13 +140,11 @@ export default Vue.extend<Data, Methods, Computed>({
       });
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        //@ts-ignore
-        this.editor.save().then((data: object) => {
+        this.editor?.save().then((data: object) => {
           const head = document.getElementById('init_head') as HTMLElement;
           this.$store
             .dispatch('updateBoard', {
               meta: {
-                // @ts-ignore
                 name: head.innerText,
                 stamp: Date.now(),
                 cover: this.cover,
@@ -196,6 +166,24 @@ export default Vue.extend<Data, Methods, Computed>({
     },
   },
   created() {
+    this.boardData = this.$store.getters.giveBoard(
+      this.$route.params._slug,
+    ) ?? {
+      data: tempBoard,
+      meta: {
+        name: 'Untitled',
+        cover: '🔰',
+        coverBg: {
+          background:
+            'linear-gradient(90deg, #71f7bd 25%, #e2a8f7 50%, #8077e5 75%)',
+        },
+      },
+    };
+    this.$io.on('update:room-board', (data: any) => {
+      console.log(data);
+
+      this.boardData = { ...this.boardData, data: data.data, meta: data.meta };
+    });
     this.editor = new EditorJS({
       autofocus: true,
       holder: 'editor',
@@ -234,7 +222,7 @@ export default Vue.extend<Data, Methods, Computed>({
         linkTool: {
           class: Link,
           config: {
-            endpoint: endpoint,
+            endpoint: process.env.VUE_APP_PRE,
           },
         },
         inlineCode: {
@@ -257,7 +245,7 @@ export default Vue.extend<Data, Methods, Computed>({
         },
         image: SimpleImage,
       },
-      data: this.boardData?.data,
+      data: this.boardData?.data as OutputData,
       //@ts-ignore
       logLevel: 'ERROR',
       onChange: () => {
@@ -283,7 +271,7 @@ export default Vue.extend<Data, Methods, Computed>({
     const head = document.getElementById('init_head') as HTMLElement;
     this.coverBg = this.boardData?.meta.coverBg;
     this.cover = this.boardData?.meta.cover;
-    head.innerHTML = this.boardData?.meta.name as string;
+    this.$refs.h1.innerText = this.boardData?.meta.name as string;
     //@ts-ignore
     this._keyListener = (e) => {
       if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
@@ -291,14 +279,15 @@ export default Vue.extend<Data, Methods, Computed>({
         this.autoSave();
       }
     };
-    //@ts-ignore
-    document.addEventListener('keydown', this._keyListener.bind(this));
+    document.addEventListener('keydown', (this as any)._keyListener.bind(this));
+    this.$io.emit('create-room', {
+      _slug: this.$route.params._slug,
+    });
   },
   beforeDestroy() {
+    document.removeEventListener('keydown', (this as any)._keyListener);
     //@ts-ignore
-    document.removeEventListener('keydown', this._keyListener);
-    //@ts-ignore
-    /*  this.editor.destroy(); */
+    (this.editor as EditorJS).destroy();
   },
 });
 </script>

@@ -5,7 +5,7 @@ import randomColor from 'randomcolor';
  * @returns  the value of the cookie
  */
 
-export const getCookie = (name: string) => {
+export const getCookie = (name: string): any => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2)

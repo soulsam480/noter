@@ -45,6 +45,17 @@ export default new Vuex.Store({
     setBoard: (state, data) => {
       state.boardStatus = data;
     },
+    setBoardData(state, data) {
+      const index = state.boards.findIndex((el) => el.id === data.id);
+      if (index !== -1) {
+        state.boards[index] = {
+          ...state.boards[index],
+          data: data.data,
+          meta: data.meta,
+        };
+      }
+      state.boards = [...state.boards];
+    },
     logoutUser: (state) => {
       state.user.data = null;
       state.user.loggedIn = false;

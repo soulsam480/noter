@@ -1,13 +1,10 @@
 import { createWs } from './sock';
 import axios from 'axios';
 import store from '@/store';
-import { getCookie, createDispatchEvent } from './index';
+import { getCookie } from './index';
 import { computed } from '@vue/composition-api';
-import router from '@/router';
-
 export default async () => {
   const rtoken = getCookie('loggedIn');
-
   if (rtoken === 'true') {
     const mainToken = computed(() => {
       return store.getters.getToken;
@@ -44,18 +41,14 @@ export default async () => {
               store.dispatch('USER', user);
               createWs(mainToken.value);
               store.dispatch('getBoards', res.data.userId);
-              // document.dispatchEvent(createDispatchEvent('currentUser', user));
-              // router.push('');
             })
             .catch((err) => {
               console.log(err);
-              // document.dispatchEvent(createDispatchEvent('currentUser', null));
             });
         });
       });
     } catch (err) {
       console.log(err);
-      // document.dispatchEvent(createDispatchEvent('currentUser', null));
     }
 
     setTimeout(async () => {
